@@ -1,0 +1,156 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=1024, minimum-scale=1, maximum-scale=1, user-scalable=no" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <title>git from the inside</title>
+    
+    <meta name="description" content="git from the inside -- how git works" />
+    <meta name="author" content="Jens Neuhalfen" />
+
+    <link href="http://fonts.googleapis.com/css?family=Open+Sans:regular,semibold,italic,italicsemibold|PT+Sans:400,700,400italic,700italic|PT+Serif:400,700,400italic,700italic" rel="stylesheet" />
+
+    <link href="css/impress-demo.css" rel="stylesheet" />
+    
+    <link rel="shortcut icon" href="favicon.png" />
+    <link rel="apple-touch-icon" href="apple-touch-icon.png" />
+</head>
+
+<body class="impress-not-supported">
+
+<!--
+    For example this fallback message is only visible when there is `impress-not-supported` class on body.
+-->
+<div class="fallback-message">
+    <p>Your browser <b>doesn't support the features required</b> by impress.js, so you are presented with a simplified version of this presentation.</p>
+    <p>For the best experience please use the latest <b>Chrome</b>, <b>Safari</b> or <b>Firefox</b> browser.</p>
+</div>
+
+<div id="impress">
+
+    <div id="opening_slide" class="step slide" data-x="-5024" data-y="-1500">
+        <q>
+                <div><b>git</b> from the inside </div>
+                <div>Jens Neuhalfen</div> 
+        </q>
+    </div>
+    <div id="hash_function" class="step slide" data-x="-4000" data-y="-1500">
+                <h1>Hash function<sup>*</sup></h1>
+<!-- TODO: use css -->
+                <pre>
+
+
+
+a == b  <=>  hash(a) == hash(b)
+a != b  <=>  hash(a) != hash(b)
+
+
+
+                 </pre> 
+        <span class="footnote"><sup>*</sup> let's just assume this is all true and ignore <a href="https://en.wikipedia.org/wiki/Collision_%28computer_science%29">hash collisions</a>.</span>
+    </div>
+
+<!--
+
+  Trees
+
+-->
+
+
+
+    <div id="objectstore_overview"class="step" data-x="1700" data-y="-150" data-scale="1">
+        <!-- copy viewBox from svg -->
+        <svg viewBox="0 0 530 350">
+          <use xlink:href="svg/tree.svg#objectstore"></use>
+          <use xlink:href="svg/tree.svg#objectstore_after_commit"></use>
+        </svg>
+    </div>
+
+    <div id="tree_detail" class="step" data-x="1250" data-y="-170" data-scale="1">
+    </div>
+    <div id="tree_first_commit" class="step" data-x="1100" data-y="-300" data-scale="1">
+    </div>
+    <div id="tree_second_commit" class="step" data-x="1100" data-y="-640" data-scale="1">
+    </div>
+
+
+    <div id="tree_two_commits_overview"class="step no_hide_step" data-x="1024" data-y="-512" data-scale="1">
+        <!-- copy viewBox from svg -->
+<!-- TODO: this is a dead slide -->
+        <svg viewBox="0 0 530 644">
+          <use xlink:href="svg/tree.svg#tree"></use>
+        </svg>
+    </div>
+<!--
+EEEEVIL: break everything!!!
+    <div id="tree_overview" class="step no_hide_step" data-x="1024" data-y="-512" data-scale="1" data-z="1000" />
+
+-->
+
+<!--
+
+  Commits
+
+-->
+
+    <div id="commits_start" class="step no_hide_step" data-x="0" data-y="1500" data-scale="4" data-z="0">
+        <svg viewBox="0 0 850 550">
+          <use xlink:href="svg/commits.svg#layer_master_branch"></use>
+        </svg>
+    </div>
+
+    <div id="commits_start_index" class="step" data-x="300" data-y="850" data-z="-100"  data-scale="1" >
+        <svg viewBox="0 0 770 380">
+          <use xlink:href="svg/commits.svg#layer_master_branch_index"></use>
+        </svg>
+    </div>
+
+    <div id="commits_devel_branch" class="step" data-x="2500" data-y="1700" data-z="0"  data-scale="1" >
+        <svg viewBox="0 0 1000 550">
+          <use xlink:href="svg/commits.svg#layer_devel_branch"></use>
+        </svg>
+    </div>
+
+    <div id="commits_devel_branch_merge" class="step" data-x="3500" data-y="1700" data-z="0"  data-scale="1" >
+        <svg viewBox="0 0 1000 680">
+          <use xlink:href="svg/commits.svg#layer_devel_branch_merge"></use>
+        </svg>
+    </div>
+
+    <div id="commits_devel_branch_rebase" class="step" data-x="2500" data-y="2500" data-z="0"  data-scale="1" >
+        <svg viewBox="0 0 1000 700">
+          <use xlink:href="svg/commits.svg#layer_devel_branch_rebase"></use>
+        </svg>
+    </div>
+    <div id="commits_devel_branch_remote" class="step" data-x="3500" data-y="2500" data-z="0"  data-scale="1" >
+        <svg viewBox="0 0 1110 545">
+          <use xlink:href="svg/commits.svg#layer_remote"></use>
+        </svg>
+    </div>
+    <div id="commits_devel_branch_remote_nonff" class="step" data-x="3500" data-y="3200" data-z="0"  data-scale="1" >
+        <svg viewBox="0 0 1300 695">
+          <use xlink:href="svg/commits.svg#layer_remote_nonff"></use>
+        </svg>
+    </div>
+<!--
+    <div id="commits_overview" class="step no_hide_step" data-x="0" data-y="3000" data-scale="10" />
+-->
+
+
+<div class="hint">
+    <p>Use a spacebar or arrow keys to navigate</p>
+</div>
+<script>
+if ("ontouchstart" in document.documentElement) { 
+    document.querySelector(".hint").innerHTML = "<p>Tap on the left or right to navigate</p>";
+}
+</script>
+
+<script src="js/impress.js"></script>
+<script>impress().init();</script>
+
+</body>
+</html>
+
