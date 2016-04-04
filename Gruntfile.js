@@ -3,7 +3,6 @@
 module.exports = function(grunt) {
         "use strict";
 
-
         // Project configuration.
         grunt.initConfig({
                 pkg: grunt.file.readJSON('package.json'),
@@ -11,10 +10,21 @@ module.exports = function(grunt) {
                         files: '<config:lint.files>',
                         tasks: 'default'
                 },
-
                 clean: {
                         folder: [ "output", "tmp" ]
                 }, 
+                copy: {
+                        html: {
+                                files:  [
+                                                { src:"src/html/index.html", dest:  "output/index.html" },
+                                        ],
+                        },
+                        css: {
+                                files:  [
+                                                { cwd: 'src/css', src: ['*.css'], dest: 'output/' },
+                                        ],
+                        },
+                },
                 svgmin: {
                         options: {
                             plugins: [
@@ -34,7 +44,7 @@ module.exports = function(grunt) {
                         dist: {
                                 files: [{
                                         expand: true,
-                                        cwd: 'svg',
+                                        cwd: 'src/svg',
                                         src: ['*.svg'],
                                         dest: 'tmp/svg-svgmin'
                                 }]
@@ -103,8 +113,9 @@ module.exports = function(grunt) {
         });
 
         grunt.loadNpmTasks('grunt-contrib-clean');
+        grunt.loadNpmTasks('grunt-contrib-copy');
         grunt.loadNpmTasks('grunt-grunticon');
         grunt.loadNpmTasks('grunt-svgmin');
-        grunt.registerTask('default', ['svgmin', 'grunticon:slides']);
+        grunt.registerTask('default', ['svgmin', 'grunticon:slides', 'copy:*']);
 };
 
