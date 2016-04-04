@@ -1,3 +1,5 @@
+// vim:  set syntax=javaScript foldmethod=indent  foldlevel=2 :
+
 module.exports = function(grunt) {
         "use strict";
 
