@@ -21,7 +21,7 @@ module.exports = function(grunt) {
                         },
                         css: {
                                 files:  [
-                                                { cwd: 'src/css', src: ['*.css'], dest: 'output/' },
+                                                {  cwd: 'src/css', src: 'impress-demo.css',  dest: 'output/', expand: true },
                                         ],
                         },
                 },
