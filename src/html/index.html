@@ -11,16 +11,22 @@
     <meta name="author" content="Jens Neuhalfen" />
 
     <link href="http://fonts.googleapis.com/css?family=Open+Sans:regular,semibold,italic,italicsemibold|PT+Sans:400,700,400italic,700italic|PT+Serif:400,700,400italic,700italic" rel="stylesheet" />
+    <link href="impress-demo.css" rel="stylesheet" data-embed />
 
-    <link href="impress-demo.css" rel="stylesheet" />
-
-    <script src="grunticon.loader.js">
+    <script src="grunticon.loader.js" data-embed>
+<!-- Do not use the <... /> sytax: embedd cannot handle it -->
+    </script>
+    <script>
         grunticon(["icons.data.svg.css", "icons.data.png.css", "icons.fallback.css"], grunticon.svgLoadedCallback);
     </script>
-    <noscript><link href="icons.fallback.css" rel="stylesheet"></noscript>
-    
+
+<!--
     <link rel="shortcut icon" href="favicon.png" />
     <link rel="apple-touch-icon" href="apple-touch-icon.png" />
+-->
+
+    <noscript><link href="icons.fallback.css" rel="stylesheet" data-embed></noscript>
+
 </head>
 
 <body class="impress-not-supported">

@@ -12,11 +12,11 @@ module.exports = function(grunt) {
                 },
                 clean: {
                         folder: [ "output", "tmp" ]
-                }, 
+                },
                 copy: {
                         html: {
                                 files:  [
-                                                { src:"src/html/index.html", dest:  "output/index.html" },
+                                                {  cwd: 'src/html', src: 'index.html',  dest: 'output/', expand: true },
                                         ],
                         },
                         css: {
@@ -24,6 +24,17 @@ module.exports = function(grunt) {
                                                 {  cwd: 'src/css', src: 'impress-demo.css',  dest: 'output/', expand: true },
                                         ],
                         },
+                },
+                embed: {
+                    options: {
+                      threshold: '1024KB', /* Embedd EVERYTHING */
+                      assetRoot: 'output'
+                    },
+                    html: {
+                      files: {
+                        "output/index.html" : "src/html/index.html"
+                      }
+                    }
                 },
                 svgmin: {
                         options: {
@@ -116,6 +127,7 @@ module.exports = function(grunt) {
         grunt.loadNpmTasks('grunt-contrib-copy');
         grunt.loadNpmTasks('grunt-grunticon');
         grunt.loadNpmTasks('grunt-svgmin');
-        grunt.registerTask('default', ['svgmin', 'grunticon:slides', 'copy:*']);
-};
+        grunt.loadNpmTasks('grunt-embed');
 
+        grunt.registerTask('default', ['svgmin', 'grunticon:slides', 'copy:css', 'embed:html']);
+};
