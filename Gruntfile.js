@@ -92,32 +92,16 @@ module.exports = function(grunt) {
                                         pngfolder: "png",
 
                                         // prefix for CSS classnames
-                                        cssprefix: ".icon-",
+                                        cssprefix: ".slide-",
 
                                         defaultWidth: "800px",
                                         //defaultHeight: "200px",
 
-                                        // define vars that can be used in filenames if desirable, like foo.colors-primary-secondary.svg
-                                        colors: {
-                                                primary: "red",
-                                                secondary: "#666"
-                                        },
-
-                                        dynamicColorOnly: true,
-
                                         // css file path prefix - this defaults to "/" and will be placed before the "dest" path when stylesheets are loaded.
                                         // This allows root-relative referencing of the CSS. If you don't want a prefix path, set to to ""
                                         cssbasepath: "/",
-                                        customselectors: {
-                                                "cat" : ["#el-gato"],
-                                                "gummy-bears-2" : ["nav li a.deadly-bears:before"]
-                                        },
-
-                                        // template: path.join( __dirname, "example", "default-css.hbs" ),
-                                        // previewTemplate: path.join( __dirname, "example", "preview-custom.hbs" ),
 
                                         compressPNG: false
-
                                 }
                         }
                 },
