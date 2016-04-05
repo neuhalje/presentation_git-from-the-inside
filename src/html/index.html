@@ -6,8 +6,8 @@
     <meta name="viewport" content="width=1024, minimum-scale=1, maximum-scale=1, user-scalable=no" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
     <title>git from the inside</title>
-    
-    <meta name="description" content="git from the inside -- how git works" />
+
+    <meta name="description" content="git from the inside - fighting cargo cult with science" />
     <meta name="author" content="Jens Neuhalfen" />
 
     <link href="http://fonts.googleapis.com/css?family=Open+Sans:regular,semibold,italic,italicsemibold|PT+Sans:400,700,400italic,700italic|PT+Serif:400,700,400italic,700italic" rel="stylesheet" />
@@ -39,12 +39,14 @@
     <p>For the best experience please use the latest <b>Chrome</b>, <b>Safari</b> or <b>Firefox</b> browser.</p>
 </div>
 
+
+
 <div id="impress">
 
     <div id="opening_slide" class="step slide" data-x="-5024" data-y="-1500">
         <q>
                 <div><b>git</b> from the inside </div>
-                <div>Jens Neuhalfen</div> 
+                <div>Jens Neuhalfen</div>
         </q>
     </div>
     <div id="hash_function" class="step slide" data-x="-4000" data-y="-1500">
@@ -59,7 +61,7 @@ a != b  <=>  hash(a) != hash(b)
 
 
 
-                 </pre> 
+                 </pre>
         <span class="footnote"><sup>*</sup> let's just assume this is all true and ignore <a href="https://en.wikipedia.org/wiki/Collision_%28computer_science%29">hash collisions</a>.</span>
     </div>
 
@@ -70,13 +72,8 @@ a != b  <=>  hash(a) != hash(b)
 -->
 
 
-
-    <div id="objectstore_overview"class="step" data-x="1700" data-y="-150" data-scale="1">
-        <!-- copy viewBox from svg -->
-        <svg viewBox="0 0 530 350">
-          <use xlink:href="svg/tree.svg#objectstore"></use>
-          <use xlink:href="svg/tree.svg#objectstore_after_commit"></use>
-        </svg>
+    <div id="objectstore_overview"  class="step " data-x="1700" data-y="-150" data-scale="1" >
+      <div class="icon-tree_objectstore" style="width: 553.996px; height: 351.321px;" />
     </div>
 
     <div id="tree_detail" class="step" data-x="1250" data-y="-170" data-scale="1">
@@ -88,11 +85,7 @@ a != b  <=>  hash(a) != hash(b)
 
 
     <div id="tree_two_commits_overview"class="step no_hide_step" data-x="1024" data-y="-512" data-scale="1">
-        <!-- copy viewBox from svg -->
-<!-- TODO: this is a dead slide -->
-        <svg viewBox="0 0 530 644">
-          <use xlink:href="svg/tree.svg#tree"></use>
-        </svg>
+      <div class="icon-tree_complete"  style="width: 795.489px; height: 676.486px;"  />
     </div>
 <!--
 EEEEVIL: break everything!!!
@@ -154,7 +147,7 @@ EEEEVIL: break everything!!!
     <p>Use a spacebar or arrow keys to navigate</p>
 </div>
 <script>
-if ("ontouchstart" in document.documentElement) { 
+if ("ontouchstart" in document.documentElement) {
     document.querySelector(".hint").innerHTML = "<p>Tap on the left or right to navigate</p>";
 }
 </script>
@@ -164,4 +157,3 @@ if ("ontouchstart" in document.documentElement) {
 
 </body>
 </html>
-
