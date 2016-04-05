@@ -198,7 +198,7 @@ a:focus {
 }
 
 .impress-enabled .step.active { opacity: 1 }
-.impress-enabled .step.no_hide_step { opacity: 1 }
+.impress-enabled .no_hide_step { opacity: 1 }
 
 /*
     These 'slide' step styles were heavily inspired by HTML5 Slides:
