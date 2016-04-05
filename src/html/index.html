@@ -100,60 +100,45 @@ EEEEVIL: break everything!!!
 -->
 
     <div id="commits_start" class="step no_hide_step" data-x="0" data-y="1500" data-scale="4" data-z="0">
-        <svg viewBox="0 0 850 550">
-          <use xlink:href="svg/commits.svg#layer_master_branch"></use>
-        </svg>
+        <div class="slide-commits_master_branch" style="width: 864.77px; height: 570.339px;" ></div>
     </div>
 
     <div id="commits_start_index" class="step" data-x="300" data-y="850" data-z="-100"  data-scale="1" >
-        <svg viewBox="0 0 770 380">
-          <use xlink:href="svg/commits.svg#layer_master_branch_index"></use>
-        </svg>
+        <div class="slide-commits_master_branch_index" style="width: 890.229px; height: 383.848px;" ></div>
     </div>
 
     <div id="commits_devel_branch" class="step" data-x="2500" data-y="1700" data-z="0"  data-scale="1" >
-        <svg viewBox="0 0 1000 550">
-          <use xlink:href="svg/commits.svg#layer_devel_branch"></use>
-        </svg>
+        <div class="slide-commits_devel_branch" style="width: 1227.985px; height: 574.722px;" ></div>
     </div>
 
     <div id="commits_devel_branch_merge" class="step" data-x="3500" data-y="1700" data-z="0"  data-scale="1" >
-        <svg viewBox="0 0 1000 680">
-          <use xlink:href="svg/commits.svg#layer_devel_branch_merge"></use>
-        </svg>
+        <div class="slide-commits_devel_branch_merge" style="width: 1200.931px; height: 714.607px;" ></div>
     </div>
 
     <div id="commits_devel_branch_rebase" class="step" data-x="2500" data-y="2500" data-z="0"  data-scale="1" >
-        <svg viewBox="0 0 1000 700">
-          <use xlink:href="svg/commits.svg#layer_devel_branch_rebase"></use>
-        </svg>
+        <div class="slide-commits_devel_branch_rebase" style="width: 1049.918px; height: 734.682px;" ></div>
     </div>
+
     <div id="commits_devel_branch_remote" class="step" data-x="3500" data-y="2500" data-z="0"  data-scale="1" >
-        <svg viewBox="0 0 1110 545">
-          <use xlink:href="svg/commits.svg#layer_remote"></use>
-        </svg>
+        <div class="slide-commits_remote" style="width: 1171.763px; height: 586.891px;" ></div>
     </div>
+
     <div id="commits_devel_branch_remote_nonff" class="step" data-x="3500" data-y="3200" data-z="0"  data-scale="1" >
-        <svg viewBox="0 0 1300 695">
-          <use xlink:href="svg/commits.svg#layer_remote_nonff"></use>
-        </svg>
+        <div class="slide-commits_remote_nonff" style="width: 1391.428px; height: 726.297px;" ></div>
     </div>
-<!--
-    <div id="commits_overview" class="step no_hide_step" data-x="0" data-y="3000" data-scale="10" />
--->
 
+    <div class="hint">
+        <p>Use a spacebar or arrow keys to navigate</p>
+    </div>
 
-<div class="hint">
-    <p>Use a spacebar or arrow keys to navigate</p>
-</div>
-<script>
+    <script>
 if ("ontouchstart" in document.documentElement) {
     document.querySelector(".hint").innerHTML = "<p>Tap on the left or right to navigate</p>";
 }
-</script>
+    </script>
 
-<script src="js/impress.js"></script>
-<script>impress().init();</script>
+    <script src="js/impress.js"></script>
+    <script>impress().init();</script>
 
 </body>
 </html>
