@@ -241,6 +241,13 @@ a:focus {
     white-space: nowrap;
 }
 
+.svgslide {
+    /*
+   Scale the svg to the size of the DIV
+   */
+    background-size: contain;
+}
+
 /*
     And now we start to style each step separately.
 
