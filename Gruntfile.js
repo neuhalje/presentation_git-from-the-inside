@@ -27,7 +27,7 @@ module.exports = function(grunt) {
                 },
                 embed: {
                     options: {
-                      threshold: '1024KB', /* Embedd EVERYTHING */
+                      threshold: '10240KB', /* Embedd EVERYTHING */
                       assetRoot: 'output'
                     },
                     html: {
