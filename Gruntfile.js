@@ -95,7 +95,7 @@ module.exports = function(grunt) {
                                         cssprefix: ".slide-",
 
                                         defaultWidth: "800px",
-                                        //defaultHeight: "200px",
+                                        defaultHeight: "600px",
 
                                         // css file path prefix - this defaults to "/" and will be placed before the "dest" path when stylesheets are loaded.
                                         // This allows root-relative referencing of the CSS. If you don't want a prefix path, set to to ""
