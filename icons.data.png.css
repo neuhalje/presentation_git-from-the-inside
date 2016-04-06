@@ -1,0 +1,28 @@
+.slide-commits_devel_branch { background-image: url('png/commits_devel_branch.png'); background-repeat: no-repeat; }
+
+.slide-commits_devel_branch_merge { background-image: url('png/commits_devel_branch_merge.png'); background-repeat: no-repeat; }
+
+.slide-commits_devel_branch_rebase { background-image: url('png/commits_devel_branch_rebase.png'); background-repeat: no-repeat; }
+
+.slide-commits_master_branch { background-image: url('png/commits_master_branch.png'); background-repeat: no-repeat; }
+
+.slide-commits_master_branch_index { background-image: url('png/commits_master_branch_index.png'); background-repeat: no-repeat; }
+
+.slide-commits_push_rebased_act_i { background-image: url('png/commits_push_rebased_act_i.png'); background-repeat: no-repeat; }
+
+.slide-commits_push_rebased_act_ii { background-image: url('png/commits_push_rebased_act_ii.png'); background-repeat: no-repeat; }
+
+.slide-commits_push_rebased_act_iii { background-image: url('png/commits_push_rebased_act_iii.png'); background-repeat: no-repeat; }
+
+.slide-commits_push_rebased_act_iv { background-image: url('png/commits_push_rebased_act_iv.png'); background-repeat: no-repeat; }
+
+.slide-commits_push_rebased_act_v { background-image: url('png/commits_push_rebased_act_v.png'); background-repeat: no-repeat; }
+
+.slide-commits_remote { background-image: url('png/commits_remote.png'); background-repeat: no-repeat; }
+
+.slide-commits_remote_nonff { background-image: url('png/commits_remote_nonff.png'); background-repeat: no-repeat; }
+
+.slide-tree_complete { background-image: url('png/tree_complete.png'); background-repeat: no-repeat; }
+
+.slide-tree_objectstore { background-image: url('png/tree_objectstore.png'); background-repeat: no-repeat; }
+
