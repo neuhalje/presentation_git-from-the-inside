@@ -114,4 +114,5 @@ module.exports = function(grunt) {
         grunt.loadNpmTasks('grunt-embed');
 
         grunt.registerTask('default', ['svgmin', 'grunticon:slides', 'copy:css', 'embed:html']);
+        grunt.registerTask('no_embedd', ['svgmin', 'grunticon:slides', 'copy:css', 'copy:html']);
 };
