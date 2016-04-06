@@ -118,6 +118,6 @@ module.exports = function(grunt) {
         grunt.loadNpmTasks('grunt-svgmin');
         grunt.loadNpmTasks('grunt-embed');
 
-        grunt.registerTask('default', ['svgmin', 'grunticon:slides', 'copy:css', 'embed:html']);
-        grunt.registerTask('no_embedd', ['svgmin', 'grunticon:slides', 'copy:css', 'copy:html']);
+        grunt.registerTask('default', ['svgmin', 'grunticon:slides', 'copy:css', 'copy:impress', 'embed:html']);
+        grunt.registerTask('no_embedd', ['svgmin', 'grunticon:slides', 'copy:css', 'copy:impress', 'copy:html']);
 };
