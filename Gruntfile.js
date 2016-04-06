@@ -24,6 +24,11 @@ module.exports = function(grunt) {
                                                 {  cwd: 'src/css', src: 'impress-demo.css',  dest: 'output/', expand: true },
                                         ],
                         },
+                        impress: {
+                                files:  [
+                                                {  cwd: 'src/js', src: 'impress.js',  dest: 'output/', expand: true },
+                                        ],
+                        },
                 },
                 embed: {
                     options: {
