@@ -1,1 +1,1 @@
-Generated from [v1](https://github.com/neuhalje/git-from-the-inside/tree/v1)
+Generated from [v2](https://github.com/neuhalje/git-from-the-inside/tree/v2)
