@@ -29,6 +29,11 @@ module.exports = function(grunt) {
                                                 {  cwd: 'src/js', src: 'impress.js',  dest: 'output/', expand: true },
                                         ],
                         },
+                        images: {
+                                files:  [
+                                                {  cwd: 'src/img', src: '**',  dest: 'output/img/', expand: true },
+                                        ],
+                        },
                 },
                 embed: {
                     options: {
@@ -118,6 +123,6 @@ module.exports = function(grunt) {
         grunt.loadNpmTasks('grunt-svgmin');
         grunt.loadNpmTasks('grunt-embed');
 
-        grunt.registerTask('default', ['svgmin', 'grunticon:slides', 'copy:css', 'copy:impress', 'embed:html']);
-        grunt.registerTask('no_embedd', ['svgmin', 'grunticon:slides', 'copy:css', 'copy:impress', 'copy:html']);
+        grunt.registerTask('default', ['svgmin', 'grunticon:slides', 'copy:css', 'copy:impress', 'copy:images', 'embed:html']);
+        grunt.registerTask('no_embedd', ['svgmin', 'grunticon:slides', 'copy:css', 'copy:impress','copy:images', 'copy:html']);
 };
