@@ -246,6 +246,7 @@ a:focus {
    Scale the svg to the size of the DIV
    */
     background-size: contain;
+    background-repeat: no-repeat;
 }
 
 /*
