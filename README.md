@@ -19,9 +19,9 @@ grunt
 Install Build ENV
 ---------------------
 ```sh
-# @pre: need grunt, npm
-
+# @pre: need npm
 npm install
+grunt
 ```
 
 
