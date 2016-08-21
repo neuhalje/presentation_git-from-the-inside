@@ -22,6 +22,8 @@
 
 .slide-commits_remote_nonff { background-image: url('png/commits_remote_nonff.png'); background-repeat: no-repeat; }
 
+.slide-front_page_image { background-image: url('png/front_page_image.png'); background-repeat: no-repeat; }
+
 .slide-tree_complete { background-image: url('png/tree_complete.png'); background-repeat: no-repeat; }
 
 .slide-tree_objectstore { background-image: url('png/tree_objectstore.png'); background-repeat: no-repeat; }

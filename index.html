@@ -137,6 +137,16 @@
         text-shadow: -1px -1px 2px rgba(100,100,100,0.5);
     }
     
+    
+    footer {
+        text-align: left;
+        font-size: 30px;
+        line-height: 1;
+        font-style: normal;
+        position: absolute;
+        bottom: 0;
+    }
+    
     /*
         Because the main point behind the impress.js demo is to demo impress.js
         we display a fallback message for users with browsers that don't support
@@ -201,7 +211,7 @@
     */
     .impress-enabled .step {
         margin: 0;
-        opacity: 0.3;
+        opacity: 0.1;
     
         -webkit-transition: opacity 1s;
         -moz-transition:    opacity 1s;
@@ -290,36 +300,60 @@
         font-size: 1em;
     }
     
-    /*
-        Second step is nothing special, just a text with a link, so it doesn't need
-        any special styling.
-    
-        Let's move to 'big thoughts' with centered text and custom font sizes.
-    */
-    #big {
-        width: 600px;
+    .intro_heading {
         text-align: center;
         font-size: 60px;
-        line-height: 1;
+        line-height: 2;
+    }
+    
+    .intro_subtext {
+        text-align: center;
+        font-size: 30px;
+        line-height: 1.5;
+        font-style: italic;
+    }
+    
+    .slide_heading {
+        text-align: center;
+        font-size: 60px;
+        line-height: 2;
+    }
+    .slide_subtext {
+        text-align: center;
+        font-size: 30px;
+        line-height: 1.5;
+        font-style: italic;
+    }
+    
+    .transition_duration_2500ms {
+        display: inline-block;
+        -webkit-transition: 2.5s;
+        -moz-transition:    2.5s;
+        -ms-transition:     2.5s;
+        -o-transition:      2.5s;
+        transition:         2.5s;
+    }
+    
+    #trees_and_blobs .rotating_BLOB {
+        -webkit-transform: rotate(-10deg);
+        -moz-transform:    rotate(-10deg);
+        -ms-transform:     rotate(-10deg);
+        -o-transform:      rotate(-10deg);
+        transform:         rotate(-10deg);
+    }
+    
+    #trees_and_blobs.present .rotating_BLOB {
+        -webkit-transform: rotate(0deg);
+        -moz-transform:    rotate(0deg);
+        -ms-transform:     rotate(0deg);
+        -o-transform:      rotate(0deg);
+        transform:         rotate(0deg);
     }
     
     #big b {
         display: block;
         font-size: 250px;
         line-height: 250px;
-    }
-    
-    #big .thoughts {
-        font-size: 90px;
-        line-height: 150px;
-    }
-    
-    /*
-        'Tiny ideas' just need some tiny styling.
-    */
-    #tiny {
-        width: 500px;
-        text-align: center;
     }
     
     /*
@@ -715,7 +749,7 @@
     <script>
     /*! grunt-grunticon Stylesheet Loader - v2.1.6 | https://github.com/filamentgroup/grunticon | (c) 2015 Scott Jehl, Filament Group, Inc. | MIT license. */
     
-    !function(){function e(e,n,t){"use strict";var o=window.document.createElement("link"),r=n||window.document.getElementsByTagName("script")[0],a=window.document.styleSheets;return o.rel="stylesheet",o.href=e,o.media="only x",r.parentNode.insertBefore(o,r),o.onloadcssdefined=function(e){for(var n,t=0;t<a.length;t++)a[t].href&&a[t].href===o.href&&(n=!0);n?e():setTimeout(function(){o.onloadcssdefined(e)})},o.onloadcssdefined(function(){o.media=t||"all"}),o}function n(e,n){e.onload=function(){e.onload=null,n&&n.call(e)},"isApplicationInstalled"in navigator&&"onloadcssdefined"in e&&e.onloadcssdefined(n)}!function(t){var o=function(r,a){"use strict";if(r&&3===r.length){var i=t.navigator,c=t.document,s=t.Image,d=!(!c.createElementNS||!c.createElementNS("http://www.w3.org/2000/svg","svg").createSVGRect||!c.implementation.hasFeature("http://www.w3.org/TR/SVG11/feature#Image","1.1")||t.opera&&-1===i.userAgent.indexOf("Chrome")||-1!==i.userAgent.indexOf("Series40")),l=new s;l.onerror=function(){o.method="png",o.href=r[2],e(r[2])},l.onload=function(){var t=1===l.width&&1===l.height,i=r[t&&d?0:t?1:2];t&&d?o.method="svg":t?o.method="datapng":o.method="png",o.href=i,n(e(i),a)},l.src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==",c.documentElement.className+=" grunticon"}};o.loadCSS=e,o.onloadCSS=n,t.grunticon=o}(this),function(e,n){"use strict";var t=n.document,o="grunticon:",r=function(e){if(t.attachEvent?"complete"===t.readyState:"loading"!==t.readyState)e();else{var n=!1;t.addEventListener("readystatechange",function(){n||(n=!0,e())},!1)}},a=function(e){return n.document.querySelector('link[href$="'+e+'"]')},i=function(e){var n,t,r,a,i,c,s={};if(n=e.sheet,!n)return s;t=n.cssRules?n.cssRules:n.rules;for(var d=0;d<t.length;d++)r=t[d].cssText,a=o+t[d].selectorText,i=r.split(");")[0].match(/US\-ASCII\,([^"']+)/),i&&i[1]&&(c=decodeURIComponent(i[1]),s[a]=c);return s},c=function(e){var n,r,a,i;a="data-grunticon-embed";for(var c in e){i=c.slice(o.length);try{n=t.querySelectorAll(i)}catch(s){continue}r=[];for(var d=0;d<n.length;d++)null!==n[d].getAttribute(a)&&r.push(n[d]);if(r.length)for(d=0;d<r.length;d++)r[d].innerHTML=e[c],r[d].style.backgroundImage="none",r[d].removeAttribute(a)}return r},s=function(n){"svg"===e.method&&r(function(){c(i(a(e.href))),"function"==typeof n&&n()})};e.embedIcons=c,e.getCSS=a,e.getIcons=i,e.ready=r,e.svgLoadedCallback=s,e.embedSVG=s}(grunticon,this)}();
+    !function(){function e(e,n,t){"use strict";var o=window.document.createElement("link"),r=n||window.document.getElementsByTagName("script")[0],a=window.document.styleSheets;return o.rel="stylesheet",o.href=e,o.media="only x",r.parentNode.insertBefore(o,r),o.onloadcssdefined=function(e){for(var n,t=0;t<a.length;t++)a[t].href&&a[t].href===o.href&&(n=!0);n?e():setTimeout(function(){o.onloadcssdefined(e)})},o.onloadcssdefined(function(){o.media=t||"all"}),o}function n(e,n){e.onload=function(){e.onload=null,n&&n.call(e)},"isApplicationInstalled"in navigator&&"onloadcssdefined"in e&&e.onloadcssdefined(n)}!function(t){var o=function(r,a){"use strict";if(r&&3===r.length){var i=t.navigator,c=t.document,s=t.Image,d=!(!c.createElementNS||!c.createElementNS("http://www.w3.org/2000/svg","svg").createSVGRect||!c.implementation.hasFeature("http://www.w3.org/TR/SVG11/feature#Image","1.1")||t.opera&&i.userAgent.indexOf("Chrome")===-1||i.userAgent.indexOf("Series40")!==-1),l=new s;l.onerror=function(){o.method="png",o.href=r[2],e(r[2])},l.onload=function(){var t=1===l.width&&1===l.height,i=r[t&&d?0:t?1:2];t&&d?o.method="svg":t?o.method="datapng":o.method="png",o.href=i,n(e(i),a)},l.src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==",c.documentElement.className+=" grunticon"}};o.loadCSS=e,o.onloadCSS=n,t.grunticon=o}(this),function(e,n){"use strict";var t=n.document,o="grunticon:",r=function(e){if(t.attachEvent?"complete"===t.readyState:"loading"!==t.readyState)e();else{var n=!1;t.addEventListener("readystatechange",function(){n||(n=!0,e())},!1)}},a=function(e){return n.document.querySelector('link[href$="'+e+'"]')},i=function(e){var n,t,r,a,i,c,s={};if(n=e.sheet,!n)return s;t=n.cssRules?n.cssRules:n.rules;for(var d=0;d<t.length;d++)r=t[d].cssText,a=o+t[d].selectorText,i=r.split(");")[0].match(/US\-ASCII\,([^"']+)/),i&&i[1]&&(c=decodeURIComponent(i[1]),s[a]=c);return s},c=function(e){var n,r,a,i;a="data-grunticon-embed";for(var c in e){i=c.slice(o.length);try{n=t.querySelectorAll(i)}catch(e){continue}r=[];for(var s=0;s<n.length;s++)null!==n[s].getAttribute(a)&&r.push(n[s]);if(r.length)for(s=0;s<r.length;s++)r[s].innerHTML=e[c],r[s].style.backgroundImage="none",r[s].removeAttribute(a)}return r},s=function(n){"svg"===e.method&&r(function(){c(i(a(e.href))),"function"==typeof n&&n()})};e.embedIcons=c,e.getCSS=a,e.getIcons=i,e.ready=r,e.svgLoadedCallback=s,e.embedSVG=s}(grunticon,this)}();
     </script>
     <script>
         grunticon(["icons.data.svg.css", "icons.data.png.css", "icons.fallback.css"], grunticon.svgLoadedCallback);
@@ -751,6 +785,8 @@
 
 .slide-commits_remote_nonff { background-image: url('../../output/png/commits_remote_nonff.png'); background-repeat: no-repeat; }
 
+.slide-front_page_image { background-image: url('../../output/png/front_page_image.png'); background-repeat: no-repeat; }
+
 .slide-tree_complete { background-image: url('../../output/png/tree_complete.png'); background-repeat: no-repeat; }
 
 .slide-tree_objectstore { background-image: url('../../output/png/tree_objectstore.png'); background-repeat: no-repeat; }
@@ -773,13 +809,18 @@
 <div id="impress">
 
     <div id="opening_slide" class="step slide" data-x="-5024" data-y="-1500">
-        <q>
-                <div><b>git</b> from the inside </div>
-                <div>Jens Neuhalfen</div>
-        </q>
-        <div>
-<a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/4.0/88x31.png" /></a><br /><span xmlns:dct="http://purl.org/dc/terms/" property="dct:title">git-from-the-inside</span> by <span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName">Jens Neuhalfen</span> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike 4.0 International License</a>.<br />Based on a work at <a xmlns:dct="http://purl.org/dc/terms/" href="https://github.com/neuhalje/git-from-the-inside" rel="dct:source">https://github.com/neuhalje/git-from-the-inside</a>.
-       </div>
+
+                <h1 class="intro_heading"><b>git</b> from the inside</h1>
+                <div class="intro_subtext">Everything You Always Wanted to Know about .git</div>
+                <div class="intro_subtext">But Were Afraid to Ask</div>
+                <hr/>
+                <!-- center -->
+                <div style="width: 500px; height:350px;  margin: 0px auto; text-align: center;">
+                     <div class="slide-front_page_image svgslide" style="height: 100%;"></div>
+                </div>
+        <footer>
+<span xmlns:dct="http://purl.org/dc/terms/" property="dct:title"><address><a xmlns:dct="http://purl.org/dc/terms/" href="https://github.com/neuhalje/git-from-the-inside" rel="dct:source">https://github.com/neuhalje/git-from-the-inside</a></address></span> by <span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName">Jens Neuhalfen</span> is licensed under <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">CC by-sa<img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/4.0/88x31.png" /></a>.
+       </footer>
     </div>
     <div id="hash_function" class="step slide" data-x="-4000" data-y="-1500">
                 <h1>Hash function<sup>*</sup></h1>
@@ -802,6 +843,9 @@ a != b  <=>  hash(a) != hash(b)
       Trees
 
     -->
+    <div id="trees_and_blobs" class="step slide" data-x="-200" data-y="-800" data-z="400" data-scale="5">
+                <h1 class="intro_heading">I see trees of ... <span class="transition_duration_2500ms rotating_BLOB">BLOB<span></h1>
+    </div>
 
     <div id="objectstore_overview"  class="step " data-x="800" data-y="200" data-scale="2" >
       <div class="slide-tree_objectstore" style="width: 800px; height: 507px;"></div>
@@ -829,27 +873,48 @@ a != b  <=>  hash(a) != hash(b)
 
     -->
 
-        <div id="commits_start" class="step no_hide_step" data-x="-1000" data-y="2500" data-scale="4" data-z="0">
+        <div id="commits_start_head" class="step slide" data-x="-1000" data-y="3250" data-z="3000" data-scale="4">
+            <h1 class="slide_heading">From BLOBs to Branches</h1>
+            <div class="slide_subtext">Mama, where do the small commits come from?</div>
+        </div>
+        <div id="commits_start" class="step no_hide_step" data-x="-1000" data-y="3250" data-scale="4" data-z="0">
             <div class="slide-commits_master_branch svgslide" style="width: 800px; height: 528px;" ></div>
         </div>
-
-        <div id="commits_start_index" class="step" data-x="-500" data-y="1800" data-z="-200"  data-scale="1" >
+        <div id="commits_start_index" class="step" data-x="-500" data-y="2550" data-z="-200"  data-scale="1" >
             <div class="slide-commits_master_branch_index svgslide" style="width: 800px; height: 345px;" ></div>
         </div>
 
-        <div id="commits_devel_branch" class="step" data-x="4000" data-y="2500" data-z="0"  data-scale="4" >
+<!-- Merge -->
+        <div id="commits_devel_branch_head" class="step slide" data-x="4000" data-y="3250" data-z="3000" data-scale="4">
+            <h1 class="slide_heading">From hither to tither</h1>
+            <div class="slide_subtext">Branches are like roads - you can only walk one at a time</div>
+        </div>
+        <div id="commits_devel_branch" class="step" data-x="4000" data-y="3250" data-z="0"  data-scale="4" >
             <div class="slide-commits_devel_branch svgslide" style="width: 800px; height: 375px;" ></div>
         </div>
 
-        <div id="commits_devel_branch_merge" class="step" data-x="9000" data-y="2500" data-z="0"  data-scale="4" >
+        <div id="commits_devel_branch_merge_head" class="step slide" data-x="9000" data-y="3250" data-z="3000" data-scale="4">
+            <h1 class="slide_heading">When shall we meet again?</h1>
+            <div class="slide_subtext">In thunder, or lightning, or rain?</div>
+        </div>
+        <div id="commits_devel_branch_merge" class="step" data-x="9000" data-y="3250" data-z="0"  data-scale="4" >
             <div class="slide-commits_devel_branch_merge svgslide" style="width: 800px; height: 477px;" ></div>
         </div>
 
-        <div id="commits_devel_branch_rebase" class="step" data-x="14000" data-y="2500" data-z="0"  data-scale="4" >
+        <div id="commits_devel_rebase_head" class="step slide" data-x="14000" data-y="3250" data-z="3000" data-scale="4">
+            <h1 class="slide_heading">Rebase</h1>
+            <div class="slide_subtext">It's just a little bit of history ...</div>
+            <div class="slide_subtext">rewriting</div>
+        </div>
+        <div id="commits_devel_branch_rebase" class="step" data-x="14000" data-y="3250" data-z="0"  data-scale="4" >
             <div class="slide-commits_devel_branch_rebase svgslide" style="width: 800px; height: 560px;" ></div>
         </div>
 
-        <div id="commits_devel_branch_remote" class="step" data-x="-1000" data-y="5500" data-z="0"  data-scale="4" >
+        <div id="commits_devel_remote_head" class="step slide" data-x="-1000" data-y="7500" data-z="3000" data-scale="4">
+            <h1 class="slide_heading">Remotes</h1>
+            <div class="slide_subtext">It's boring to work alone</div>
+        </div>
+        <div id="commits_devel_branch_remote" class="step" data-x="-1000" data-y="7500" data-z="0"  data-scale="4" >
             <div class="slide-commits_remote svgslide" style="width: 800px; height: 401px;" ></div>
         </div>
 
@@ -865,20 +930,20 @@ What could possibly go wrong?
             <div class="slide-commits_remote_nonff svgslide" style="width: 800px; height: 418px;" ></div>
         </div>
 
-        <div id="commits_push_rebase_act_i" class="step"  data-x="-1000" data-y="-6000"  data-z="2500" data-rotate-y="-90"  data-scale="1" >
+        <div id="commits_push_rebase_act_i" class="step"  data-x="-1000" data-y="-7000"  data-z="2500" data-rotate-y="-90"  data-scale="1" >
                 <div class="slide-commits_push_rebased_act_i svgslide" style="width: 800px; height: 600px;"></div>
         </div>
 
-        <div id="commits_push_rebase_act_ii" class="step"  data-x="-1000" data-y="-5000"  data-z="2500" data-rotate-y="-90"  data-scale="1" >
+        <div id="commits_push_rebase_act_ii" class="step"  data-x="-1000" data-y="-6000"  data-z="2500" data-rotate-y="-90"  data-scale="1" >
                 <div class="slide-commits_push_rebased_act_ii svgslide" style="width: 800px; height: 600px;"></div>
         </div>
-        <div id="commits_push_rebase_act_iii" class="step"  data-x="-1000" data-y="-4000"  data-z="2500" data-rotate-y="-90"  data-scale="1" >
+        <div id="commits_push_rebase_act_iii" class="step"  data-x="-1000" data-y="-5000"  data-z="2500" data-rotate-y="-90"  data-scale="1" >
                 <div class="slide-commits_push_rebased_act_iii svgslide" style="width: 800px; height: 600px;"></div>
         </div>
-        <div id="commits_push_rebase_act_iv" class="step"  data-x="-1000" data-y="-3000"  data-z="2500" data-rotate-y="-90"  data-scale="1" >
+        <div id="commits_push_rebase_act_iv" class="step"  data-x="-1000" data-y="-4000"  data-z="2500" data-rotate-y="-90"  data-scale="1" >
                 <div class="slide-commits_push_rebased_act_iv svgslide" style="width: 800px; height: 600px;"></div>
         </div>
-        <div id="commits_push_rebase_act_v" class="step"  data-x="-1000" data-y="-2000"  data-z="2500" data-rotate-y="-90"  data-scale="1" >
+        <div id="commits_push_rebase_act_v" class="step"  data-x="-1000" data-y="-3000"  data-z="2500" data-rotate-y="-90"  data-scale="1" >
                 <div class="slide-commits_push_rebased_act_v svgslide" style="width: 800px; height: 600px;"></div>
         </div>
 
