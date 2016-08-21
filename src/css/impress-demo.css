@@ -124,6 +124,16 @@ a:focus {
     text-shadow: -1px -1px 2px rgba(100,100,100,0.5);
 }
 
+
+footer {
+    text-align: left;
+    font-size: 30px;
+    line-height: 1;
+    font-style: normal;
+    position: absolute;
+    bottom: 0;
+}
+
 /*
     Because the main point behind the impress.js demo is to demo impress.js
     we display a fallback message for users with browsers that don't support
@@ -188,7 +198,7 @@ a:focus {
 */
 .impress-enabled .step {
     margin: 0;
-    opacity: 0.3;
+    opacity: 0.1;
 
     -webkit-transition: opacity 1s;
     -moz-transition:    opacity 1s;
@@ -277,36 +287,60 @@ a:focus {
     font-size: 1em;
 }
 
-/*
-    Second step is nothing special, just a text with a link, so it doesn't need
-    any special styling.
-
-    Let's move to 'big thoughts' with centered text and custom font sizes.
-*/
-#big {
-    width: 600px;
+.intro_heading {
     text-align: center;
     font-size: 60px;
-    line-height: 1;
+    line-height: 2;
+}
+
+.intro_subtext {
+    text-align: center;
+    font-size: 30px;
+    line-height: 1.5;
+    font-style: italic;
+}
+
+.slide_heading {
+    text-align: center;
+    font-size: 60px;
+    line-height: 2;
+}
+.slide_subtext {
+    text-align: center;
+    font-size: 30px;
+    line-height: 1.5;
+    font-style: italic;
+}
+
+.transition_duration_2500ms {
+    display: inline-block;
+    -webkit-transition: 2.5s;
+    -moz-transition:    2.5s;
+    -ms-transition:     2.5s;
+    -o-transition:      2.5s;
+    transition:         2.5s;
+}
+
+#trees_and_blobs .rotating_BLOB {
+    -webkit-transform: rotate(-10deg);
+    -moz-transform:    rotate(-10deg);
+    -ms-transform:     rotate(-10deg);
+    -o-transform:      rotate(-10deg);
+    transform:         rotate(-10deg);
+}
+
+#trees_and_blobs.present .rotating_BLOB {
+    -webkit-transform: rotate(0deg);
+    -moz-transform:    rotate(0deg);
+    -ms-transform:     rotate(0deg);
+    -o-transform:      rotate(0deg);
+    transform:         rotate(0deg);
 }
 
 #big b {
     display: block;
     font-size: 250px;
     line-height: 250px;
-}
-
-#big .thoughts {
-    font-size: 90px;
-    line-height: 150px;
-}
-
-/*
-    'Tiny ideas' just need some tiny styling.
-*/
-#tiny {
-    width: 500px;
-    text-align: center;
 }
 
 /*

@@ -43,13 +43,18 @@
 <div id="impress">
 
     <div id="opening_slide" class="step slide" data-x="-5024" data-y="-1500">
-        <q>
-                <div><b>git</b> from the inside </div>
-                <div>Jens Neuhalfen</div>
-        </q>
-        <div>
-<a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/4.0/88x31.png" /></a><br /><span xmlns:dct="http://purl.org/dc/terms/" property="dct:title">git-from-the-inside</span> by <span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName">Jens Neuhalfen</span> is licensed under a <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike 4.0 International License</a>.<br />Based on a work at <a xmlns:dct="http://purl.org/dc/terms/" href="https://github.com/neuhalje/git-from-the-inside" rel="dct:source">https://github.com/neuhalje/git-from-the-inside</a>.
-       </div>
+
+                <h1 class="intro_heading"><b>git</b> from the inside</h1>
+                <div class="intro_subtext">Everything You Always Wanted to Know about .git</div>
+                <div class="intro_subtext">But Were Afraid to Ask</div>
+                <hr/>
+                <!-- center -->
+                <div style="width: 500px; height:350px;  margin: 0px auto; text-align: center;">
+                     <div class="slide-front_page_image svgslide" style="height: 100%;"></div>
+                </div>
+        <footer>
+<span xmlns:dct="http://purl.org/dc/terms/" property="dct:title"><address><a xmlns:dct="http://purl.org/dc/terms/" href="https://github.com/neuhalje/git-from-the-inside" rel="dct:source">https://github.com/neuhalje/git-from-the-inside</a></address></span> by <span xmlns:cc="http://creativecommons.org/ns#" property="cc:attributionName">Jens Neuhalfen</span> is licensed under <a rel="license" href="http://creativecommons.org/licenses/by-sa/4.0/">CC by-sa<img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-sa/4.0/88x31.png" /></a>.
+       </footer>
     </div>
     <div id="hash_function" class="step slide" data-x="-4000" data-y="-1500">
                 <h1>Hash function<sup>*</sup></h1>
@@ -72,6 +77,9 @@ a != b  <=>  hash(a) != hash(b)
       Trees
 
     -->
+    <div id="trees_and_blobs" class="step slide" data-x="-200" data-y="-800" data-z="400" data-scale="5">
+                <h1 class="intro_heading">I see trees of ... <span class="transition_duration_2500ms rotating_BLOB">BLOB<span></h1>
+    </div>
 
     <div id="objectstore_overview"  class="step " data-x="800" data-y="200" data-scale="2" >
       <div class="slide-tree_objectstore" style="width: 800px; height: 507px;"></div>
@@ -99,27 +107,48 @@ a != b  <=>  hash(a) != hash(b)
 
     -->
 
-        <div id="commits_start" class="step no_hide_step" data-x="-1000" data-y="2500" data-scale="4" data-z="0">
+        <div id="commits_start_head" class="step slide" data-x="-1000" data-y="3250" data-z="3000" data-scale="4">
+            <h1 class="slide_heading">From BLOBs to Branches</h1>
+            <div class="slide_subtext">Mama, where do the small commits come from?</div>
+        </div>
+        <div id="commits_start" class="step no_hide_step" data-x="-1000" data-y="3250" data-scale="4" data-z="0">
             <div class="slide-commits_master_branch svgslide" style="width: 800px; height: 528px;" ></div>
         </div>
-
-        <div id="commits_start_index" class="step" data-x="-500" data-y="1800" data-z="-200"  data-scale="1" >
+        <div id="commits_start_index" class="step" data-x="-500" data-y="2550" data-z="-200"  data-scale="1" >
             <div class="slide-commits_master_branch_index svgslide" style="width: 800px; height: 345px;" ></div>
         </div>
 
-        <div id="commits_devel_branch" class="step" data-x="4000" data-y="2500" data-z="0"  data-scale="4" >
+<!-- Merge -->
+        <div id="commits_devel_branch_head" class="step slide" data-x="4000" data-y="3250" data-z="3000" data-scale="4">
+            <h1 class="slide_heading">From hither to tither</h1>
+            <div class="slide_subtext">Branches are like roads - you can only walk one at a time</div>
+        </div>
+        <div id="commits_devel_branch" class="step" data-x="4000" data-y="3250" data-z="0"  data-scale="4" >
             <div class="slide-commits_devel_branch svgslide" style="width: 800px; height: 375px;" ></div>
         </div>
 
-        <div id="commits_devel_branch_merge" class="step" data-x="9000" data-y="2500" data-z="0"  data-scale="4" >
+        <div id="commits_devel_branch_merge_head" class="step slide" data-x="9000" data-y="3250" data-z="3000" data-scale="4">
+            <h1 class="slide_heading">When shall we meet again?</h1>
+            <div class="slide_subtext">In thunder, or lightning, or rain?</div>
+        </div>
+        <div id="commits_devel_branch_merge" class="step" data-x="9000" data-y="3250" data-z="0"  data-scale="4" >
             <div class="slide-commits_devel_branch_merge svgslide" style="width: 800px; height: 477px;" ></div>
         </div>
 
-        <div id="commits_devel_branch_rebase" class="step" data-x="14000" data-y="2500" data-z="0"  data-scale="4" >
+        <div id="commits_devel_rebase_head" class="step slide" data-x="14000" data-y="3250" data-z="3000" data-scale="4">
+            <h1 class="slide_heading">Rebase</h1>
+            <div class="slide_subtext">It's just a little bit of history ...</div>
+            <div class="slide_subtext">rewriting</div>
+        </div>
+        <div id="commits_devel_branch_rebase" class="step" data-x="14000" data-y="3250" data-z="0"  data-scale="4" >
             <div class="slide-commits_devel_branch_rebase svgslide" style="width: 800px; height: 560px;" ></div>
         </div>
 
-        <div id="commits_devel_branch_remote" class="step" data-x="-1000" data-y="5500" data-z="0"  data-scale="4" >
+        <div id="commits_devel_remote_head" class="step slide" data-x="-1000" data-y="7500" data-z="3000" data-scale="4">
+            <h1 class="slide_heading">Remotes</h1>
+            <div class="slide_subtext">It's boring to work alone</div>
+        </div>
+        <div id="commits_devel_branch_remote" class="step" data-x="-1000" data-y="7500" data-z="0"  data-scale="4" >
             <div class="slide-commits_remote svgslide" style="width: 800px; height: 401px;" ></div>
         </div>
 
@@ -135,20 +164,20 @@ What could possibly go wrong?
             <div class="slide-commits_remote_nonff svgslide" style="width: 800px; height: 418px;" ></div>
         </div>
 
-        <div id="commits_push_rebase_act_i" class="step"  data-x="-1000" data-y="-6000"  data-z="2500" data-rotate-y="-90"  data-scale="1" >
+        <div id="commits_push_rebase_act_i" class="step"  data-x="-1000" data-y="-7000"  data-z="2500" data-rotate-y="-90"  data-scale="1" >
                 <div class="slide-commits_push_rebased_act_i svgslide" style="width: 800px; height: 600px;"></div>
         </div>
 
-        <div id="commits_push_rebase_act_ii" class="step"  data-x="-1000" data-y="-5000"  data-z="2500" data-rotate-y="-90"  data-scale="1" >
+        <div id="commits_push_rebase_act_ii" class="step"  data-x="-1000" data-y="-6000"  data-z="2500" data-rotate-y="-90"  data-scale="1" >
                 <div class="slide-commits_push_rebased_act_ii svgslide" style="width: 800px; height: 600px;"></div>
         </div>
-        <div id="commits_push_rebase_act_iii" class="step"  data-x="-1000" data-y="-4000"  data-z="2500" data-rotate-y="-90"  data-scale="1" >
+        <div id="commits_push_rebase_act_iii" class="step"  data-x="-1000" data-y="-5000"  data-z="2500" data-rotate-y="-90"  data-scale="1" >
                 <div class="slide-commits_push_rebased_act_iii svgslide" style="width: 800px; height: 600px;"></div>
         </div>
-        <div id="commits_push_rebase_act_iv" class="step"  data-x="-1000" data-y="-3000"  data-z="2500" data-rotate-y="-90"  data-scale="1" >
+        <div id="commits_push_rebase_act_iv" class="step"  data-x="-1000" data-y="-4000"  data-z="2500" data-rotate-y="-90"  data-scale="1" >
                 <div class="slide-commits_push_rebased_act_iv svgslide" style="width: 800px; height: 600px;"></div>
         </div>
-        <div id="commits_push_rebase_act_v" class="step"  data-x="-1000" data-y="-2000"  data-z="2500" data-rotate-y="-90"  data-scale="1" >
+        <div id="commits_push_rebase_act_v" class="step"  data-x="-1000" data-y="-3000"  data-z="2500" data-rotate-y="-90"  data-scale="1" >
                 <div class="slide-commits_push_rebased_act_v svgslide" style="width: 800px; height: 600px;"></div>
         </div>
 
