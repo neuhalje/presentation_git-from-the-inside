@@ -73,9 +73,11 @@
       "./src/css/*.css"
     ],
     "img": [
-      "./public/img/"
+      "./src/img/"
     ],
-    "components": [],
+    "html": [
+      "./src/*.html"
+    ],
     "fonts": [
       "./src/fonts/*.{eot,ttf,woff,woff2}"
     ],
