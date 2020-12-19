@@ -1,0 +1,181 @@
+{
+  "name": "git-from-the-inside",
+  "version": "0.0.1",
+  "description": "Git from the inside: slides",
+  "homepage": "https://github.com/neuhalje/git-from-the-inside",
+  "main": "dist/slides.js",
+  "module": "dist/slides.esm.js",
+  "license": "CC-BY-SA-4.0",
+  "copyright": "Copyright (C) 2020",
+  "scripts": {
+    "test": "gulp test",
+    "start": "gulp serve",
+    "build": "gulp build"
+  },
+  "author": {
+    "name": "Jens Neuhalfen",
+    "email": "jens@neuhalfen.name",
+    "web": "https://neuhalfen.name/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/neuhalje/git-from-the-inside.git"
+  },
+  "engines": {
+    "node": ">=10.0.0"
+  },
+  "paths": {
+    "src": {
+      "base": "./src/",
+      "css": "./src/css/",
+      "json": "./src/json/",
+      "js": "./src/js/",
+      "img": "./src/img/",
+      "scss": "./src/scss/"
+    },
+    "dist": {
+      "base": "./public/",
+      "css": "./public/css/",
+      "js": "./public/js/",
+      "fonts": "./public/fonts/",
+      "img": "./public/img/"
+    },
+    "build": {
+      "base": "./build/",
+      "css": "./build/css/",
+      "fonts": "./build/fonts/",
+      "js": "./build/js/",
+      "html": "./build/html/",
+      "img": "./build/img/"
+    },
+    "favicon": {
+      "src": "./src/img/favicon_src.png",
+      "dest": "./public/img/site/",
+      "path": "/img/site/"
+    },
+    "scss": [],
+    "templates": "./craft/templates/"
+  },
+  "urls": {
+    "live": "https://github.com/neuhalje/git-from-the-inside/",
+    "local": "https://github.com/neuhalje/git-from-the-inside/"
+  },
+  "vars": {
+    "siteCssName": "site.combined.min.css",
+    "scssName": "style.scss",
+    "cssName": "style.css",
+    "distZip": "git-from-the-inside.zip"
+  },
+  "globs": {
+    "distCss": [
+      "./node_modules/reveal.js/dist/*.css",
+      "./build/css/*.css",
+      "./src/css/*.css"
+    ],
+    "img": [
+      "./public/img/"
+    ],
+    "components": [],
+    "fonts": [
+      "./src/fonts/*.{eot,ttf,woff,woff2}"
+    ],
+    "download": [
+      {
+        "url": "https://www.google-analytics.com/analytics.js",
+        "dest": "./public/js/"
+      }
+    ],
+    "distJs": [
+      "./build/js/*.js",
+      "./node_modules/reveal.js/dist/reveal.js",
+      "./node_modules/d3/dist/d3.min.js",
+      "./node_modules/d3-graphviz/build/d3-graphviz.js",
+      "./node_modules/@hpcc-js/wasm/dist/index.min.js",
+      "./node_modules/mathjax/es5/tex-chtml.js"
+    ],
+    "babelJs": [
+      "./src/js/*.js"
+    ],
+    "inlineJs": [],
+    "siteIcon": "./public/img/site/favicon.*"
+  },
+  "keywords": [
+    "git",
+    "reveal",
+    "slides",
+    "presentation"
+  ],
+  "devDependencies": {
+    "@babel/core": "^7.9.6",
+    "@babel/preset-env": "^7.9.6",
+    "@rollup/plugin-babel": "^5.0.2",
+    "@rollup/plugin-commonjs": "^12.0.0",
+    "@rollup/plugin-node-resolve": "^8.0.0",
+    "babel-eslint": "^10.1.0",
+    "babel-plugin-transform-html-import-to-string": "0.0.1",
+    "colors": "^1.4.0",
+    "core-js": "^3.6.5",
+    "glob": "^7.1.6",
+    "gulp": "^4.0.2",
+    "gulp-autoprefixer": "^7.0.1",
+    "gulp-clean-css": "^4.2.0",
+    "gulp-connect": "^5.7.0",
+    "gulp-eslint": "^6.0.0",
+    "gulp-header": "^2.0.9",
+    "gulp-sass": "^4.0.2",
+    "gulp-tap": "^2.0.0",
+    "gulp-zip": "^5.0.1",
+    "highlight.js": "^10.0.3",
+    "marked": "^1.1.0",
+    "node-qunit-puppeteer": "^2.0.1",
+    "qunit": "^2.10.0",
+    "rollup": "^2.10.9",
+    "rollup-plugin-terser": "^5.3.0",
+    "yargs": "^15.1.0"
+  },
+  "browserslist": "> 0.5%, IE 11, not dead",
+  "eslintConfig": {
+    "env": {
+      "browser": true,
+      "es6": true
+    },
+    "parser": "babel-eslint",
+    "parserOptions": {
+      "sourceType": "module",
+      "allowImportExportEverywhere": true
+    },
+    "globals": {
+      "module": false,
+      "console": false,
+      "unescape": false,
+      "define": false,
+      "exports": false
+    },
+    "rules": {
+      "curly": 0,
+      "eqeqeq": 2,
+      "wrap-iife": [
+        2,
+        "any"
+      ],
+      "no-use-before-define": [
+        2,
+        {
+          "functions": false
+        }
+      ],
+      "new-cap": 2,
+      "no-caller": 2,
+      "dot-notation": 0,
+      "no-eq-null": 2,
+      "no-unused-expressions": 0
+    }
+  },
+  "dependencies": {
+    "d3": "^5.16.0",
+    "d3-graphviz": "^3.1.0",
+    "mathjax": "^3.1.2",
+    "reveal.js": "^4.1.0",
+    "reveald3": "^1.5.5"
+  }
+}

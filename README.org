@@ -1,0 +1,17 @@
+* Serving
+gulp serve
+
+
+* Building
+** Install
+*** npm
+Install npm: https://www.npmjs.com/get-npm
+*** Gulp
+Install Gulp: https://gulpjs.com/docs/en/getting-started/quick-start
+*** Dependencies
+npm install
+
+
+*** orgmk
+- https://github.com/fniessen/orgmk
+- https://gitlab.com/oer/emacs-reveal
