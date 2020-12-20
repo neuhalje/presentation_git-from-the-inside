@@ -1,0 +1,30 @@
+#+TITLE: Todo
+* Active TODOs
+** TODO Clean up gulp file
+It has lots of repeating configuation, esp. dependencies (see [[id:78b0ebf6-ab43-4a88-9c61-670ece096600][Add ~watch~ support that really works]]).
+
+Ideas:
+- https://nystudio107.com/blog/a-better-package-json-for-the-frontend
+- https://nystudio107.com/blog/a-gulp-workflow-for-frontend-development-automation
+** TODO Add Chapter: Content addressed storage
+** TODO Add Chapter: What is a hash?
+** TODO Add Chapter: Tree, blob, commit
+** TODO Add Chapter: Branch
+** TODO Add ~watch~ support that really works
+:PROPERTIES:
+:ID:       78b0ebf6-ab43-4a88-9c61-670ece096600
+:END:
+Made difficult by duplicate configurations for dependencies (e.g. "watch").
+** TODO [#B] Load fonts locally, not from google
+** TODO Publish to GitHub
+** TODO Generate =html= via Docker
+Extend the Dockerfile from https://gitlab.com/oer/emacs-reveal and add [[https://github.com/fniessen/orgmk][orkmk]] support.
+*** TODO New Dockerfile
+*** TODO Add orgmk
+*** TODO Install needed packages in emacs
+*** TODO Add call to generate html to gulpfile
+** TODO [#A] Add a grid to the slides
+*** TODO Custom CSS
+** TODO Add speaker notes
+** TODO Add License (CC)
+* Archived TODOs
