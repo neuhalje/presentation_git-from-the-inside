@@ -29,6 +29,8 @@
 #+HTML_HEAD: <script src="js/d3-graphviz.js"></script>
 #+HTML_HEAD: <script src="js/@hpcc-js/wasm/dist/index.min.js" type="application/javascript"></script>
 
+#+EXPORT_FILE_NAME: ../build/index.html
+
 #+TITLE: GIT from the inside
 #+AUTHOR: Jens Neuhalfen
 #+EMAIL: jens@neuhalfen.name

@@ -22,6 +22,8 @@ const connect = require('gulp-connect')
 const merge = require('merge-stream')
 const autoprefixer = require('gulp-autoprefixer')
 const Vinyl = require('vinyl')
+const shell = require('gulp-shell')
+const fs   = require('fs');
 
 const root = yargs.argv.root || pkg.paths.dist.base
 const port = yargs.argv.port || 8000
@@ -355,15 +357,27 @@ gulp.task('licenses', (cb) => {
     });
 })
 
+gulp.task('create-build-dir', (cb) => {
+        const dir = pkg.paths.build.base
 
-            //return  string_src(pkg.vars.licenses,  JSON.stringify(packages))
+        if(!fs.existsSync(dir)) {
+            fs.mkdirSync(dir)
+            console.log('📁  folder created:', dir)
+        }
+    cb()
+})
+
+gulp.task('build-org-file-with-docker', shell.task(`docker run --rm -v $(pwd):/tmp/source  build-org /root/convert-to-html.sh /tmp/source/src`))
+
+gulp.task('build-org-file', gulp.series('create-build-dir','build-org-file-with-docker'))
+
 gulp.task('reveal.js', () => gulp.src(["node_modules/reveal.js/**/*"])
         .pipe(gulp.dest(pkg.paths.dist.js + 'reveal.js')))
 
 gulp.task('@hpcc-js/wasm', () => gulp.src(["node_modules/@hpcc-js/wasm/dist/**/*"])
         .pipe(gulp.dest(pkg.paths.dist.js + '@hpcc-js/wasm/dist')))
 
-gulp.task('default', gulp.series('rename-files', 'reveal.js', '@hpcc-js/wasm', 'html', 'assets', gulp.parallel('js', 'css'), 'test'))
+gulp.task('default', gulp.series('build-org-file','rename-files', 'reveal.js', '@hpcc-js/wasm', 'html', 'assets', gulp.parallel('js', 'css'), 'test'))
 
 gulp.task('build', gulp.parallel('js', 'css'))
 
