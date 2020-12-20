@@ -17,6 +17,13 @@ Ideas:
 Made difficult by duplicate configurations for dependencies (e.g. "watch").
 ** TODO [#B] Load fonts locally, not from google
 ** TODO Publish to GitHub
+*** DONE Rescue old repo
+CLOSED: [2020-12-20 Sun 20:40]
+:LOGBOOK:
+- State "DONE"       from "TODO"       [2020-12-20 Sun 20:40]
+:END:
+*** TODO Push to new master
+*** TODO Gulp script to generate =ghpages=
 ** TODO Generate =html= via Docker
 Extend the Dockerfile from https://gitlab.com/oer/emacs-reveal and add [[https://github.com/fniessen/orgmk][orkmk]] support.
 *** TODO New Dockerfile
