@@ -21,6 +21,7 @@ const minify = require('gulp-clean-css')
 const connect = require('gulp-connect')
 const merge = require('merge-stream')
 const autoprefixer = require('gulp-autoprefixer')
+const Vinyl = require('vinyl')
 
 const root = yargs.argv.root || pkg.paths.dist.base
 const port = yargs.argv.port || 8000
@@ -314,6 +315,48 @@ gulp.task('eslint', () => gulp.src([ pkg.paths.src.js + '**', 'gulpfile.js'])
 gulp.task('test', gulp.series( 'eslint', 'qunit' ))
 ////////////////////// }}}
 
+
+function string_src(filename, string) {
+  var src = require('stream').Readable({ objectMode: true })
+  src._read = function () {
+    this.push(new Vinyl({
+      cwd: '',
+      base: null,
+      path: filename,
+      contents: Buffer.from(string)
+    }))
+    this.push(null)
+  }
+  return src
+}
+
+gulp.task('xlicenses', () => string_src(pkg.vars.licenses, pkg.version)
+          .pipe(gulp.dest(pkg.paths.dist.base)))
+
+gulp.task('licenses', (cb) => {
+    const checker = require('license-checker')
+    const treeify = require('treeify')
+
+    checker.init({
+        start: '.',
+        production: true,
+        development: false
+    }, function(err, packages) {
+        if (err) {
+            //Handle error
+            cb(new Error('kaboom: ' + err));
+        } else {
+            //The sorted package data
+            //as an Object
+            string_src(pkg.vars.licenses,  treeify.asTree(packages, true))
+                .pipe(gulp.dest(pkg.paths.dist.base))
+            cb()
+        }
+    });
+})
+
+
+            //return  string_src(pkg.vars.licenses,  JSON.stringify(packages))
 gulp.task('reveal.js', () => gulp.src(["node_modules/reveal.js/**/*"])
         .pipe(gulp.dest(pkg.paths.dist.js + 'reveal.js')))
 

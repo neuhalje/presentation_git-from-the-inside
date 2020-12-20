@@ -64,7 +64,8 @@
     "siteCssName": "site.combined.min.css",
     "scssName": "style.scss",
     "cssName": "style.css",
-    "distZip": "git-from-the-inside.zip"
+    "distZip": "git-from-the-inside.zip",
+    "licenses": "licenses.txt"
   },
   "distRename": [
     [
@@ -137,12 +138,14 @@
     "gulp-tap": "^2.0.0",
     "gulp-zip": "^5.0.2",
     "highlight.js": "^10.4.1",
+    "license-checker": "^25.0.1",
     "marked": "^1.2.7",
     "merge-stream": "^2.0.0",
     "node-qunit-puppeteer": "^2.0.3",
     "qunit": "^2.13.0",
     "rollup": "^2.35.1",
     "rollup-plugin-terser": "^5.3.1",
+    "vinyl": "^2.2.1",
     "yargs": "^15.4.1"
   },
   "browserslist": "> 0.5%, IE 11, not dead",
