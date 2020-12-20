@@ -173,6 +173,53 @@ Some caveats:
 (make-local-variable 'git-command-result)
 (setq git-command-result (list ))
 #+end_src
+** =mk_example_repo=: Create an example repository
+#+NAME: mk_example_repo
+#+begin_src bash :results output :var repo="2" :exports both :noweb yes :cache no
+if [[ ${repo} == "/tmp/"* ]];then
+    rm -rf "${repo}"
+
+    mkdir -p "${repo}/local"
+    mkdir -p "${repo}/origin"
+    cd "${repo}/local"
+    git init
+    touch README
+    git add README
+
+    git commit -m 'initial'
+    git commit --allow-empty -m 'first'
+    git checkout -b develop
+    git commit --allow-empty -m 'second'
+    git checkout -b feature-1
+    git commit --allow-empty -m 'feature 1'
+    git commit --allow-empty -m 'feature 1 again'
+    git checkout develop
+    git commit --allow-empty -m 'third'
+    git checkout -b feature-2
+    git commit --allow-empty -m 'feature 2'
+    git commit --allow-empty -m 'feature 2 again'
+    git checkout develop
+    git merge --no-ff feature-2
+    git checkout master
+    git commit --allow-empty -m 'commit pre merge on master'
+    git merge --no-ff develop
+    git tag -a 1.0 -m '1.0!'
+
+
+    cd "${repo}/origin"
+    git init --bare .
+
+    cd "${repo}/local"
+    git remote add origin ../origin
+
+    git checkout master
+    git push -u origin master
+    git fetch origin
+else
+    echo "ERROR: Will only run in /tmp but repo='${repo}'" >&1
+fi
+#+end_src
+
 * Reveal                                                                        :noexport:
 ** =inline-js=: Inline a =begin_src= block as JavaScript
 #+name: inline-js
