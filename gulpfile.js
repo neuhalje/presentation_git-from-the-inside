@@ -367,9 +367,11 @@ gulp.task('default', gulp.series('rename-files', 'reveal.js', '@hpcc-js/wasm', '
 
 gulp.task('build', gulp.parallel('js', 'css'))
 
-gulp.task('package', gulp.series('default', () =>
-    gulp.src(pkg.paths.dist.base).pipe(zip(pkg.vars.distZip)).pipe(gulp.dest('./'))
-))
+gulp.task('zip_public',  () => gulp.src(pkg.paths.dist.base + "**/*")
+                                 .pipe(zip(pkg.vars.distZip))
+                                 .pipe(gulp.dest('./')))
+
+gulp.task('package', gulp.series('default', 'licenses', 'zip_public'))
 
 gulp.task('reload', () => gulp.src([pkg.paths.src + '*.html'])
     .pipe(connect.reload()));
