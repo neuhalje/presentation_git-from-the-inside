@@ -318,7 +318,7 @@ gulp.task('reveal.js', () => gulp.src(["node_modules/reveal.js/**/*"])
         .pipe(gulp.dest(pkg.paths.dist.js + 'reveal.js')))
 
 gulp.task('@hpcc-js/wasm', () => gulp.src(["node_modules/@hpcc-js/wasm/dist/**/*"])
-        .pipe(gulp.dest(pkg.paths.dist.js + '@hpcc-js_wasm')))
+        .pipe(gulp.dest(pkg.paths.dist.js + '@hpcc-js/wasm/dist')))
 
 gulp.task('default', gulp.series('rename-files', 'reveal.js', '@hpcc-js/wasm', 'html', 'assets', gulp.parallel('js', 'css'), 'test'))
 
