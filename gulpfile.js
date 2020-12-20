@@ -19,6 +19,7 @@ const header = require('gulp-header')
 const eslint = require('gulp-eslint')
 const minify = require('gulp-clean-css')
 const connect = require('gulp-connect')
+const merge = require('merge-stream')
 const autoprefixer = require('gulp-autoprefixer')
 
 const root = yargs.argv.root || pkg.paths.dist.base
@@ -182,6 +183,20 @@ gulp.task('js-es6', () => {
 gulp.task('js-babel', () => gulp.src(pkg.globs.babelJs)
           .pipe(gulp.dest(pkg.paths.build.js)));
 
+gulp.task('rename-files', () => {
+    var streams = [];
+
+    pkg.distRename.forEach( function(entry)
+        {
+        var stream = gulp.src(entry[0])
+                            .pipe($.rename(entry[1]))
+                            .pipe(gulp.dest(entry[2]));
+         streams.push(stream);
+        });
+    return merge(streams);
+    }
+)
+
 gulp.task('js-to-public',  () => gulp.src(pkg.globs.distJs)
         .pipe($.if(["*.js", "!*.min.js"],
             $.newer({dest: pkg.paths.dist.js, ext: ".min.js"}),
@@ -295,7 +310,7 @@ gulp.task('eslint', () => gulp.src([ pkg.paths.src.js + '**', 'gulpfile.js'])
 gulp.task('test', gulp.series( 'eslint', 'qunit' ))
 ////////////////////// }}}
 
-gulp.task('default', gulp.series('html', 'assets', gulp.parallel('js', 'css'), 'test'))
+gulp.task('default', gulp.series('rename-files', 'html', 'assets', gulp.parallel('js', 'css'), 'test'))
 
 gulp.task('build', gulp.parallel('js', 'css'))
 
