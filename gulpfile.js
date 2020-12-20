@@ -310,7 +310,10 @@ gulp.task('eslint', () => gulp.src([ pkg.paths.src.js + '**', 'gulpfile.js'])
 gulp.task('test', gulp.series( 'eslint', 'qunit' ))
 ////////////////////// }}}
 
-gulp.task('default', gulp.series('rename-files', 'html', 'assets', gulp.parallel('js', 'css'), 'test'))
+gulp.task('reveal.js', () => gulp.src(["node_modules/reveal.js/**/*"])
+        .pipe(gulp.dest(pkg.paths.dist.js + 'reveal.js')))
+
+gulp.task('default', gulp.series('rename-files', 'reveal.js', 'html', 'assets', gulp.parallel('js', 'css'), 'test'))
 
 gulp.task('build', gulp.parallel('js', 'css'))
 
