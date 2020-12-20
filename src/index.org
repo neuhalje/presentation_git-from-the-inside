@@ -43,6 +43,20 @@
 # SPC m e v v
 
 #+INCLUDE: setupfile.org
+* Example: images
+#+NAME: example-image-plantuml
+#+begin_src plantuml :file "XXXexample-image-plantuml.png"
+@startuml
+title Example
+
+' https://plantuml.com/class-diagram
+$Class01 "1" *-- "many" Class02 : contains
+Class03 o-- Class04 : aggregation
+Class05 --> "1" Class060
+Class06 -> Class060 : pointing right
+@enduml
+#+end_src
+
 
 * Better
 :PROPERTIES:

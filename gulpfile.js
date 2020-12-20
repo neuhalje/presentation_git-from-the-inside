@@ -367,7 +367,7 @@ gulp.task('create-build-dir', (cb) => {
     cb()
 })
 
-gulp.task('build-org-file-with-docker', shell.task(`docker run --rm -v $(pwd):/tmp/source  build-org /root/convert-to-html.sh /tmp/source/src`))
+gulp.task('build-org-file-with-docker', shell.task(`docker run --rm -v $(pwd):/tmp/source ${pkg.vars.build_org_docker_local}  /root/convert-to-html.sh /tmp/source/src`))
 
 gulp.task('build-org-file', gulp.series('create-build-dir','build-org-file-with-docker'))
 

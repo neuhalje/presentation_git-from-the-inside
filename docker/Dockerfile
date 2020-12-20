@@ -10,3 +10,6 @@ RUN git config --global user.email "alice@neuhalfen.name" &&  git config --globa
 
 ADD convert-to-html.sh /root/.
 RUN chmod 755 /root/convert-to-html.sh
+
+RUN cp /root/plantuml-*/plantuml.jar /root/.
+RUN echo "\n(setq org-plantuml-jar-path (expand-file-name \"/root/plantuml.jar\"))\n(add-to-list 'org-src-lang-modes '(\"plantuml\" . plantuml))\n(org-babel-do-load-languages 'org-babel-load-languages '((plantuml . t)))" >> /root/.emacs
