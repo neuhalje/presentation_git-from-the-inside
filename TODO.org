@@ -26,10 +26,49 @@ CLOSED: [2020-12-20 Sun 20:40]
 *** TODO Gulp script to generate =ghpages=
 ** TODO Generate =html= via Docker
 Extend the Dockerfile from https://gitlab.com/oer/emacs-reveal and add [[https://github.com/fniessen/orgmk][orkmk]] support.
-*** TODO New Dockerfile
+*** DONE New Dockerfile
+CLOSED: [2020-12-20 Sun 21:02]
+:LOGBOOK:
+- State "DONE"       from "TODO"       [2020-12-20 Sun 21:02]
+:END:
 *** TODO Add orgmk
 *** TODO Install needed packages in emacs
-*** TODO Add call to generate html to gulpfile
+*** DONE Add call to generate html to gulpfile
+CLOSED: [2020-12-20 Sun 21:02]
+:LOGBOOK:
+- State "DONE"       from "TODO"       [2020-12-20 Sun 21:02]
+:END:
+*** DONE plantuml files not generated in docker version
+CLOSED: [2020-12-20 Sun 21:23]
+:LOGBOOK:
+- State "DONE"       from "TODO"       [2020-12-20 Sun 21:23]
+:END:
+Calling =org-re-reveal-export-to-html= interactively in doom generates images, running in docker does not.
+
+#+NAME: example-image-plantuml
+#+begin_src plantuml :file "example-image-plantuml.png"
+@startuml
+title Example
+
+' https://plantuml.com/class-diagram
+$Class01 "1" *-- "many" Class02 : contains
+Class03 o-- Class04 : aggregation
+Class05 --> "1" Class060
+Class06 -> Class060 : pointing right
+@enduml
+#+end_src
+
+**** Solution
+Add PlantUML to the load path:
+
+#+begin_example elisp
+(setq org-plantuml-jar-path (expand-file-name "/root/plantuml.jar"))
+(add-to-list 'org-src-lang-modes '("plantuml" . plantuml))
+(org-babel-do-load-languages 'org-babel-load-languages '((plantuml . t)))
+#+end_example
+
+Fixed in [[orgit-rev:.::621794b][621794b master Generate PlantUML]].
+
 ** TODO [#A] Add a grid to the slides
 *** TODO Custom CSS
 ** TODO Add speaker notes
