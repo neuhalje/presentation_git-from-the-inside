@@ -190,7 +190,6 @@ gulp.task('js-to-public',  () => gulp.src(pkg.globs.distJs)
         .pipe($.if(["*.js", "!*.min.js"],
             $.rename({suffix: ".min"})
         ))
-        .pipe(header(banner, {pkg: pkg}))
         .pipe(gulp.dest(pkg.paths.dist.js))
           .pipe($.filter("**/*.js")));
 
