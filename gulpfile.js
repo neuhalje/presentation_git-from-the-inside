@@ -21,8 +21,16 @@ const minify = require('gulp-clean-css')
 const connect = require('gulp-connect')
 const autoprefixer = require('gulp-autoprefixer')
 
-const root = yargs.argv.root || '.'
+const root = yargs.argv.root || pkg.paths.dist.base
 const port = yargs.argv.port || 8000
+
+const $ = {
+    if : require('gulp-if'),
+    newer : require('gulp-newer'),
+    filter : require('gulp-filter'),
+    rename : require('gulp-rename')
+}
+
 
 const banner = `/*!
 * ${pkg.name}  ${pkg.version}
@@ -68,9 +76,64 @@ babelConfigESM.presets[0][1].targets = { browsers: [
 
 let cache = {};
 
+
+// Creates a UMD and ES module bundle for each of our
+// built-in plugins
+
+// gulp.task('plugins', () => {
+//     return Promise.all([
+//         { name: 'RevealHighlight', input: './plugin/highlight/plugin.js', output: './plugin/highlight/highlight' },
+//         { name: 'RevealMarkdown', input: './plugin/markdown/plugin.js', output: './plugin/markdown/markdown' },
+//         { name: 'RevealSearch', input: './plugin/search/plugin.js', output: './plugin/search/search' },
+//         { name: 'RevealNotes', input: './plugin/notes/plugin.js', output: './plugin/notes/notes' },
+//         { name: 'RevealZoom', input: './plugin/zoom/plugin.js', output: './plugin/zoom/zoom' },
+//         { name: 'RevealMath', input: './plugin/math/plugin.js', output: './plugin/math/math' },
+//     ].map( plugin => {
+//         return rollup({
+//                 cache: cache[plugin.input],
+//                 input: plugin.input,
+//                 plugins: [
+//                     resolve(),
+//                     commonjs(),
+//                     babel({
+//                         ...babelConfig,
+//                         ignore: [/node_modules\/(?!(highlight\.js|marked)\/).*/],
+//                     }),
+//                     terser()
+//                 ]
+//             }).then( bundle => {
+//                 cache[plugin.input] = bundle.cache;
+//                 bundle.write({
+//                     file: plugin.output + '.esm.js',
+//                     name: plugin.name,
+//                     format: 'es'
+//                 })
+
+//                 bundle.write({
+//                     file: plugin.output + '.js',
+//                     name: plugin.name,
+//                     format: 'umd'
+//                 })
+//             });
+//     } ));
+// })
+
+////////////////////// {{{ static assets
+gulp.task('html', () => gulp.src(pkg.globs.html)
+        .pipe(gulp.dest(pkg.paths.dist.base)))
+
+gulp.task('img', () => gulp.src(pkg.globs.img)
+        .pipe(gulp.dest(pkg.paths.dist.img)))
+
+gulp.task('fonts', () => gulp.src(pkg.globs.fonts)
+        .pipe(gulp.dest(pkg.paths.dist.fonts)))
+
+gulp.task('assets', gulp.parallel('img', 'fonts'))
+////////////////////// }}}
+
+//////////////////////  {{{ JavaScript
 // Creates a bundle with broad browser support, exposed
 // as UMD
-//gulp.src('')
 gulp.task('js-es5', () => {
     return rollup({
         cache: cache.umd,
@@ -114,58 +177,27 @@ gulp.task('js-es6', () => {
         });
     });
 })
-gulp.task('js', gulp.parallel('js-es5', 'js-es6'));
 
-// Creates a UMD and ES module bundle for each of our
-// built-in plugins
+// FIXME: .pipe(babel(babelConfig)) --> TypeError: dest.on is not a function
+gulp.task('js-babel', () => gulp.src(pkg.globs.babelJs)
+          .pipe(gulp.dest(pkg.paths.build.js)));
 
-// gulp.task('plugins', () => {
-//     return Promise.all([
-//         { name: 'RevealHighlight', input: './plugin/highlight/plugin.js', output: './plugin/highlight/highlight' },
-//         { name: 'RevealMarkdown', input: './plugin/markdown/plugin.js', output: './plugin/markdown/markdown' },
-//         { name: 'RevealSearch', input: './plugin/search/plugin.js', output: './plugin/search/search' },
-//         { name: 'RevealNotes', input: './plugin/notes/plugin.js', output: './plugin/notes/notes' },
-//         { name: 'RevealZoom', input: './plugin/zoom/plugin.js', output: './plugin/zoom/zoom' },
-//         { name: 'RevealMath', input: './plugin/math/plugin.js', output: './plugin/math/math' },
-//     ].map( plugin => {
-//         return rollup({
-//                 cache: cache[plugin.input],
-//                 input: plugin.input,
-//                 plugins: [
-//                     resolve(),
-//                     commonjs(),
-//                     babel({
-//                         ...babelConfig,
-//                         ignore: [/node_modules\/(?!(highlight\.js|marked)\/).*/],
-//                     }),
-//                     terser()
-//                 ]
-//             }).then( bundle => {
-//                 cache[plugin.input] = bundle.cache;
-//                 bundle.write({
-//                     file: plugin.output + '.esm.js',
-//                     name: plugin.name,
-//                     format: 'es'
-//                 })
+gulp.task('js-to-public',  () => gulp.src(pkg.globs.distJs)
+        .pipe($.if(["*.js", "!*.min.js"],
+            $.newer({dest: pkg.paths.dist.js, ext: ".min.js"}),
+            $.newer({dest: pkg.paths.dist.js})
+        ))
+        .pipe($.if(["*.js", "!*.min.js"],
+            $.rename({suffix: ".min"})
+        ))
+        .pipe(header(banner, {pkg: pkg}))
+        .pipe(gulp.dest(pkg.paths.dist.js))
+          .pipe($.filter("**/*.js")));
 
-//                 bundle.write({
-//                     file: plugin.output + '.js',
-//                     name: plugin.name,
-//                     format: 'umd'
-//                 })
-//             });
-//     } ));
-// })
-gulp.task('html', () => gulp.src(pkg.globs.html)
-        .pipe(gulp.dest(pkg.paths.dist.base)))
+gulp.task('js', gulp.series(gulp.parallel('js-es5', 'js-es6'), 'js-babel', 'js-to-public'));
+////////////////////// }}}
 
-gulp.task('img', () => gulp.src(pkg.globs.img)
-        .pipe(gulp.dest(pkg.paths.dist.img)))
-
-gulp.task('fonts', () => gulp.src(pkg.globs.fonts)
-        .pipe(gulp.dest(pkg.paths.dist.fonts)))
-
-gulp.task('assets', gulp.parallel('img', 'fonts'))
+//////////////////////   {{{ CSS
 
 gulp.task('css-themes', () => gulp.src([ pkg.paths.src.scss + '/theme/source/*.{sass,scss}'])
         .pipe(sass())
@@ -187,6 +219,9 @@ gulp.task('css-core-css', () => gulp.src(pkg.globs.distCss)
 gulp.task('css-core', gulp.series('css-core-sass', 'css-core-css'))
 gulp.task('css', gulp.parallel('css-themes', 'css-core'))
 
+////////////////////// }}}
+
+////////////////////// {{{ Unit testing
 gulp.task('qunit', () => {
 
     let serverConfig = {
@@ -259,6 +294,7 @@ gulp.task('eslint', () => gulp.src([ pkg.paths.src.js + '**', 'gulpfile.js'])
         .pipe(eslint.format()))
 
 gulp.task('test', gulp.series( 'eslint', 'qunit' ))
+////////////////////// }}}
 
 gulp.task('default', gulp.series('html', 'assets', gulp.parallel('js', 'css'), 'test'))
 
