@@ -197,7 +197,7 @@ gulp.task('rename-files', () => {
     }
 )
 
-gulp.task('js-to-public',  () => gulp.src(pkg.globs.distJs)
+gulp.task('OLD-js-to-public',  () => gulp.src(pkg.globs.distJs)
         .pipe($.if(["*.js", "!*.min.js"],
             $.newer({dest: pkg.paths.dist.js, ext: ".min.js"}),
             $.newer({dest: pkg.paths.dist.js})
@@ -205,6 +205,10 @@ gulp.task('js-to-public',  () => gulp.src(pkg.globs.distJs)
         .pipe($.if(["*.js", "!*.min.js"],
             $.rename({suffix: ".min"})
         ))
+        .pipe(gulp.dest(pkg.paths.dist.js))
+          .pipe($.filter("**/*.js")));
+
+gulp.task('js-to-public',  () => gulp.src(pkg.globs.distJs)
         .pipe(gulp.dest(pkg.paths.dist.js))
           .pipe($.filter("**/*.js")));
 
@@ -313,7 +317,10 @@ gulp.task('test', gulp.series( 'eslint', 'qunit' ))
 gulp.task('reveal.js', () => gulp.src(["node_modules/reveal.js/**/*"])
         .pipe(gulp.dest(pkg.paths.dist.js + 'reveal.js')))
 
-gulp.task('default', gulp.series('rename-files', 'reveal.js', 'html', 'assets', gulp.parallel('js', 'css'), 'test'))
+gulp.task('@hpcc-js/wasm', () => gulp.src(["node_modules/@hpcc-js/wasm/dist/**/*"])
+        .pipe(gulp.dest(pkg.paths.dist.js + '@hpcc-js_wasm')))
+
+gulp.task('default', gulp.series('rename-files', 'reveal.js', '@hpcc-js/wasm', 'html', 'assets', gulp.parallel('js', 'css'), 'test'))
 
 gulp.task('build', gulp.parallel('js', 'css'))
 
