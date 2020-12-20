@@ -95,14 +95,14 @@
       }
     ],
     "distJs": [
-      "./build/js/*.js",
+      "./build/js/**/*.js",
       "./node_modules/reveal.js/dist/reveal.js",
       "./node_modules/d3/dist/d3.min.js",
       "./node_modules/d3-graphviz/build/d3-graphviz.js",
       "./node_modules/mathjax/es5/tex-chtml.js"
     ],
     "babelJs": [
-      "./src/js/*.js"
+      "./src/js/**/*.js"
     ],
     "inlineJs": [],
     "siteIcon": "./public/img/site/favicon.*"
