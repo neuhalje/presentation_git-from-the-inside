@@ -1,52 +1,119 @@
 #+TITLE: Building the presentation
+#+OPTIONS: ^:nil
 
 * Overview
+** Design decisions
+The whole process serves the simple matter of /creating a presentation/. That means neither bandwitdh nor page load speed are a primary consideration.
+
+These are the primary design goals, from more general to more specific:
+- Get the Job Done :: In the end the result in =public/= matters.
+- Ease of Use :: The whole process must be easy to use with a [[id:6dd3eadc-eb0c-474a-964a-b5d8e3298390][minimum set of required tools]].
+- Automated Build :: The whole process needs to be automated.
+- Support for =org-mode= :: This was the trigger. I wanted to use [[https://www.gnu.org/software/emacs/][emacs]] with [[https://orgmode.org/][org-mode]], [[https://orgmode.org/worg/org-contrib/babel/][org-babel]], and [[https://gitlab.com/oer/org-re-reveal][org-re-reveal]] for writing slides.
+- Reuseable :: The whole system should be reusable across multiple presentations. /Ideally/ a new presentation just needs some bootstrap (repository) and /content/.
+- One Pipeline Per File :: Each file /should/ only be modified (e.g. minify) in exactly /one/ pipeline. Changing files in multiple pipelines makes it difficult to figure out /where/ things happen.
+- Configuration in [[file:../package.json][package.json]] :: Ideally (see /Reuseable/) a new presentation only needs changes in [[file:../package.json][package.json]] and [[file:../src/index.org][index.org]].
 ** Directory layout
-- node_modules :: [[file:../package.json][Modules]] installed via [[https://www.npmjs.com/][npm]]. Copied to =build/js= via specific targets. TODO targets.
+The directory layout is quite simple: Files are moved from ={src, node_modules}= to =build=. In =build= files are generated (e.g. =.org= --> =.html=) and then copied to =public=.
+
+- node_modules/ :: [[file:../package.json][Modules]] installed via [[https://www.npmjs.com/][npm]]. Copied to =build/js= via specific targets. TODO targets.
 - src/ :: Source files (/read-only/ during build)
   + . :: files that will end up in =build/= via copy. [[file:../src/index.org][index.org]] is located here. TARGET TODO
   + img/ :: images, will be copied to =build/img/.=. TARGETxxx TODO
-  + js/ :: JavaScript files, will be copied (and potentially minified & uglified) to =build/img=. TARGETxxx TODO
+  + js/ :: JavaScript files, will be copied (and potentially minified & uglified) to =build/js=. TARGETxxx TODO
   + css/ :: CSS files, will be copied (and potentially minified) to =build/css=. TARGETxxx TODO
   + scss/ :: [[https://sass-lang.com/documentation/syntax][SCSS]] files, will be run through [[https://sass-lang.com/][Sass]] and copied (and potentially minified) to =build/css=. TARGETxxx TODO
-- build/ :: Root folder for all build related activities. E.g. the [[id:2b7f9a55-6c27-416f-afd4-21e6e1f80ca5][building of index.org]] happens in here.
+- build/ :: /Not in version control/. Root folder for all build related activities. E.g. the [[id:2b7f9a55-6c27-416f-afd4-21e6e1f80ca5][building of index.org]] happens in here.
+  + . :: files that will end up in =public/= via copy. Before that, files will be transformed, e.g. by creating =index.html= by running [[file:../src/index.org][index.org]]. TARGET TODO
   + img/ :: images, will be copied to =public/img/.=. TARGETxxx TODO
   + js/ :: JavaScript files, will be copied to =public/js=. No further minification/uglification. TARGETxxx TODO
   + css/ :: CSS files, will be copied (and potentially minified) to =public/css=. TARGETxxx TODO
-- public/ :: Root folder for the final build result. Can be served via [[id:8879b480-5de7-4984-978a-0645337d26b4][=gulp serve=]] and packaged as a ZIP via  [[id:4ab8166f-97e4-433c-ab2e-b4ca7f39e950][=gulp package=]].
+- public/ :: The final build result.
+  + . :: Can be served via [[id:8879b480-5de7-4984-978a-0645337d26b4][=gulp serve=]] and packaged as a ZIP via  [[id:4ab8166f-97e4-433c-ab2e-b4ca7f39e950][=gulp package=]].
   + img/ :: images
   + js/ :: JavaScript files
   + css/ :: CSS files
-
 *** Flow between folders
 #+begin_src dot :file img/flow-between-folders.png :cmdline -Tpng -Kdot
  digraph dfd{
     node[shape=folder]
     rankdir=LR
+    legend [style="filled,dotted"   label="{{<name>gulp function NAME |<description>DESCRIPTION}|{<input> input|<output> output}}" shape=Mrecord];
 
-    subgraph cluster_src {
-        label = "src/"
-        src_img [label="img/*"];
+    subgraph cluster_sources {
+        src_node_modules [label="node_modules/"];
+        subgraph cluster_src {
+            rankdir=TD;
+            label = "src/";
+            src_root [label="/"];
+            src_img [label="img/*"];
+            src_js [label="js/*"];
+            src_css [label="css/*"];
+            src_scss [label="scss/*"];
+        }
     }
 
-    src_img-> proc1:f0;
-    proc1 [label="{<f0> 1.0|<f1> Some process here\n\n\n}" shape=Mrecord];
-     proc1:f1 -> build_img;
+    src_root-> src_copy_to_build:input [label="*.*"];
+    src_img-> src_copy_to_build:input [label="Images"];
+    src_css-> src_copy_to_build:input [label="*.css"];
+    src_copy_to_build [style="filled" label="{{<name>src_copy_\{root,css,img\}_to_build |<description>Copy files from src to build.}|{<input> input|<output> output}}" shape=Mrecord];
+    src_copy_to_build:output -> build_img [label="Images"]
+    src_copy_to_build:output -> build_css [label="*.css"]
+    src_copy_to_build:output -> build_root [label="LICENSE, LICENSE.md"]
+
+    src_scss-> src_scss_to_build:input [label="*.scss"];
+    src_scss_to_build [style="filled" label="{{<name>src_scss_to_build |<description>Compile SCSS stylesheets.}|{<input> input|<output> output}}" shape=Mrecord];
+    src_scss_to_build:output -> build_css [label="*.css"]
+
+    src_js-> src_js_to_build:input [label="*.js"];
+    src_js_to_build [style="filled" label="{{<name>src_js_to_build |<description>Minify js files to build.}|{<input> input|<output> output}}" shape=Mrecord];
+    src_js_to_build:output -> build_js [label="*.min.js"]
+
+    src_node_modules -> node_modules_to_build:input [label="(custom)"];
+    node_modules_to_build[style="filled" label="{{<name>node_module_\{name\}_to_build|<description>Copy several nodejs modules.\nThese often need custom rules.}|{<input> input|<output> output}}" shape=Mrecord];
+    node_modules_to_build:output -> build_js [label="**/*"]
 
     subgraph cluster_build {
-      label = "build/"
-      build_img [label="img/."]
+        label = "build/"
+        rankdir=TD;
+        build_root [label="/"];
+        build_img [label="img/*"];
+        build_js [label="js/*"];
+        build_css [label="css/*"];
     }
 
+    build_root -> build_org_to_build:input [label="*.org"];
+    build_org_to_build [style="filled" label="{{<name>build_org_to_build|<description>Build .org files via Docker.}|{<input> input|<output> output}}" shape=Mrecord];
+    build_org_to_build:output -> build_root [label="*.html"]
+    build_org_to_build:output -> build_img [label="Images"]
+
+    licenses [style="filled" label="{{<name>licenses|<description>Create the list of all licenses from packages.json (--save-to-prod).}|{<input> input|<output> output}}" shape=Mrecord];
+    licenses:output -> build_root [label="licenses.txt"]
+
     subgraph cluster_public {
-      label = "public/"
-      public_img [label="img/."]
+        label = "public/"
+        rankdir=TD;
+        public_root [label="(root)"];
+        public_img [label="img/*"];
+        public_js [label="js/*"];
+        public_css [label="css/*"];
     }
+
+    build_root-> build_copy_to_public:input [label="*.*"];
+    build_img-> build_copy_to_public:input [label="Images"];
+    build_css-> build_copy_to_public:input [label="*.css"];
+    build_js-> build_copy_to_public:input [label="*.*"];
+    build_copy_to_public [style="filled" label="{{<name>build_copy_\{root,css,img,js\}_to_public |<description>Copy files from build to public.\nNo filtering in js/ due to included node_modules.}|{<input> input|<output> output}}" shape=Mrecord];
+    build_copy_to_public:output -> public_img [label="Images"]
+    build_copy_to_public:output -> public_css [label="*.css"]
+    build_copy_to_public:output -> public_js [label="**/*"]
+    build_copy_to_public:output -> public_root [label="*.html, LICENSE, LICENSE.md, licenses.txt"]
 }
 #+end_src
 
 #+RESULTS:
-[[file:img/data-flow.png]]
+[[file:img/flow-between-folders.png]]
+** Configuration in =packages.json=
 
 ** Edit =org= file
 :PROPERTIES:
@@ -58,22 +125,23 @@
 :END:
 The final version will be published into the =public/= directory. Calling =gulp= (or =gulp default=) will build the whole presentation.
 
-=C-c C-e v v=
-
-It is important that the presentation is viewed via =http(s)= since some JS libraries will not correctly work when served via the file system.
-
+*It is important that the presentation is viewed via http(s)* since some JS libraries will not correctly work when served via the file system. [[id:8879b480-5de7-4984-978a-0645337d26b4][=gulp serve=]] starts a small webserver for that.
+*** =gulp default= - build =public/=
+=gulp= or =gulp default= will update =public/= to the latest result.
 *** =gulp serve= - development webserver with watch
 :PROPERTIES:
 :ID:       8879b480-5de7-4984-978a-0645337d26b4
 :END:
-=gulp serve= will start a small webserver to view the results.
-
+=gulp serve= will start a small webserver to view the results (via [[https://www.npmjs.com/package/gulp-serve][gulp-serve]]).
 *** =gulp package= - create a ZIP
 :PROPERTIES:
 :ID:       4ab8166f-97e4-433c-ab2e-b4ca7f39e950
 :END:
 =gulp package= will create a ZIP file of =public/**/*=.
 ** Required tools
+:PROPERTIES:
+:ID:       6dd3eadc-eb0c-474a-964a-b5d8e3298390
+:END:
 - gulp :: Gulp is used for orchestrating the build
 - Docker :: [[file:../src/index.org][index.org]] is compiled to html via [[https://hub.docker.com/repository/docker/xuxxux/org-re-reveal-builder][xuxxux/org-re-reveal-builder]] ([[file:../docker/Dockerfile][Dockerfile]])
 * Details
