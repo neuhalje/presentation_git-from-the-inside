@@ -1,0 +1,19 @@
+#+TITLE: Building the presentation
+
+* Overview
+
+** TL;DR
+
+*** Directory layout
+
+*** Edit =org= file
+
+** Tools used
+
+*** =gulp= for building
+
+*** =reveal.js= as presentation framework
+
+*** =org-mode=, =org-babel=, =org-re-reveal= for writing/exporting
+
+*** =Docker= for transforming =org= to =html=

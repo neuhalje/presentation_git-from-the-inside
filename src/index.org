@@ -56,7 +56,20 @@ Class05 --> "1" Class060
 Class06 -> Class060 : pointing right
 @enduml
 #+end_src
+* Halt on Error
+#+begin_src python
+raise Exception("please stop")
+#+end_src
 
+#+begin_src python
+this is a syntax error
+#+end_src
+
+#+begin_src bash
+echo Hello there
+echo Hello there to stderr >&2
+exit 1
+#+end_src
 
 * Better
 :PROPERTIES:
