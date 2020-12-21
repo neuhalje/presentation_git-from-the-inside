@@ -2,31 +2,21 @@
 
 * Overview
 ** Directory layout
-
-#+begin_example
-.
-├── build
-│   ├── css
-│   └── js
-├── doc
-│   └── img
-├── docker
-├── public
-│   ├── css
-│   ├── img
-│   └── js
-└── src
-    ├── css
-    ├── img
-    ├── js
-    ├── json
-    └── scss
-#+end_example
-*** =src= - source files
-
-*** =build= - transient build files
-
-*** =public= - final build result
+- node_modules :: [[file:../package.json][Modules]] installed via [[https://www.npmjs.com/][npm]]. Copied to =build/js= via specific targets. TODO targets.
+- src/ :: Source files (/read-only/ during build)
+  + . :: files that will end up in =build/= via copy. [[file:../src/index.org][index.org]] is located here. TARGET TODO
+  + img/ :: images, will be copied to =build/img/.=. TARGETxxx TODO
+  + js/ :: JavaScript files, will be copied (and potentially minified & uglified) to =build/img=. TARGETxxx TODO
+  + css/ :: CSS files, will be copied (and potentially minified) to =build/css=. TARGETxxx TODO
+  + scss/ :: [[https://sass-lang.com/documentation/syntax][SCSS]] files, will be run through [[https://sass-lang.com/][Sass]] and copied (and potentially minified) to =build/css=. TARGETxxx TODO
+- build/ :: Root folder for all build related activities. E.g. the [[id:2b7f9a55-6c27-416f-afd4-21e6e1f80ca5][building of index.org]] happens in here.
+  + img/ :: images, will be copied to =public/img/.=. TARGETxxx TODO
+  + js/ :: JavaScript files, will be copied to =public/js=. No further minification/uglification. TARGETxxx TODO
+  + css/ :: CSS files, will be copied (and potentially minified) to =public/css=. TARGETxxx TODO
+- public/ :: Root folder for the final build result. Can be served via [[id:8879b480-5de7-4984-978a-0645337d26b4][=gulp serve=]] and packaged as a ZIP via  [[id:4ab8166f-97e4-433c-ab2e-b4ca7f39e950][=gulp package=]].
+  + img/ :: images
+  + js/ :: JavaScript files
+  + css/ :: CSS files
 
 *** Flow between folders
 #+begin_src dot :file img/flow-between-folders.png :cmdline -Tpng -Kdot
@@ -59,14 +49,30 @@
 [[file:img/data-flow.png]]
 
 ** Edit =org= file
+:PROPERTIES:
+:ID:       7bb6442d-00e0-4ee1-8838-469d1d47f7e6
+:END:
 ** Build and publish
+:PROPERTIES:
+:ID:       2b7f9a55-6c27-416f-afd4-21e6e1f80ca5
+:END:
 The final version will be published into the =public/= directory. Calling =gulp= (or =gulp default=) will build the whole presentation.
 
 =C-c C-e v v=
 
 It is important that the presentation is viewed via =http(s)= since some JS libraries will not correctly work when served via the file system.
 
+*** =gulp serve= - development webserver with watch
+:PROPERTIES:
+:ID:       8879b480-5de7-4984-978a-0645337d26b4
+:END:
 =gulp serve= will start a small webserver to view the results.
+
+*** =gulp package= - create a ZIP
+:PROPERTIES:
+:ID:       4ab8166f-97e4-433c-ab2e-b4ca7f39e950
+:END:
+=gulp package= will create a ZIP file of =public/**/*=.
 ** Required tools
 - gulp :: Gulp is used for orchestrating the build
 - Docker :: [[file:../src/index.org][index.org]] is compiled to html via [[https://hub.docker.com/repository/docker/xuxxux/org-re-reveal-builder][xuxxux/org-re-reveal-builder]] ([[file:../docker/Dockerfile][Dockerfile]])

@@ -1,82 +1,64 @@
 
 # Table of Contents
 
-1.  [Overview](#org3306d69)
-    1.  [Directory layout](#orga8cefc3)
-        1.  [`src` - source files](#org56d73b0)
-        2.  [`build` - transient build files](#org60e9aae)
-        3.  [`public` - final build result](#org038210d)
-        4.  [Flow between folders](#orgdd17676)
-    2.  [Edit `org` file](#org91de47c)
-    3.  [Build and publish](#org951926f)
-    4.  [Required tools](#orgbab0506)
-2.  [Details](#org43322f6)
-    1.  [Tools used](#org02f601b)
-        1.  [`gulp` for building](#org52240ec)
-        2.  [`reveal.js` as presentation framework](#org3f5300e)
-        3.  [`emacs` with `org-mode`, `org-babel`, `org-re-reveal` for writing/exporting](#org641f7a5)
-        4.  [`Docker` for transforming `org` to `html`](#orga6a5ed2)
-    2.  [Build targets](#org09dc6b5)
-3.  [Building this document](#org6360cd5)
+1.  [Overview](#org2000448)
+    1.  [Directory layout](#orgafa6906)
+        1.  [Flow between folders](#org1d2b976)
+    2.  [Edit `org` file](#orgb382248)
+    3.  [Build and publish](#orgd9fa709)
+        1.  [`gulp serve` - development webserver with watch](#org109e943)
+        2.  [`gulp package` - create a ZIP](#org6f01855)
+    4.  [Required tools](#orge93011e)
+2.  [Details](#org4df416e)
+    1.  [Tools used](#org5d77af9)
+        1.  [`gulp` for building](#orgb7c28f5)
+        2.  [`reveal.js` as presentation framework](#org4246934)
+        3.  [`emacs` with `org-mode`, `org-babel`, `org-re-reveal` for writing/exporting](#orgc705194)
+        4.  [`Docker` for transforming `org` to `html`](#orge27a9c5)
+    2.  [Build targets](#org0b962ad)
+3.  [Building this document](#orge7651b2)
 
 
 
-<a id="org3306d69"></a>
+<a id="org2000448"></a>
 
 # Overview
 
 
-<a id="orga8cefc3"></a>
+<a id="orgafa6906"></a>
 
 ## Directory layout
 
-    .
-    ├── build
-    │   ├── css
-    │   └── js
-    ├── doc
-    │   └── img
-    ├── docker
-    ├── public
-    │   ├── css
-    │   ├── img
-    │   └── js
-    └── src
-        ├── css
-        ├── img
-        ├── js
-        ├── json
-        └── scss
+-   **node<sub>modules</sub>:** [Modules](../package.json) installed via [npm](https://www.npmjs.com/). Copied to `build/js` via specific targets. TODO targets.
+-   **src/:** Source files (*read-only* during build)
+    -   **.:** files that will end up in `build/` via copy. [index.org](../src/index.md) is located here. TARGET TODO
+    -   **img/:** images, will be copied to `build/img/.`. TARGETxxx TODO
+    -   **js/:** JavaScript files, will be copied (and potentially minified & uglified) to `build/img`. TARGETxxx TODO
+    -   **css/:** CSS files, will be copied (and potentially minified) to `build/css`. TARGETxxx TODO
+    -   **scss/:** [SCSS](https://sass-lang.com/documentation/syntax) files, will be run through [Sass](https://sass-lang.com/) and copied (and potentially minified) to `build/css`. TARGETxxx TODO
+-   **build/:** Root folder for all build related activities. E.g. the [building of index.org](#orgd9fa709) happens in here.
+    -   **img/:** images, will be copied to `public/img/.`. TARGETxxx TODO
+    -   **js/:** JavaScript files, will be copied to `public/js`. No further minification/uglification. TARGETxxx TODO
+    -   **css/:** CSS files, will be copied (and potentially minified) to `public/css`. TARGETxxx TODO
+-   **public/:** Root folder for the final build result. Can be served via [`gulp serve`](#org109e943) and packaged as a ZIP via  [`gulp package`](#org6f01855).
+    -   **img/:** images
+    -   **js/:** JavaScript files
+    -   **css/:** CSS files
 
 
-<a id="org56d73b0"></a>
-
-### `src` - source files
-
-
-<a id="org60e9aae"></a>
-
-### `build` - transient build files
-
-
-<a id="org038210d"></a>
-
-### `public` - final build result
-
-
-<a id="orgdd17676"></a>
+<a id="org1d2b976"></a>
 
 ### Flow between folders
 
 ![img](img/flow-between-folders.png)
 
 
-<a id="org91de47c"></a>
+<a id="orgb382248"></a>
 
 ## Edit `org` file
 
 
-<a id="org951926f"></a>
+<a id="orgd9fa709"></a>
 
 ## Build and publish
 
@@ -86,10 +68,22 @@ The final version will be published into the `public/` directory. Calling `gulp`
 
 It is important that the presentation is viewed via `http(s)` since some JS libraries will not correctly work when served via the file system.
 
+
+<a id="org109e943"></a>
+
+### `gulp serve` - development webserver with watch
+
 `gulp serve` will start a small webserver to view the results.
 
 
-<a id="orgbab0506"></a>
+<a id="org6f01855"></a>
+
+### `gulp package` - create a ZIP
+
+`gulp package` will create a ZIP file of `public/**/*`.
+
+
+<a id="orge93011e"></a>
 
 ## Required tools
 
@@ -97,17 +91,17 @@ It is important that the presentation is viewed via `http(s)` since some JS libr
 -   **Docker:** [index.org](../src/index.md) is compiled to html via [xuxxux/org-re-reveal-builder](https://hub.docker.com/repository/docker/xuxxux/org-re-reveal-builder) ([Dockerfile](../docker/Dockerfile))
 
 
-<a id="org43322f6"></a>
+<a id="org4df416e"></a>
 
 # Details
 
 
-<a id="org02f601b"></a>
+<a id="org5d77af9"></a>
 
 ## Tools used
 
 
-<a id="org52240ec"></a>
+<a id="orgb7c28f5"></a>
 
 ### `gulp` for building
 
@@ -117,29 +111,29 @@ The build is automated via [gulp](https://gulpjs.com/docs/en/getting-started/qui
 -   **package.json:** Configures dependencies for build (`--save-dev`), runtime (`--save-prod`) and configuration like paths, urls, globs.
 
 
-<a id="org3f5300e"></a>
+<a id="org4246934"></a>
 
 ### `reveal.js` as presentation framework
 
 [reveal.js](https://revealjs.com/) 4.x is used as presentation framework.
 
 
-<a id="org641f7a5"></a>
+<a id="orgc705194"></a>
 
 ### `emacs` with `org-mode`, `org-babel`, `org-re-reveal` for writing/exporting
 
 
-<a id="orga6a5ed2"></a>
+<a id="orge27a9c5"></a>
 
 ### `Docker` for transforming `org` to `html`
 
 
-<a id="org09dc6b5"></a>
+<a id="org0b962ad"></a>
 
 ## Build targets
 
 
-<a id="org6360cd5"></a>
+<a id="orge7651b2"></a>
 
 # Building this document
 
