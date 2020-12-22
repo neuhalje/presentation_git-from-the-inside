@@ -53,9 +53,6 @@ const $ = {
     sourcemaps   : require('gulp-sourcemaps')
 }
 
-const root = $.yargs.argv.root || pkg.cfg.paths.dist.base // .cfg.paths.dist.base := "./public/"
-const port = $.yargs.argv.port || 8000
-
 const banner = `/*!
  * ${pkg.name}  ${pkg.version}
  * ${pkg.homepage}
@@ -252,10 +249,40 @@ function build_gather_node_modules_licenses(cb) {
 // exports.node_licenses = build_gather_node_modules_licenses
 
 function public_copy_from_build() {
-  return src(pkg.cfg.paths.build.base)
+  return src(pkg.cfg.paths.build.base + "**/*")
         .pipe($.filter(["**/*", "!*.tmp"]))
         .pipe(dest(pkg.cfg.paths.dist.base))
 }
 exports.publish = series(exports.finish_build,
                          parallel(public_copy_from_build,
                                   build_gather_node_modules_licenses))
+
+const root = $.yargs.argv.root || pkg.cfg.paths.dist.base // .cfg.paths.dist.base := "./public/"
+const port = $.yargs.argv.port || 8000
+
+function serve() {
+    $.connect.server({
+        root: root,
+        port: port,
+        host: '0.0.0.0',
+        livereload: true
+    })
+    // $.watch([pkg.paths.src + '*.html'], series('reload'))
+
+    // $.watch([pkg.paths.src.js + '**'], series('js', 'reload', 'test'))
+
+    // $.watch(['plugin/**/plugin.js'], series('reload'))
+
+    // $.watch([
+    //     'css/theme/source/*.{sass,scss}',
+    //     'css/theme/template/*.{sass,scss}',
+    // ], series('css-themes', 'reload'))
+
+    // $.watch([
+    //     pkg.paths.src.css + '**/*.scss',
+    //     pkg.paths.src.css + '**/*.css'
+    // ], series('css-core', 'reload'))
+
+    // $.watch(['test/*.html'], series('test'))
+}
+exports.serve = serve
