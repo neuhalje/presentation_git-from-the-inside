@@ -14,6 +14,7 @@ const pkg = require('./package.json')
 const { series, parallel } = require('gulp')
 const { src, dest } = require('gulp')
 const { watch } = require('gulp');
+const gulp = require('gulp');
 
 const { rollup } = require('rollup')
 const { terser } = require('rollup-plugin-terser')
@@ -389,25 +390,8 @@ function serve() {
                    public_copy_from_build,
                    reload
                   ))
-    //, ))
-
-    // $.watch([pkg.paths.src.js + '**'], series('js', 'reload', 'test'))
-
-    // $.watch(['plugin/**/plugin.js'], series('reload'))
-
-    // $.watch([
-    //     'css/theme/source/*.{sass,scss}',
-    //     'css/theme/template/*.{sass,scss}',
-    // ], series('css-themes', 'reload'))
-
-    // $.watch([
-    //     pkg.paths.src.css + '**/*.scss',
-    //     pkg.paths.src.css + '**/*.css'
-    // ], series('css-core', 'reload'))
-
-    // $.watch(['test/*.html'], series('test'))
 }
-serve.displayName = "serve"
+
 serve.description = `Serve ${root} as http://${host}:${port}/. Override with --{host,port,root}.`
 exports.serve = serve
 
@@ -425,12 +409,9 @@ function clean() {
           throw new Error('kaboom: ' + msg)
       }
   }
-
   return $.del(to_be_deleted)
 }
 
-
-clean.displayName = "clean"
 clean.description = `Delete all build outputs (${pkg.cfg.paths.build.base}, ${pkg.cfg.paths.dist.base}).`
 exports.clean = clean
 

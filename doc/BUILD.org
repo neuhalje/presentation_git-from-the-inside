@@ -19,7 +19,7 @@ Calling =gulp= (or =gulp default=) will build the whole presentation. The final 
 
 #+begin_example sh
 # Serve rebuild the presentation and serve it via a local http server
-gulp clean publish serve
+gulp clean publish serve --series
 #+end_example
 *** =gulp serve= - development webserver with watch
 :PROPERTIES:
@@ -43,7 +43,7 @@ gulp clean publish serve --series
 
 The task is defined [[id:525d205f-7998-45a3-b615-92ea8f9dfe0b][here]].
 
-*** TODO =gulp package= - create a ZIP
+*** =gulp package= - create a ZIP
 :PROPERTIES:
 :ID:       4ab8166f-97e4-433c-ab2e-b4ca7f39e950
 :END:
@@ -88,9 +88,9 @@ The directory layout is quite simple: Files are moved from ={src, node_modules}=
   + img/ :: images
   + js/ :: JavaScript files
   + css/ :: CSS files
-*** Flow between folders
-#+RESULTS:
-[[file:img/flow-between-folders.png]]
+*** TODO Flow between folders
+# PLEASE RUN THIS **AFTER** tangling
+
 
 ** TODO Configuration in =packages.json=
 ** Edit the presentation
@@ -188,6 +188,7 @@ Most plugins are scoped under =$= to (a) make clear what is provided by a plugin
 const { series, parallel } = require('gulp')
 const { src, dest } = require('gulp')
 const { watch } = require('gulp');
+const gulp = require('gulp');
 
 const { rollup } = require('rollup')
 const { terser } = require('rollup-plugin-terser')
@@ -235,8 +236,6 @@ const $ = {
 :PROPERTIES:
 :ID:       846e5594-5dfd-424e-ae7a-753783b7d3d9
 :END:
-
-
 Banner prefixed to my scripts:
 #+begin_src javascript
 const banner = `/*!
@@ -250,11 +249,9 @@ const banner = `/*!
 #+end_src
 
 Prevent warnings from opening too many test pages:
-
 #+begin_src javascript
 process.setMaxListeners(20)
 #+end_src
-
 ** Custom Functions
 :PROPERTIES:
 :ID:       307e4bec-1c65-4092-8bfa-8d4ac61906fe
@@ -735,25 +732,8 @@ function serve() {
                    public_copy_from_build,
                    reload
                   ))
-    //, ))
-
-    // $.watch([pkg.paths.src.js + '**'], series('js', 'reload', 'test'))
-
-    // $.watch(['plugin/**/plugin.js'], series('reload'))
-
-    // $.watch([
-    //     'css/theme/source/*.{sass,scss}',
-    //     'css/theme/template/*.{sass,scss}',
-    // ], series('css-themes', 'reload'))
-
-    // $.watch([
-    //     pkg.paths.src.css + '**/*.scss',
-    //     pkg.paths.src.css + '**/*.css'
-    // ], series('css-core', 'reload'))
-
-    // $.watch(['test/*.html'], series('test'))
 }
-serve.displayName = "serve"
+
 serve.description = `Serve ${root} as http://${host}:${port}/. Override with --{host,port,root}.`
 exports.serve = serve
 #+end_src
@@ -779,12 +759,9 @@ function clean() {
           throw new Error('kaboom: ' + msg)
       }
   }
-
   return $.del(to_be_deleted)
 }
 
-
-clean.displayName = "clean"
 clean.description = `Delete all build outputs (${pkg.cfg.paths.build.base}, ${pkg.cfg.paths.dist.base}).`
 exports.clean = clean
 #+end_src
