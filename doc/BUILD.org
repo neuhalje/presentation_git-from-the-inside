@@ -268,6 +268,109 @@ function string_src(filename, string) {
 #+end_src
 
 ** Folders
+*** node_modules/
+:PROPERTIES:
+:ID:       f8ced29c-64bd-47f3-b0da-6bbfe854a34f
+:END:
+#+begin_src javascript :export none
+/*
+ * Scripts to get things from node_modules to build.
+ */
+#+end_src
+
+**** reveal.js
+:PROPERTIES:
+:ID:       4c9372b8-0efd-45dd-9c0b-f293e80cb882
+:END:
+#+begin_src javascript
+function node_modules_reveal_js_to_build() {
+  const dst = pkg.cfg.paths.build.js + 'reveal.js'
+  $.log(`-> Copy reveal.js to ${dst}`)
+
+  return src(["node_modules/reveal.js/**/*"])
+        .pipe(dest(dst))
+
+}
+#+end_src
+**** d3 and extensions
+Install d3 and d3-graphviz.
+***** hpcc-js/wasm
+:PROPERTIES:
+:ID:       7228b6a7-f6a1-4662-8ddb-cddcfc81d8fb
+:END:
+=@hpcc-js/wasm= is required by [[https://github.com/magjac/d3-graphviz][d3-graphviz]]. The folder needs to be copied as-is because the =.wasm= files are dynamically loaded.
+
+#+begin_src javascript
+function node_modules_hpcc_js_to_build() {
+  const dst = pkg.cfg.paths.build.js + '@hpcc-js/wasm/dist'
+  $.log(`-> Copy @hpcc-js/wasm to ${dst}`)
+
+  return src(["node_modules/@hpcc-js/wasm/dist/**/*"])
+        .pipe(dest(dst))
+}
+#+end_src
+***** d3
+:PROPERTIES:
+:ID:       c40f5f3b-c99b-4c04-be44-c7413fded092
+:END:
+#+begin_src javascript
+function node_modules_d3_to_build() {
+  const dst = pkg.cfg.paths.build.js
+  $.log(`-> Copy d3 to ${dst}`)
+
+  return src(["node_modules/d3/dist/d3.min.js"])
+        .pipe(dest(dst))
+}
+#+end_src
+***** d3-graphviz
+:PROPERTIES:
+:ID:       46ed6009-60df-41ff-980b-f65c42e66c92
+:END:
+#+begin_src javascript
+function node_modules_d3_graphviz_to_build() {
+  const dst = pkg.cfg.paths.build.js
+  $.log(`-> Copy d3-graphviz to ${dst}`)
+
+  return src(["node_modules/d3-graphviz/build/d3-graphviz.js"])
+        .pipe(dest(dst))
+}
+#+end_src
+***** d3 composed
+:PROPERTIES:
+:ID:       eb16846b-9fe6-4cf9-acbb-5b67e0ef9c74
+:END:
+#+begin_src javascript
+function node_modules_d3_to_build_compose() {
+  return parallel(node_modules_hpcc_js_to_build,
+                  node_modules_d3_to_build,
+                  node_modules_d3_graphviz_to_build)
+}
+#+end_src
+
+**** mathjax
+:PROPERTIES:
+:ID:       f909e7fa-0a69-41aa-babb-7dd164c7d892
+:END:
+#+begin_src javascript
+function node_modules_mathjax_to_build() {
+  $.log("-> Copy mathjax to build")
+
+  return src(["node_modules/mathjax/es5/tex-chtml.js"])
+        .pipe(dest(pkg.cfg.paths.build.js))
+}
+#+end_src
+**** Combined rules for =node_modules/=
+:PROPERTIES:
+:ID:       b7161708-2aab-4e7c-b4a3-d1376e1bce1e
+:END:
+#+begin_src javascript
+function node_modules_to_build_compose() {
+  return parallel(node_modules_reveal_js_to_build,
+                  node_modules_d3_to_build_compose(),
+                  node_modules_mathjax_to_build)
+}
+// Enable for debugging: exports.node_modules_to_build = node_modules_to_build_compose()
+#+end_src
 *** src/
 :PROPERTIES:
 :ID:       3dd4b9ae-afb2-44cc-869c-de1a1e9e7b0f
@@ -379,119 +482,7 @@ function src_to_build_compose() {
 }
 // Enable for debugging: exports.src_to_build = src_to_build_compose()
 #+end_src
-*** node_modules/
-:PROPERTIES:
-:ID:       f8ced29c-64bd-47f3-b0da-6bbfe854a34f
-:END:
-#+begin_src javascript :export none
-/*
- * Scripts to get things from node_modules to build.
- */
-#+end_src
-
-**** reveal.js
-:PROPERTIES:
-:ID:       4c9372b8-0efd-45dd-9c0b-f293e80cb882
-:END:
-#+begin_src javascript
-function node_modules_reveal_js_to_build() {
-  const dst = pkg.cfg.paths.build.js + 'reveal.js'
-  $.log(`-> Copy reveal.js to ${dst}`)
-
-  return src(["node_modules/reveal.js/**/*"])
-        .pipe(dest(dst))
-
-}
-#+end_src
-**** d3 and extensions
-Install d3 and d3-graphviz.
-***** hpcc-js/wasm
-:PROPERTIES:
-:ID:       7228b6a7-f6a1-4662-8ddb-cddcfc81d8fb
-:END:
-=@hpcc-js/wasm= is required by [[https://github.com/magjac/d3-graphviz][d3-graphviz]]. The folder needs to be copied as-is because the =.wasm= files are dynamically loaded.
-
-#+begin_src javascript
-function node_modules_hpcc_js_to_build() {
-  const dst = pkg.cfg.paths.build.js + '@hpcc-js/wasm/dist'
-  $.log(`-> Copy @hpcc-js/wasm to ${dst}`)
-
-  return src(["node_modules/@hpcc-js/wasm/dist/**/*"])
-        .pipe(dest(dst))
-}
-#+end_src
-***** d3
-:PROPERTIES:
-:ID:       c40f5f3b-c99b-4c04-be44-c7413fded092
-:END:
-#+begin_src javascript
-function node_modules_d3_to_build() {
-  const dst = pkg.cfg.paths.build.js
-  $.log(`-> Copy d3 to ${dst}`)
-
-  return src(["node_modules/d3/dist/d3.min.js"])
-        .pipe(dest(dst))
-}
-#+end_src
-***** d3-graphviz
-:PROPERTIES:
-:ID:       46ed6009-60df-41ff-980b-f65c42e66c92
-:END:
-#+begin_src javascript
-function node_modules_d3_graphviz_to_build() {
-  const dst = pkg.cfg.paths.build.js
-  $.log(`-> Copy d3-graphviz to ${dst}`)
-
-  return src(["node_modules/d3-graphviz/build/d3-graphviz.js"])
-        .pipe(dest(dst))
-}
-#+end_src
-***** d3 composed
-:PROPERTIES:
-:ID:       eb16846b-9fe6-4cf9-acbb-5b67e0ef9c74
-:END:
-#+begin_src javascript
-function node_modules_d3_to_build_compose() {
-  return parallel(node_modules_hpcc_js_to_build,
-                  node_modules_d3_to_build,
-                  node_modules_d3_graphviz_to_build)
-}
-#+end_src
-
-**** mathjax
-:PROPERTIES:
-:ID:       f909e7fa-0a69-41aa-babb-7dd164c7d892
-:END:
-#+begin_src javascript
-function node_modules_mathjax_to_build() {
-  $.log("-> Copy mathjax to build")
-
-  return src(["node_modules/mathjax/es5/tex-chtml.js"])
-        .pipe(dest(pkg.cfg.paths.build.js))
-}
-#+end_src
-**** Combined rules for =node_modules/=
-:PROPERTIES:
-:ID:       b7161708-2aab-4e7c-b4a3-d1376e1bce1e
-:END:
-#+begin_src javascript
-function node_modules_to_build_compose() {
-  return parallel(node_modules_reveal_js_to_build,
-                  node_modules_d3_to_build_compose(),
-                  node_modules_mathjax_to_build)
-}
-// Enable for debugging: exports.node_modules_to_build = node_modules_to_build_compose()
-#+end_src
-*** build/
-:PROPERTIES:
-:ID:       9184651b-cbd8-4728-9022-a4ee3d28d811
-:END:
-#+begin_src javascript :export none
-/*
- * Scripts to build things in build.
- */
-#+end_src
-**** Populate Build (combined)
+**** Populate Build (combined src/node_modules)
 :PROPERTIES:
 :ID:       255f4acb-a5df-4238-a1d9-39b8b8f4de0d
 :END:
@@ -501,6 +492,15 @@ function build_prepare_build_compose() {
                     src_to_build_compose())
 }
 exports.prepare_build = build_prepare_build_compose()
+#+end_src
+*** build/
+:PROPERTIES:
+:ID:       9184651b-cbd8-4728-9022-a4ee3d28d811
+:END:
+#+begin_src javascript :export none
+/*
+ * Scripts to build things in build.
+ */
 #+end_src
 **** Build index.org
 :PROPERTIES:
@@ -606,7 +606,7 @@ function build_favicons() {
         .pipe(dest(pkg.cfg.favicon.dest))
 }
 
-exports.favicons = build_favicons
+//exports.favicons = build_favicons
 #+end_src
 **** Complete Build
 :PROPERTIES:
@@ -614,7 +614,7 @@ exports.favicons = build_favicons
 :END:
 #+begin_src javascript
 exports.finish_build = parallel(build_gather_node_modules_licenses,
-                                exports.favicons,
+                                build_favicons,
                                 series(build_prepare_build_compose(),
                                        build_org_file_with_docker))
 #+end_src
@@ -627,14 +627,15 @@ exports.finish_build = parallel(build_gather_node_modules_licenses,
  * Scripts to get things from build to public.
  */
 #+end_src
-**** Fill =public/=
+**** Filter =build/= to =public/=
 :PROPERTIES:
 :ID:       25e1c467-b340-43de-8dc3-26748886bfeb
 :END:
+Copy over =build/= to =public/=. Filter out temporary files and =org= files.
 #+begin_src javascript
 function public_copy_from_build() {
   return src(pkg.cfg.paths.build.base + "**/*")
-        .pipe($.filter(["**/*", "!*.tmp", "!*.org"]))
+        .pipe($.filter(["**/*", "!*.tmp", "!*.org", "!#*", "!*.tmp"]))
         .pipe(dest(pkg.cfg.paths.dist.base))
 }
 exports.publish = series(exports.finish_build,

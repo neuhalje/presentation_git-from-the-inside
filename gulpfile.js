@@ -83,6 +83,63 @@ function string_src(filename, string) {
 }
 
 /*
+ * Scripts to get things from node_modules to build.
+ */
+
+function node_modules_reveal_js_to_build() {
+  const dst = pkg.cfg.paths.build.js + 'reveal.js'
+  $.log(`-> Copy reveal.js to ${dst}`)
+
+  return src(["node_modules/reveal.js/**/*"])
+        .pipe(dest(dst))
+
+}
+
+function node_modules_hpcc_js_to_build() {
+  const dst = pkg.cfg.paths.build.js + '@hpcc-js/wasm/dist'
+  $.log(`-> Copy @hpcc-js/wasm to ${dst}`)
+
+  return src(["node_modules/@hpcc-js/wasm/dist/**/*"])
+        .pipe(dest(dst))
+}
+
+function node_modules_d3_to_build() {
+  const dst = pkg.cfg.paths.build.js
+  $.log(`-> Copy d3 to ${dst}`)
+
+  return src(["node_modules/d3/dist/d3.min.js"])
+        .pipe(dest(dst))
+}
+
+function node_modules_d3_graphviz_to_build() {
+  const dst = pkg.cfg.paths.build.js
+  $.log(`-> Copy d3-graphviz to ${dst}`)
+
+  return src(["node_modules/d3-graphviz/build/d3-graphviz.js"])
+        .pipe(dest(dst))
+}
+
+function node_modules_d3_to_build_compose() {
+  return parallel(node_modules_hpcc_js_to_build,
+                  node_modules_d3_to_build,
+                  node_modules_d3_graphviz_to_build)
+}
+
+function node_modules_mathjax_to_build() {
+  $.log("-> Copy mathjax to build")
+
+  return src(["node_modules/mathjax/es5/tex-chtml.js"])
+        .pipe(dest(pkg.cfg.paths.build.js))
+}
+
+function node_modules_to_build_compose() {
+  return parallel(node_modules_reveal_js_to_build,
+                  node_modules_d3_to_build_compose(),
+                  node_modules_mathjax_to_build)
+}
+// Enable for debugging: exports.node_modules_to_build = node_modules_to_build_compose()
+
+/*
  * Scripts to get things from src to build.
  */
 
@@ -152,72 +209,15 @@ function src_to_build_compose() {
 }
 // Enable for debugging: exports.src_to_build = src_to_build_compose()
 
-/*
- * Scripts to get things from node_modules to build.
- */
-
-function node_modules_reveal_js_to_build() {
-  const dst = pkg.cfg.paths.build.js + 'reveal.js'
-  $.log(`-> Copy reveal.js to ${dst}`)
-
-  return src(["node_modules/reveal.js/**/*"])
-        .pipe(dest(dst))
-
-}
-
-function node_modules_hpcc_js_to_build() {
-  const dst = pkg.cfg.paths.build.js + '@hpcc-js/wasm/dist'
-  $.log(`-> Copy @hpcc-js/wasm to ${dst}`)
-
-  return src(["node_modules/@hpcc-js/wasm/dist/**/*"])
-        .pipe(dest(dst))
-}
-
-function node_modules_d3_to_build() {
-  const dst = pkg.cfg.paths.build.js
-  $.log(`-> Copy d3 to ${dst}`)
-
-  return src(["node_modules/d3/dist/d3.min.js"])
-        .pipe(dest(dst))
-}
-
-function node_modules_d3_graphviz_to_build() {
-  const dst = pkg.cfg.paths.build.js
-  $.log(`-> Copy d3-graphviz to ${dst}`)
-
-  return src(["node_modules/d3-graphviz/build/d3-graphviz.js"])
-        .pipe(dest(dst))
-}
-
-function node_modules_d3_to_build_compose() {
-  return parallel(node_modules_hpcc_js_to_build,
-                  node_modules_d3_to_build,
-                  node_modules_d3_graphviz_to_build)
-}
-
-function node_modules_mathjax_to_build() {
-  $.log("-> Copy mathjax to build")
-
-  return src(["node_modules/mathjax/es5/tex-chtml.js"])
-        .pipe(dest(pkg.cfg.paths.build.js))
-}
-
-function node_modules_to_build_compose() {
-  return parallel(node_modules_reveal_js_to_build,
-                  node_modules_d3_to_build_compose(),
-                  node_modules_mathjax_to_build)
-}
-// Enable for debugging: exports.node_modules_to_build = node_modules_to_build_compose()
-
-/*
- * Scripts to build things in build.
- */
-
 function build_prepare_build_compose() {
     return parallel(node_modules_to_build_compose(),
                     src_to_build_compose())
 }
 exports.prepare_build = build_prepare_build_compose()
+
+/*
+ * Scripts to build things in build.
+ */
 
 function build_org_file_with_docker()
 {
@@ -302,10 +302,10 @@ function build_favicons() {
         .pipe(dest(pkg.cfg.favicon.dest))
 }
 
-exports.favicons = build_favicons
+//exports.favicons = build_favicons
 
 exports.finish_build = parallel(build_gather_node_modules_licenses,
-                                exports.favicons,
+                                build_favicons,
                                 series(build_prepare_build_compose(),
                                        build_org_file_with_docker))
 
@@ -315,7 +315,7 @@ exports.finish_build = parallel(build_gather_node_modules_licenses,
 
 function public_copy_from_build() {
   return src(pkg.cfg.paths.build.base + "**/*")
-        .pipe($.filter(["**/*", "!*.tmp", "!*.org"]))
+        .pipe($.filter(["**/*", "!*.tmp", "!*.org", "!#*", "!*.tmp"]))
         .pipe(dest(pkg.cfg.paths.dist.base))
 }
 exports.publish = series(exports.finish_build,
