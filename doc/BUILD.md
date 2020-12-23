@@ -78,30 +78,30 @@ To override the port/path use `--port` and `--root`:
 Changes to `index.org` will be detected and automatically build & deployed to `public/`. `gulp serve` will *not* do the initial build.
 
     # A good way to start the day
-    gulp clean publish serve
+    gulp clean publish serve --series
 
-The task is defined [here](#org6ad2bd2).
+The task is defined [here](#org36ca742).
 
 
-<a id="org0a05df4"></a>
+<a id="orgadff564"></a>
 
 ### TODO `gulp package` - create a ZIP
 
 `gulp package` will create a ZIP file of `public/**/*`.
 
-The task is defined [here](#orgc6441d4).
+The task is defined [here](#org72cac2d).
 
 
-<a id="orgae5a395"></a>
+<a id="orga80e960"></a>
 
 ### `gulp clean` - clean `build/` and `public/`
 
 `gulp clean` will delete all build outputs.
 
-The task is defined [here](#org1ced34d).
+The task is defined [here](#org22b8046).
 
 
-<a id="org0d0448c"></a>
+<a id="org1cf3b85"></a>
 
 ## Design decisions
 
@@ -118,51 +118,51 @@ These are the primary design goals, from more general to more specific:
 -   **Configuration in [package.json](../package.json):** Ideally (see *Reuseable*) a new presentation only needs changes in [package.json](../package.json) and [index.org](../src/index.md).
 
 
-<a id="org60901fd"></a>
+<a id="org8c54ba4"></a>
 
 ## Directory layout
 
 The directory layout is quite simple: Files are moved from `{src, node_modules}` to `build`. In `build` files are generated (e.g. `.org` &#x2013;> `.html`) and then copied to `public`.
 
--   **node\_modules/:** [Modules](../package.json) installed via [npm](https://www.npmjs.com/). Copied to `build/js` via specific targets. (see [node\_modules/](#orgef642c3))
+-   **node\_modules/:** [Modules](../package.json) installed via [npm](https://www.npmjs.com/). Copied to `build/js` via specific targets. (see [node\_modules/](#org424d199))
 -   **src/:** Source files (*read-only* during build)
-    -   **.:** files that will end up in `build/` via copy. `index.org` is located here. (see[src/](#orgaddd822))
-    -   **img/:** images, will be copied to `build/img/.`. ([src/img/](#orge9c2946))
-    -   **js/:** JavaScript files, will be copied (and potentially minified & uglified) to `build/js`. ([src/js/](#orge2950f9))
-    -   **css/:** CSS files, will be copied (and potentially minified) to `build/css`. ([src/css/](#org08e3b39))
-    -   **scss/:** [SCSS](https://sass-lang.com/documentation/syntax) files, will be run through [Sass](https://sass-lang.com/) and copied (and potentially minified) to `build/css`. ([src/scss/](#org473fb2c))
--   **build/:** *Not in version control*. Root folder for all build related activities. E.g. the [building of index.org](#orga8de25b) happens in here. ([build/](#org592c22c)). Later copied to `public/` by [Fill `public/`](#orgcaf01ba).
-    -   **.:** files that will end up in `public/` via copy. Before that, files will be transformed, e.g. by creating `index.html` by running [index.org](../src/index.md). ([Build index.org](#org6549fc3))
+    -   **.:** files that will end up in `build/` via copy. `index.org` is located here. (see[src/](#org26d6439))
+    -   **img/:** images, will be copied to `build/img/.`. ([src/img/](#org39803bd))
+    -   **js/:** JavaScript files, will be copied (and potentially minified & uglified) to `build/js`. ([src/js/](#org7d73e27))
+    -   **css/:** CSS files, will be copied (and potentially minified) to `build/css`. ([src/css/](#orgd0d826b))
+    -   **scss/:** [SCSS](https://sass-lang.com/documentation/syntax) files, will be run through [Sass](https://sass-lang.com/) and copied (and potentially minified) to `build/css`. ([src/scss/](#org899ada9))
+-   **build/:** *Not in version control*. Root folder for all build related activities. E.g. the [building of index.org](#org38c3bf6) happens in here. ([build/](#orgd759fcd)). Later copied to `public/` by [Fill `public/`](#org87d8177).
+    -   **.:** files that will end up in `public/` via copy. Before that, files will be transformed, e.g. by creating `index.html` by running [index.org](../src/index.md). ([Build index.org](#org1f29ff0))
     -   **img/:** images, will be copied to `public/img/.`
     -   **js/:** JavaScript files, will be copied to `public/js`. No further minification/uglification.
     -   **css/:** CSS files, will be copied (and potentially minified) to `public/css`.
 -   **public/:** The final build result.
-    -   **.:** Can be served via [`gulp serve`](#org6288b10) and packaged as a ZIP via [`gulp package`](#org0a05df4).
+    -   **.:** Can be served via [`gulp serve`](#org77d640e) and packaged as a ZIP via [`gulp package`](#orgadff564).
     -   **img/:** images
     -   **js/:** JavaScript files
     -   **css/:** CSS files
 
 
-<a id="orgc2d3c31"></a>
+<a id="org86e9ead"></a>
 
 ### Flow between folders
 
 ![img](img/flow-between-folders.png)
 
 
-<a id="orgb579729"></a>
+<a id="orgd159e6b"></a>
 
 ## TODO Configuration in `packages.json`
 
 
-<a id="org14fb43a"></a>
+<a id="org6cedd2b"></a>
 
 ## Edit the presentation
 
 The whole presentation is contained in <../src/index.md> and build via org-mode.
 
 
-<a id="orgdcc9db2"></a>
+<a id="org2c78be6"></a>
 
 ## Required tools for building
 

@@ -38,7 +38,7 @@ Changes to =index.org= will be detected and automatically build & deployed to =p
 
 #+begin_example sh
 # A good way to start the day
-gulp clean publish serve
+gulp clean publish serve --series
 #+end_example
 
 The task is defined [[id:525d205f-7998-45a3-b615-92ea8f9dfe0b][here]].
