@@ -3,22 +3,35 @@
 
 * Overview
 This (rather lengthy) file describes the build process and is used to generate the [[file:../gulpfile.js][gulpfile]].
+
+The task of the build process is the transformation of =index.org= to a [[https://revealjs.com/][reveal.js]] presentation.
 ** Important targets
 :PROPERTIES:
 :ID:       2b7f9a55-6c27-416f-afd4-21e6e1f80ca5
 :END:
-The final version will be published into the =public/= directory. Calling =gulp= (or =gulp default=) will build the whole presentation.
+Calling =gulp= (or =gulp default=) will build the whole presentation. The final version will be published into the =public/= directory.
 
-*It is important that the presentation is viewed via http(s)* since some JS libraries will not correctly work when served via the file system. [[id:8879b480-5de7-4984-978a-0645337d26b4][=gulp serve=]] starts a small webserver for that.
+*It is important that the presentation is viewed via http(s)* since some JS libraries will not work correctly when served via the file system. The task [[id:8879b480-5de7-4984-978a-0645337d26b4][=gulp serve=]] starts a small webserver for that.
 *** =gulp publish= - build =public/=
 =gulp= or =gulp publish= will update =public/= to the latest result (see [[id:25e1c467-b340-43de-8dc3-26748886bfeb][here]]).
 
 [[id:73f2d5e2-4ba0-4250-86bc-e81cb34f5ca8][=gulp clean=]] is *not* called as a part of publish.
+
+#+begin_example sh
+# Serve rebuild the presentation and serve it via a local http server
+gulp clean publish serve
+#+end_example
 *** =gulp serve= - development webserver with watch
 :PROPERTIES:
 :ID:       8879b480-5de7-4984-978a-0645337d26b4
 :END:
 =gulp serve= will start a small webserver to view the results (via [[https://www.npmjs.com/package/gulp-serve][gulp-serve]]).
+
+To override the port/path use =--port= and =--root=:
+#+begin_example sh
+# Serve /tmp via port 9999
+gulp serve --port 9999 --root /tmp
+#+end_example
 
 The task is defined [[id:525d205f-7998-45a3-b615-92ea8f9dfe0b][here]].
 *** TODO =gulp package= - create a ZIP
@@ -26,6 +39,8 @@ The task is defined [[id:525d205f-7998-45a3-b615-92ea8f9dfe0b][here]].
 :ID:       4ab8166f-97e4-433c-ab2e-b4ca7f39e950
 :END:
 =gulp package= will create a ZIP file of =public/**/*=.
+
+The task is defined [[id:9ad0ef3f-43f0-49d7-bf8f-6d71c5c3f6e4][here]].
 *** =gulp clean= - clean =build/= and =public/=
 :PROPERTIES:
 :ID:       73f2d5e2-4ba0-4250-86bc-e81cb34f5ca8
@@ -68,8 +83,7 @@ The directory layout is quite simple: Files are moved from ={src, node_modules}=
 #+RESULTS:
 [[file:img/flow-between-folders.png]]
 
-** Configuration in =packages.json=
-
+** TODO Configuration in =packages.json=
 ** Edit the presentation
 :PROPERTIES:
 :ID:       7bb6442d-00e0-4ee1-8838-469d1d47f7e6
@@ -204,7 +218,8 @@ const $ = {
     fs   : require('fs'),
     log   : require('fancy-log'),
     sourcemaps   : require('gulp-sourcemaps'),
-    del : require('del')
+    del : require('del'),
+    favicons : require('favicons').stream
 }
 #+end_src
 *** Configure Plugins
@@ -515,15 +530,6 @@ function build_org_file_with_docker()
 }
 exports.build_org_file_with_docker = build_org_file_with_docker
 #+end_src
-**** Complete Build
-:PROPERTIES:
-:ID:       19ecb09b-7684-45d8-a8c8-c3b3b49f07a0
-:END:
-#+begin_src javascript
-exports.finish_build = parallel(build_gather_node_modules_licenses,
-                                series(build_prepare_build_compose(),
-                                       build_org_file_with_docker))
-#+end_src
 **** Create licenses
 :PROPERTIES:
 :ID:       21161d99-eca7-4a66-9e0e-02dc9c994710
@@ -553,6 +559,64 @@ function build_gather_node_modules_licenses(cb) {
     })
 }
 // exports.node_licenses = build_gather_node_modules_licenses
+#+end_src
+**** Build favicons
+:PROPERTIES:
+:ID:       b175e86c-5d89-44c3-a6c2-938dd09bcf9a
+:END:
+Generate the favicions via [[https://github.com/itgalaxy/favicons][itgalaxy/favicons]].
+
+#+begin_src javascript
+function build_favicons() {
+    const source = pkg.cfg.favicon.src
+
+    const configuration = {
+        appName: pkg.name,                            // Your application's name. `string`
+        appShortName: null,                       // Your application's short_name. `string`. Optional. If not set, appName will be used
+        appDescription: pkg.description,                     // Your application's description. `string`
+        developerName: pkg.author.name,                      // Your (or your developer's) name. `string`
+        developerURL: pkg.homepage,                       // Your (or your developer's) URL. `string`
+        background: pkg.cfg.favicon.background,
+        path: pkg.cfg.favicon.path,
+        url: pkg.homepage,
+        display: "standalone",
+        orientation: "portrait",
+        scope: "/",
+        start_url: "/",
+        version: 1.0,
+        logging: false,
+        html: "index.html",
+        pipeHTML: false,
+        replace: true,
+        icons: {
+            android: false,              // Create Android homescreen icon. `boolean` or `{ offset, background, mask, overlayGlow, overlayShadow }` or an array of sources
+            appleIcon: false,            // Create Apple touch icons. `boolean` or `{ offset, background, mask, overlayGlow, overlayShadow }` or an array of sources
+            appleStartup: false,         // Create Apple startup images. `boolean` or `{ offset, background, mask, overlayGlow, overlayShadow }` or an array of sources
+            coast: false,                // Create Opera Coast icon. `boolean` or `{ offset, background, mask, overlayGlow, overlayShadow }` or an array of sources
+            favicons: true,             // Create regular favicons. `boolean` or `{ offset, background, mask, overlayGlow, overlayShadow }` or an array of sources
+            firefox: false,              // Create Firefox OS icons. `boolean` or `{ offset, background, mask, overlayGlow, overlayShadow }` or an array of sources
+            windows: false,              // Create Windows 8 tile icons. `boolean` or `{ offset, background, mask, overlayGlow, overlayShadow }` or an array of sources
+            yandex: false                // Create Yandex browser icon. `boolean` or `{ offset, background, mask, overlayGlow, overlayShadow }` or an array of sources
+        }
+    }
+
+  return src(source)
+        .pipe($.favicons(configuration))
+        .on("error", $.log)
+        .pipe(dest(pkg.cfg.favicon.dest))
+}
+
+exports.favicons = build_favicons
+#+end_src
+**** Complete Build
+:PROPERTIES:
+:ID:       19ecb09b-7684-45d8-a8c8-c3b3b49f07a0
+:END:
+#+begin_src javascript
+exports.finish_build = parallel(build_gather_node_modules_licenses,
+                                exports.favicons,
+                                series(build_prepare_build_compose(),
+                                       build_org_file_with_docker))
 #+end_src
 *** public/
 :PROPERTIES:
@@ -646,6 +710,8 @@ exports.serve = serve
 :PROPERTIES:
 :ID:       122614dd-080f-421c-bc9a-e5ea6589da36
 :END:
+Delete =build/= and =public/=.
+
 Since =clean= is a very sharp knife, we take some precautions. Only subfolders will be deleted.
 #+begin_src javascript
 function clean() {
@@ -666,4 +732,19 @@ function clean() {
   return $.del(to_be_deleted)
 }
 exports.clean = clean
+#+end_src
+*** package
+:PROPERTIES:
+:ID:       9ad0ef3f-43f0-49d7-bf8f-6d71c5c3f6e4
+:END:
+Do a fresh build of the presentation and write it into a zip file.
+
+#+begin_src javascript
+function package_public() {
+   return src(pkg.cfg.paths.dist.base + "**/*")
+                                 .pipe($.zip(pkg.cfg.vars.distZip))
+                                 .pipe(dest('./'))
+}
+
+exports.package = series(exports.clean, exports.publish, package_public)
 #+end_src

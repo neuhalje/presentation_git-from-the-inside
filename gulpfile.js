@@ -53,7 +53,8 @@ const $ = {
     fs   : require('fs'),
     log   : require('fancy-log'),
     sourcemaps   : require('gulp-sourcemaps'),
-    del : require('del')
+    del : require('del'),
+    favicons : require('favicons').stream
 }
 
 const banner = `/*!
@@ -238,10 +239,6 @@ function build_org_file_with_docker()
 }
 exports.build_org_file_with_docker = build_org_file_with_docker
 
-exports.finish_build = parallel(build_gather_node_modules_licenses,
-                                series(build_prepare_build_compose(),
-                                       build_org_file_with_docker))
-
 function build_gather_node_modules_licenses(cb) {
     const dst = pkg.cfg.paths.build.base
     const filename = pkg.cfg.vars.licenses
@@ -265,6 +262,52 @@ function build_gather_node_modules_licenses(cb) {
     })
 }
 // exports.node_licenses = build_gather_node_modules_licenses
+
+function build_favicons() {
+    const source = pkg.cfg.favicon.src
+
+    const configuration = {
+        appName: pkg.name,                            // Your application's name. `string`
+        appShortName: null,                       // Your application's short_name. `string`. Optional. If not set, appName will be used
+        appDescription: pkg.description,                     // Your application's description. `string`
+        developerName: pkg.author.name,                      // Your (or your developer's) name. `string`
+        developerURL: pkg.homepage,                       // Your (or your developer's) URL. `string`
+        background: pkg.cfg.favicon.background,
+        path: pkg.cfg.favicon.path,
+        url: pkg.homepage,
+        display: "standalone",
+        orientation: "portrait",
+        scope: "/",
+        start_url: "/",
+        version: 1.0,
+        logging: false,
+        html: "index.html",
+        pipeHTML: false,
+        replace: true,
+        icons: {
+            android: false,              // Create Android homescreen icon. `boolean` or `{ offset, background, mask, overlayGlow, overlayShadow }` or an array of sources
+            appleIcon: false,            // Create Apple touch icons. `boolean` or `{ offset, background, mask, overlayGlow, overlayShadow }` or an array of sources
+            appleStartup: false,         // Create Apple startup images. `boolean` or `{ offset, background, mask, overlayGlow, overlayShadow }` or an array of sources
+            coast: false,                // Create Opera Coast icon. `boolean` or `{ offset, background, mask, overlayGlow, overlayShadow }` or an array of sources
+            favicons: true,             // Create regular favicons. `boolean` or `{ offset, background, mask, overlayGlow, overlayShadow }` or an array of sources
+            firefox: false,              // Create Firefox OS icons. `boolean` or `{ offset, background, mask, overlayGlow, overlayShadow }` or an array of sources
+            windows: false,              // Create Windows 8 tile icons. `boolean` or `{ offset, background, mask, overlayGlow, overlayShadow }` or an array of sources
+            yandex: false                // Create Yandex browser icon. `boolean` or `{ offset, background, mask, overlayGlow, overlayShadow }` or an array of sources
+        }
+    }
+
+  return src(source)
+        .pipe($.favicons(configuration))
+        .on("error", $.log)
+        .pipe(dest(pkg.cfg.favicon.dest))
+}
+
+exports.favicons = build_favicons
+
+exports.finish_build = parallel(build_gather_node_modules_licenses,
+                                exports.favicons,
+                                series(build_prepare_build_compose(),
+                                       build_org_file_with_docker))
 
 /*
  * Scripts to get things from build to public.
@@ -344,3 +387,11 @@ function clean() {
   return $.del(to_be_deleted)
 }
 exports.clean = clean
+
+function package_public() {
+   return src(pkg.cfg.paths.dist.base + "**/*")
+                                 .pipe($.zip(pkg.cfg.vars.distZip))
+                                 .pipe(dest('./'))
+}
+
+exports.package = series(exports.clean, exports.publish, package_public)

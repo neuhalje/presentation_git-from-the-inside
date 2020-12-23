@@ -25,9 +25,15 @@
 #+REVEAL_HLEVEL: 999
 #+REVEAL_EXTRA_CSS: ./presentation.css
 
+#+HTML_HEAD: <link rel="shortcut icon" href="/img/site/favicon.ico">
+#+HTML_HEAD: <link rel="icon" type="image/png" sizes="16x16" href="/img/site/favicon-16x16.png">
+#+HTML_HEAD: <link rel="icon" type="image/png" sizes="32x32" href="/img/site/favicon-32x32.png">
+#+HTML_HEAD: <link rel="icon" type="image/png" sizes="48x48" href="/img/site/favicon-48x48.png">
+
 #+HTML_HEAD: <script src="js/d3.min.js"></script>
 #+HTML_HEAD: <script src="js/d3-graphviz.js"></script>
 #+HTML_HEAD: <script src="js/@hpcc-js/wasm/dist/index.min.js" type="application/javascript"></script>
+
 
 #+EXPORT_FILE_NAME: ../build/index.html
 
