@@ -33,7 +33,16 @@ To override the port/path use =--port= and =--root=:
 gulp serve --port 9999 --root /tmp
 #+end_example
 
+Changes to =index.org= will be detected and automatically build & deployed to =public/=.
+=gulp serve= will /not/ do the initial build.
+
+#+begin_example sh
+# A good way to start the day
+gulp clean publish serve
+#+end_example
+
 The task is defined [[id:525d205f-7998-45a3-b615-92ea8f9dfe0b][here]].
+
 *** TODO =gulp package= - create a ZIP
 :PROPERTIES:
 :ID:       4ab8166f-97e4-433c-ab2e-b4ca7f39e950
