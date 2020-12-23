@@ -52,7 +52,8 @@ const $ = {
     child_process : require('child_process').exec,
     fs   : require('fs'),
     log   : require('fancy-log'),
-    sourcemaps   : require('gulp-sourcemaps')
+    sourcemaps   : require('gulp-sourcemaps'),
+    del : require('del')
 }
 
 const banner = `/*!
@@ -150,6 +151,10 @@ function src_to_build_compose() {
 }
 // Enable for debugging: exports.src_to_build = src_to_build_compose()
 
+/*
+ * Scripts to get things from node_modules to build.
+ */
+
 function node_modules_reveal_js_to_build() {
   const dst = pkg.cfg.paths.build.js + 'reveal.js'
   $.log(`-> Copy reveal.js to ${dst}`)
@@ -203,6 +208,10 @@ function node_modules_to_build_compose() {
 }
 // Enable for debugging: exports.node_modules_to_build = node_modules_to_build_compose()
 
+/*
+ * Scripts to build things in build.
+ */
+
 function build_prepare_build_compose() {
     return parallel(node_modules_to_build_compose(),
                     src_to_build_compose())
@@ -229,11 +238,12 @@ function build_org_file_with_docker()
 }
 exports.build_org_file_with_docker = build_org_file_with_docker
 
-exports.finish_build = series(build_prepare_build_compose(),
-                           build_org_file_with_docker)
+exports.finish_build = parallel(build_gather_node_modules_licenses,
+                                series(build_prepare_build_compose(),
+                                       build_org_file_with_docker))
 
 function build_gather_node_modules_licenses(cb) {
-    const dst = pkg.cfg.paths.dist.base
+    const dst = pkg.cfg.paths.build.base
     const filename = pkg.cfg.vars.licenses
     $.log(`-> Gathering all (potentially distributed) licenes from node_modules to ${dst}${filename}`)
 
@@ -256,14 +266,22 @@ function build_gather_node_modules_licenses(cb) {
 }
 // exports.node_licenses = build_gather_node_modules_licenses
 
+/*
+ * Scripts to get things from build to public.
+ */
+
 function public_copy_from_build() {
   return src(pkg.cfg.paths.build.base + "**/*")
-        .pipe($.filter(["**/*", "!*.tmp"]))
+        .pipe($.filter(["**/*", "!*.tmp", "!*.org"]))
         .pipe(dest(pkg.cfg.paths.dist.base))
 }
 exports.publish = series(exports.finish_build,
-                         parallel(public_copy_from_build,
-                                  build_gather_node_modules_licenses))
+                         public_copy_from_build)
+exports.default = exports.publish
+
+/*
+ * Utility functions
+ */
 
 const root = $.yargs.argv.root || pkg.cfg.paths.dist.base // .cfg.paths.dist.base := "./public/"
 const port = $.yargs.argv.port || 8000
@@ -307,3 +325,22 @@ function serve() {
     // $.watch(['test/*.html'], series('test'))
 }
 exports.serve = serve
+
+function clean() {
+
+  const to_be_deleted = [
+      pkg.cfg.paths.build.base,
+      pkg.cfg.paths.dist.base
+  ]
+
+  for (let candidate of to_be_deleted) {
+      if (! candidate.startsWith("./")) {
+          const msg=`Will not delete "${candidate}": Configure path in package.json to start with './'`
+          $.log.error(msg)
+          throw new Error('kaboom: ' + msg)
+      }
+  }
+
+  return $.del(to_be_deleted)
+}
+exports.clean = clean

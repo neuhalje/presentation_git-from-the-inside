@@ -34,13 +34,6 @@
         "img": "./src/img/",
         "scss": "./src/scss/"
       },
-      "dist": {
-        "base": "./public/",
-        "css": "./public/css/",
-        "js": "./public/js/",
-        "fonts": "./public/fonts/",
-        "img": "./public/img/"
-      },
       "build": {
         "base": "./build/",
         "css": "./build/css/",
@@ -48,6 +41,13 @@
         "js": "./build/js/",
         "html": "./build/html/",
         "img": "./build/img/"
+      },
+      "dist": {
+        "base": "./public/",
+        "css": "./public/css/",
+        "js": "./public/js/",
+        "fonts": "./public/fonts/",
+        "img": "./public/img/"
       },
       "include": {
         "scssIncludePaths": []
@@ -136,6 +136,7 @@
     "babel-plugin-transform-html-import-to-string": "0.0.1",
     "colors": "^1.4.0",
     "core-js": "^3.8.1",
+    "del": "^6.0.0",
     "fancy-log": "^1.3.3",
     "glob": "^7.1.6",
     "gulp": "^4.0.2",

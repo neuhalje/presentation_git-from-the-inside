@@ -93,6 +93,7 @@ Asked a [[https://stackoverflow.com/questions/65390626/halt-org-export-on-errors
 *** TODO Support auto-reloading
 1. =gulp --verify= says =gulp-connect: use the connect module directly=
 2. It is not working
+*** TODO build zip via package
 ** Content
 *** TODO Add Chapter: Content addressed storage
 *** TODO Add Chapter: What is a hash?

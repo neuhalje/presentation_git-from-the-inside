@@ -44,6 +44,9 @@
 
 #+INCLUDE: setupfile.org
 * Example: images
+:PROPERTIES:
+:CUSTOM_ID: example_image
+:END:
 #+NAME: example-image-plantuml
 #+begin_src plantuml :file "XXXexample-image-plantuml.png"
 @startuml
