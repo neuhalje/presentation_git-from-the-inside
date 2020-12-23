@@ -64,6 +64,9 @@
       "licenses": "licenses.txt",
       "build_org_docker": "xuxxux/org-re-reveal-builder:0.1",
       "build_org_docker_local": "build-org"
+    },
+    "filter" : {
+      "publishThese" : ["**/*", "!*.tmp", "!*.org", "!#*", "!*.tmp"]
     }
   },
   "templates": "./craft/templates/",

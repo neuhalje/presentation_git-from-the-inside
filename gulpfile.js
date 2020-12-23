@@ -95,6 +95,9 @@ function node_modules_reveal_js_to_build() {
 
 }
 
+node_modules_reveal_js_to_build.displayName = "Reveal.js to build"
+node_modules_reveal_js_to_build.description = `Copy reveal.js from node_modules to ${pkg.cfg.paths.build.base}.`
+
 function node_modules_hpcc_js_to_build() {
   const dst = pkg.cfg.paths.build.js + '@hpcc-js/wasm/dist'
   $.log(`-> Copy @hpcc-js/wasm to ${dst}`)
@@ -103,6 +106,9 @@ function node_modules_hpcc_js_to_build() {
         .pipe(dest(dst))
 }
 
+node_modules_hpcc_js_to_build.displayName = "@hpcc-js/wasm to build"
+node_modules_hpcc_js_to_build.description = "Copy @hpcc-js/wasm to build."
+
 function node_modules_d3_to_build() {
   const dst = pkg.cfg.paths.build.js
   $.log(`-> Copy d3 to ${dst}`)
@@ -110,6 +116,8 @@ function node_modules_d3_to_build() {
   return src(["node_modules/d3/dist/d3.min.js"])
         .pipe(dest(dst))
 }
+node_modules_d3_to_build.displayName = "d3 to build"
+node_modules_d3_to_build.description = "Copy d3to build."
 
 function node_modules_d3_graphviz_to_build() {
   const dst = pkg.cfg.paths.build.js
@@ -118,25 +126,33 @@ function node_modules_d3_graphviz_to_build() {
   return src(["node_modules/d3-graphviz/build/d3-graphviz.js"])
         .pipe(dest(dst))
 }
+node_modules_d3_graphviz_to_build.displayName = "d3-graphviz to build"
+node_modules_d3_graphviz_to_build.description = "Copy d3-graphviz to build."
 
 function node_modules_d3_to_build_compose() {
   return parallel(node_modules_hpcc_js_to_build,
                   node_modules_d3_to_build,
                   node_modules_d3_graphviz_to_build)
 }
+node_modules_d3_to_build_compose.displayName = "d3 & tools to build"
+node_modules_d3_to_build_compose.description = "Copy d3 & tools from node_modules to build."
 
 function node_modules_mathjax_to_build() {
-  $.log("-> Copy mathjax to build")
+  $.log("-> Copy mathjaxto build.")
 
   return src(["node_modules/mathjax/es5/tex-chtml.js"])
         .pipe(dest(pkg.cfg.paths.build.js))
 }
+node_modules_mathjax_to_build.displayName = "mathjax to build"
+node_modules_mathjax_to_build.description = "Copy mathjax from node_modules to build."
 
 function node_modules_to_build_compose() {
   return parallel(node_modules_reveal_js_to_build,
                   node_modules_d3_to_build_compose(),
                   node_modules_mathjax_to_build)
 }
+node_modules_to_build_compose.displayName = "node_modules to build"
+node_modules_to_build_compose.description = "Copy all libraries from node_modules to build."
 // Enable for debugging: exports.node_modules_to_build = node_modules_to_build_compose()
 
 /*
@@ -149,6 +165,8 @@ function src_root_to_build() {
   return src(pkg.cfg.paths.src.base + '*', { nodir: true }) // .cfg.paths.src.base := "./src/"
     .pipe(dest(pkg.cfg.paths.build.base))  // .cfg.paths.build.base := "./build/"
 }
+src_root_to_build.displayName = "Shallow copy base to build"
+src_root_to_build.description = `Shallow copy  ${pkg.cfg.paths.src.base} to build.`
 
 function src_img_to_build() {
   $.log(`-> Copy img from ${pkg.cfg.paths.src.img} to ${pkg.cfg.paths.build.img}`)
@@ -156,6 +174,8 @@ function src_img_to_build() {
   return src(pkg.cfg.paths.src.img + '**/*.{png,jpg,jpeg,gif,svg}') // .cfg.paths.src.img := "./src/img/"
     .pipe(dest(pkg.cfg.paths.build.img))                            // .cfg.paths.build.img := "./build/img/"
 }
+src_img_to_build.displayName = "img to build"
+src_img_to_build.description = `Copy ${pkg.cfg.paths.src.img} to build.`
 
 function src_lint_js() {
   $.log(`-> Linting ${[pkg.cfg.paths.src.js + '**/*.js', 'gulpfile.js']}`)
@@ -164,32 +184,33 @@ function src_lint_js() {
         .pipe($.eslint())
         .pipe($.eslint.format())
 }
+src_lint_js.displayName = "Lint my JS"
+src_lint_js.description = `Lint ${pkg.cfg.paths.src.js}.`
 
 function src_copy_js_to_build() {
-  $.log("-> Copy js to build")
-
   return src(pkg.cfg.paths.src.js + '**/*.js') // .cfg.paths.src.js := "./src/js/"
     .pipe($.header(banner))
     .pipe(dest(pkg.cfg.paths.build.js))        // .cfg.paths.build.js := "./build/js/"
 }
+src_copy_js_to_build.displayName = "Copy JS to build"
+src_copy_js_to_build.description = `Copy ${pkg.cfg.paths.src.js} to build and add banner.`
 
 function src_js_to_build_compose() {
   return series(src_lint_js, src_copy_js_to_build)
 }
+src_js_to_build_compose.description = `Lint, copy and banner JS from ${pkg.cfg.paths.src.js} to build.`
 
 function src_css_to_build() {
-  $.log("-> Copy css to build")
-
   return src(pkg.cfg.paths.src.css + '**/*.css') // .cfg.paths.src.css := "./src/css/"
         .pipe($.sourcemaps.init({loadMaps: true}))
         .pipe($.autoprefixer())
         .pipe($.sourcemaps.write("./"))
         .pipe(dest(pkg.cfg.paths.build.css))     // .cfg.paths.build.css := "./build/css/"
 }
+src_css_to_build.displayName = "Transform css to build"
+src_css_to_build.description = `Copy ${pkg.cfg.paths.src.css} to build, create sourcemaps and autoprefix.`
 
 function src_scss_to_build() {
-  $.log("-> Compiling scss to build")
-
   return src(pkg.cfg.paths.src.scss + '**/*.scss') // .cfg.paths.src.scss := "./src/scss/"
         .pipe($.sourcemaps.init({loadMaps: true}))
         .pipe($.sass({includePaths: pkg.cfg.paths.include.scssIncludePaths /* .cfg.paths.include.scssIncludePaths := [] */
@@ -199,6 +220,8 @@ function src_scss_to_build() {
         .pipe($.sourcemaps.write("./"))
         .pipe(dest(pkg.cfg.paths.build.css))       // .cfg.paths.build.css := "./build/css/"
 }
+src_scss_to_build.displayName = "Transform scss to build"
+src_scss_to_build.description = `Compile ${pkg.cfg.paths.src.scss} to build, create sourcemaps and autoprefix.`
 
 function src_to_build_compose() {
   return parallel(src_root_to_build,
@@ -207,13 +230,15 @@ function src_to_build_compose() {
                       src_css_to_build,
                       src_scss_to_build)
 }
-// Enable for debugging: exports.src_to_build = src_to_build_compose()
+// exports.src_to_build = src_to_build_compose()
+// exports.src_to_build.description = "Transform src to build"
 
 function build_prepare_build_compose() {
     return parallel(node_modules_to_build_compose(),
                     src_to_build_compose())
 }
 exports.prepare_build = build_prepare_build_compose()
+exports.prepare_build.description = `Prepare ${pkg.cfg.paths.build.base} with node_modules and  ${pkg.cfg.paths.src.base}.`
 
 /*
  * Scripts to build things in build.
@@ -234,10 +259,13 @@ function build_org_file_with_docker()
         {
             if (err) {
               $.log.error(stderr)
+              throw new Error('kaboom: ' + err)
             }
         })
 }
 exports.build_org_file_with_docker = build_org_file_with_docker
+exports.build_org_file_with_docker.displayName = "Transform index.org via Docker"
+exports.build_org_file_with_docker.description = `Build index.org with "${pkg.cfg.vars.build_org_docker_local}" docker container.`
 
 function build_gather_node_modules_licenses(cb) {
     const dst = pkg.cfg.paths.build.base
@@ -262,6 +290,8 @@ function build_gather_node_modules_licenses(cb) {
     })
 }
 // exports.node_licenses = build_gather_node_modules_licenses
+build_gather_node_modules_licenses.displayName = "Gather licenses from node_modules"
+build_gather_node_modules_licenses.description = `Gathering all (potentially distributed) licenes from node_modules to ${pkg.cfg.vars.licenses}`
 
 function build_favicons() {
     const source = pkg.cfg.favicon.src
@@ -302,12 +332,16 @@ function build_favicons() {
         .pipe(dest(pkg.cfg.favicon.dest))
 }
 
+build_favicons.displayName = "Build favicons"
+build_favicons.description = `Derive favicons from ${pkg.cfg.favicon.src}.`
 //exports.favicons = build_favicons
 
 exports.finish_build = parallel(build_gather_node_modules_licenses,
                                 build_favicons,
                                 series(build_prepare_build_compose(),
                                        build_org_file_with_docker))
+exports.finish_build.displayName = "build"
+exports.finish_build.description = `Populate and build ${pkg.cfg.paths.build.base}.`
 
 /*
  * Scripts to get things from build to public.
@@ -315,11 +349,18 @@ exports.finish_build = parallel(build_gather_node_modules_licenses,
 
 function public_copy_from_build() {
   return src(pkg.cfg.paths.build.base + "**/*")
-        .pipe($.filter(["**/*", "!*.tmp", "!*.org", "!#*", "!*.tmp"]))
+        .pipe($.filter(pkg.cfg.filter.publishThese))
         .pipe(dest(pkg.cfg.paths.dist.base))
 }
+public_copy_from_build.displayName = "Copy to build"
+public_copy_from_build.description = `Copy files matching ${pkg.cfg.filter.publishThese} from ${pkg.cfg.paths.build.base} to ${pkg.cfg.paths.dist.base}.`
+
+
 exports.publish = series(exports.finish_build,
                          public_copy_from_build)
+
+exports.publish.displayName = "publish"
+exports.publish.description = `Build the project and publish to ${pkg.cfg.paths.dist.base}.`
 exports.default = exports.publish
 
 /*
@@ -328,6 +369,7 @@ exports.default = exports.publish
 
 const root = $.yargs.argv.root || pkg.cfg.paths.dist.base // .cfg.paths.dist.base := "./public/"
 const port = $.yargs.argv.port || 8000
+const host = $.yargs.argv.bind || '127.0.0.1'
 
 async function reload() {
     // FIXME: not working
@@ -338,7 +380,7 @@ function serve() {
     $.connect.server({
         root: root,
         port: port,
-        host: '0.0.0.0',
+        host: host,
         livereload: true
     })
 
@@ -367,6 +409,8 @@ function serve() {
 
     // $.watch(['test/*.html'], series('test'))
 }
+serve.displayName = "serve"
+serve.description = `Serve ${root} as http://${host}:${port}/. Override with --{host,port,root}.`
 exports.serve = serve
 
 function clean() {
@@ -386,6 +430,10 @@ function clean() {
 
   return $.del(to_be_deleted)
 }
+
+
+clean.displayName = "clean"
+clean.description = `Delete all build outputs (${pkg.cfg.paths.build.base}, ${pkg.cfg.paths.dist.base}).`
 exports.clean = clean
 
 function package_public() {
@@ -393,5 +441,9 @@ function package_public() {
                                  .pipe($.zip(pkg.cfg.vars.distZip))
                                  .pipe(dest('./'))
 }
+package_public.displayName = `Create ${pkg.cfg.vars.distZip}`
+package_public.description = `Create ${pkg.cfg.vars.distZip}.`
 
 exports.package = series(exports.clean, exports.publish, package_public)
+exports.package.displayName = "package"
+exports.package.description = `Build & create ${pkg.cfg.vars.distZip}.`
