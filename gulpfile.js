@@ -13,9 +13,11 @@ const pkg = require('./package.json')
 
 const { series, parallel } = require('gulp')
 const { src, dest } = require('gulp')
+const { watch } = require('gulp');
 
 const { rollup } = require('rollup')
 const { terser } = require('rollup-plugin-terser')
+
 const Vinyl = require('vinyl')
 
 const path = require('path')
@@ -47,7 +49,7 @@ const $ = {
     connect : require('gulp-connect'),
     autoprefixer : require('gulp-autoprefixer'),
     merge : require('merge-stream'),
-    shell : require('gulp-shell'),
+    child_process : require('child_process').exec,
     fs   : require('fs'),
     log   : require('fancy-log'),
     sourcemaps   : require('gulp-sourcemaps')
@@ -207,22 +209,28 @@ function build_prepare_build_compose() {
 }
 exports.prepare_build = build_prepare_build_compose()
 
-function build_org_file_with_docker_compose()
+function build_org_file_with_docker()
 {
     const docker_image = pkg.cfg.vars.build_org_docker_local
     const build_dir = path.join(__dirname, pkg.cfg.paths.build.base)
 
-    $.log(`-> Building org files with docker image ${docker_image}. Mounting ${build_dir}`)
-    const docker_cmd = `docker run --rm -v ${build_dir}:/tmp/build  ${docker_image}  /root/convert-to-html.sh /tmp/build`
+    $.log(`-> Configured docker container: ${docker_image}. Sources from ${build_dir}`)
+    const docker_cmd = `docker run --rm -v "${build_dir}":/tmp/build  "${docker_image}"  /root/convert-to-html.sh /tmp/build`
 
     $.log(docker_cmd)
+    var exec = require('child_process').exec;
 
-    return $.shell.task(docker_cmd)
+    return exec(docker_cmd, (err, stdout, stderr) =>
+        {
+            if (err) {
+              $.log.error(stderr)
+            }
+        })
 }
-// exports.build_org_file_with_docker = build_org_file_with_docker_compose()
+exports.build_org_file_with_docker = build_org_file_with_docker
 
 exports.finish_build = series(build_prepare_build_compose(),
-                           build_org_file_with_docker_compose())
+                           build_org_file_with_docker)
 
 function build_gather_node_modules_licenses(cb) {
     const dst = pkg.cfg.paths.dist.base
@@ -260,6 +268,11 @@ exports.publish = series(exports.finish_build,
 const root = $.yargs.argv.root || pkg.cfg.paths.dist.base // .cfg.paths.dist.base := "./public/"
 const port = $.yargs.argv.port || 8000
 
+async function reload() {
+    // FIXME: not working
+    $.connect.reload()
+}
+
 function serve() {
     $.connect.server({
         root: root,
@@ -267,7 +280,15 @@ function serve() {
         host: '0.0.0.0',
         livereload: true
     })
-    // $.watch([pkg.paths.src + '*.html'], series('reload'))
+
+    $.log(`Watching ${[pkg.cfg.paths.src.base + '*.org']} ...`)
+    watch(pkg.cfg.paths.src.base + '*.org',
+            series(src_root_to_build,
+                   build_org_file_with_docker,
+                   public_copy_from_build,
+                   reload
+                  ))
+    //, ))
 
     // $.watch([pkg.paths.src.js + '**'], series('js', 'reload', 'test'))
 

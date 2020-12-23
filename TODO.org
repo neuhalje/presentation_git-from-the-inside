@@ -1,6 +1,5 @@
 #+TITLE: Todo
 * Active TODOs
-
 ** Building
 *** TODO Clean up gulp file
 It has lots of repeating configuation, esp. dependencies (see [[id:78b0ebf6-ab43-4a88-9c61-670ece096600][Add ~watch~ support that really works]]).
@@ -15,10 +14,14 @@ Ideas:
 **** Requirements
 - Read only =src= :: =src= should be used ~read only~.
 - Documented in GitHub :: Have a document readable in GitHub (markdown, images)
+**** TODO Update flow diagram
 
-*** TODO Add ~watch~ support that really works
+*** STARTED Add ~watch~ support that really works
 :PROPERTIES:
 :ID:       78b0ebf6-ab43-4a88-9c61-670ece096600
+:END:
+:LOGBOOK:
+- State "STARTED"    from "TODO"       [2020-12-23 Wed 10:50]
 :END:
 Made difficult by duplicate configurations for dependencies (e.g. "watch").
 *** TODO [#C] Load fonts locally, not from google
@@ -33,7 +36,13 @@ CLOSED: [2020-12-20 Sun 21:02]
 - State "DONE"       from "TODO"       [2020-12-20 Sun 21:02]
 :END:
 **** TODO Add orgmk
-**** TODO Don't pollute =src= with build artifacts (e.g. images)
+**** TODO evaluate org-oer-publish
+**** TODO Fix 'build output owned by root'
+**** DONE Don't pollute =src= with build artifacts (e.g. images)
+CLOSED: [2020-12-23 Wed 10:50]
+:LOGBOOK:
+- State "DONE"       from "TODO"       [2020-12-23 Wed 10:50]
+:END:
 Evaluate [[https://orgmode.org/manual/Publishing.html][org-publish]].
 **** DONE Install needed packages in emacs
 CLOSED: [2020-12-21 Mon 09:44]
@@ -81,6 +90,9 @@ Fixed in [[orgit-rev:.::621794b][621794b master Generate PlantUML]].
 When babel scripts fail the export should stop with an error.
 
 Asked a [[https://stackoverflow.com/questions/65390626/halt-org-export-on-errors-in-org-babel-code-e-g-non-zero-exit-code][StackOverflow question (2020-12-21)]] for that.
+*** TODO Support auto-reloading
+1. =gulp --verify= says =gulp-connect: use the connect module directly=
+2. It is not working
 ** Content
 *** TODO Add Chapter: Content addressed storage
 *** TODO Add Chapter: What is a hash?
@@ -95,7 +107,11 @@ CLOSED: [2020-12-20 Sun 20:40]
 :LOGBOOK:
 - State "DONE"       from "TODO"       [2020-12-20 Sun 20:40]
 :END:
-**** TODO Push to new master
+**** DONE Push to new master
+CLOSED: [2020-12-23 Wed 11:30]
+:LOGBOOK:
+- State "DONE"       from "TODO"       [2020-12-23 Wed 11:30]
+:END:
 **** TODO Gulp script to generate =ghpages=
 ** Layout
 *** TODO [#A] Add a grid to the slides
