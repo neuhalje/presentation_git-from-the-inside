@@ -359,9 +359,7 @@ public_copy_from_build.description = `Copy files matching ${pkg.cfg.filter.publi
 exports.publish = series(exports.finish_build,
                          public_copy_from_build)
 
-exports.publish.displayName = "publish"
 exports.publish.description = `Build the project and publish to ${pkg.cfg.paths.dist.base}.`
-exports.default = exports.publish
 
 /*
  * Utility functions
@@ -447,3 +445,5 @@ package_public.description = `Create ${pkg.cfg.vars.distZip}.`
 exports.package = series(exports.clean, exports.publish, package_public)
 exports.package.displayName = "package"
 exports.package.description = `Build & create ${pkg.cfg.vars.distZip}.`
+
+exports.default = exports.publish
