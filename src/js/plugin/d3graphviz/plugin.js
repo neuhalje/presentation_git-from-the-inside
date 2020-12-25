@@ -18,12 +18,10 @@ function GraphvizAnimation(targetElementSelector, arg) {
         attributer : function (datum, index, nodes) {
                       var selection = d3.select(this);
 
-                      if (datum.tag == "svg") {
+                      if (datum.tag === "svg") {
                           var parent = nodes[index].parentNode;
                           var width = parent.offsetWidth;
                           var height = parent.offsetHeight;
-                  //        var width = window.innerWidth;
-                  //        var height = window.innerHeight;
 
                         // FIXME: magic 100: make sure we are  not cut off on the left side
                           var x = 100;
@@ -49,7 +47,7 @@ function GraphvizAnimation(targetElementSelector, arg) {
                         .renderDot(dotLines)
                         .on("end", function () {
                             that.dotIndex = (that.dotIndex + 1) % that.dots.length;
-                            if (that.dotIndex == 0) {
+                            if (that.dotIndex === 0) {
                               that.loopCount++;
                             }
 
@@ -64,7 +62,7 @@ function GraphvizAnimation(targetElementSelector, arg) {
             //var isLast = that.dotIndex == that.dots.length - 1;
             var delay = 0;
 
-            var isLast = (that.dotIndex == 0);
+            var isLast = (that.dotIndex === 0);
             if (isLast) {
                 delay = (that.loopCount > 0) ? 6000 : 0;
             } else {
