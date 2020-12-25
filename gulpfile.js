@@ -235,6 +235,9 @@ function src_scss_to_build() {
 src_scss_to_build.displayName = "Transform scss to build"
 src_scss_to_build.description = `Compile ${pkg.cfg.paths.src.scss} to build, create sourcemaps and autoprefix.`
 
+exports.scss =() => src_scss_to_build()
+exports.scss.description = src_scss_to_build.description
+
 function src_to_build_compose() {
   return parallel(src_root_to_build,
                       src_img_to_build,
@@ -386,25 +389,44 @@ async function reload() {
     $.connect.reload()
 }
 
-function serve() {
-    $.connect.server({
-        root: root,
-        port: port,
-        host: host,
-        livereload: true
-    })
-
-    $.log(`Watching ${[pkg.cfg.paths.src.base + '*.org']} ...`)
-    watch(pkg.cfg.paths.src.base + '*.org',
+function serve_watch_org() {
+    $.log(`Watching ${pkg.cfg.paths.src.base + '*.org'} ...`)
+    return watch(pkg.cfg.paths.src.base + '*.org',
             series(src_root_to_build,
                    build_org_file_with_docker,
                    public_copy_from_build,
                    reload
                   ))
 }
+serve_watch_org.displayName = `Watch ${pkg.cfg.paths.src.base + '*.org'}`
+serve_watch_org.description = `Watchi ${pkg.cfg.paths.src.base + '*.org'} and rebuild on change.`
 
-serve.description = `Serve ${root} as http://${host}:${port}/. Override with --{host,port,root}.`
-exports.serve = serve
+function serve_watch_scss() {
+    $.log(`Watching ${pkg.cfg.paths.src.scss + '**/*.scss'} ...`)
+    return watch(pkg.cfg.paths.src.scss + '**/*.scss',
+            series(src_scss_to_build,
+                   public_copy_from_build,
+                   reload
+                  ))
+}
+serve_watch_scss.displayName = `Watch ${pkg.cfg.paths.src.scss + '**/*.scss'}`
+serve_watch_scss.description = `Watchi ${pkg.cfg.paths.src.scss + '**/*.scss'} and rebuild on change.`
+
+
+
+function serve_webserver() {
+    $.connect.server({
+        root: root,
+        port: port,
+        host: host,
+        livereload: true
+    })
+}
+serve_webserver.displayName =  `Serve ${root} as http://${host}:${port}/.`
+serve_webserver.description =  `Serve ${root} as http://${host}:${port}/. Override with --{host,port,root}.`
+
+exports.serve = parallel(serve_webserver, serve_watch_org, serve_watch_scss)
+exports.serve.description = `Serve ${root} as http://${host}:${port}/. Override with --{host,port,root}.`
 
 function clean() {
 
