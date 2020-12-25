@@ -380,8 +380,10 @@ exports.finish_build.description = `Populate and build ${pkg.cfg.paths.build.bas
  */
 
 function public_copy_from_build() {
+  const filter = $.filter(pkg.cfg.filter.publishThese)
+  $.log(`Copy ${pkg.cfg.paths.build.base} -> ${pkg.cfg.paths.dist.base} with filter ${pkg.cfg.filter.publishThese}`)
   return src(pkg.cfg.paths.build.base + "**/*")
-        .pipe($.filter(pkg.cfg.filter.publishThese))
+        .pipe(filter)
         .pipe(dest(pkg.cfg.paths.dist.base))
 }
 public_copy_from_build.displayName = "Copy to build"
@@ -398,8 +400,8 @@ exports.publish.description = `Build the project and publish to ${pkg.cfg.paths.
  */
 
 const root = $.yargs.argv.root || pkg.cfg.paths.dist.base // .cfg.paths.dist.base := "./public/"
-const port = $.yargs.argv.port || 8000
-const host = $.yargs.argv.bind || '127.0.0.1'
+const port = $.yargs.argv.port || pkg.cfg.vars.serve.port || 8000
+const host = $.yargs.argv.host || pkg.cfg.vars.serve.host || '127.0.0.1'
 
 async function reload() {
     // FIXME: not working
