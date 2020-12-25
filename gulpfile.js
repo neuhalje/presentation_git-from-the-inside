@@ -410,7 +410,7 @@ function serve_watch_org() {
     $.log(`Watching ${pkg.cfg.paths.src.base + '*.org'} ...`)
     return watch(pkg.cfg.paths.src.base + '*.org',
             series(src_root_to_build,
-                   build_org_file_with_docker,
+                   exports.build_org_file_with_docker,
                    public_copy_from_build,
                    reload
                   ))

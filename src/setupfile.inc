@@ -21,7 +21,7 @@
 #+REVEAL_TRANS: fade
 #+REVEAL_THEME: solarized
 #+REVEAL_HLEVEL: 999
-#+REVEAL_EXTRA_CSS: ./presentation.css
+#+REVEAL_EXTRA_CSS: ./css/slides.css
 
 #+HTML_HEAD: <link rel="shortcut icon" href="/img/site/favicon.ico">
 #+HTML_HEAD: <link rel="icon" type="image/png" sizes="16x16" href="/img/site/favicon-16x16.png">

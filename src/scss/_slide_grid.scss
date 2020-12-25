@@ -1,0 +1,113 @@
+/*
+ * Layouts for a slide
+ */
+
+// phi: goden ratio
+$phi: 1.6180339887498948482;
+
+/*
+/* Two columns:
+/* .---------------------------------------------.
+/* |    .container .two-columns                  |
+/* |                                             |
+/* |   .---------.--------------------------.    |
+/* |   |  div1   | div2                     |    |
+/* |   |         |                          |    |
+/* |   |         |                          |    |
+/* |   |         |                          |    |
+/* |   |         |                          |    |
+/* |   |         |                          |    |
+/* |   |         |                          |    |
+/* |   .---------.--------------------------.    |
+/* .---------------------------------------------.
+*/
+
+.container {
+    display: grid;
+    max-width:  none;
+    max-height: none;
+}
+
+.two-columns {
+    grid-template-columns: 1fr $phi * 1fr;
+}
+
+.two-columns-small-right {
+    grid-template-columns: $phi * 1fr 1fr;
+}
+
+
+/*
+/* Two columns, two rows:
+/* .---------------------------------------------.
+/* |    .container .two-rows                     |
+/* |                                             |
+/* |   .---------.--------------------------.    |
+/* |   |  div1   | div2                     |    |
+/* |   |         |                          |    |
+/* |   |         |                          |    |
+/* |   |         |                          |    |
+/* |   |         |                          |    |
+/* |   .---------.--------------------------.    |
+/* |   |  div3   | div4                     |    |
+/* |   .---------.--------------------------.    |
+/* .---------------------------------------------.
+*/
+
+.two-rows {
+    grid-template-rows:  $phi * 1fr 1fr;
+}
+
+
+/*
+/* Two columns, two rows plus area for notes:
+/* .---------------------------------------------.
+/* |    .container .two-rows-notes               |
+/* |                                             |
+/* |   .---------.--------------------------.    |
+/* |   |  div1   | div2                     |    |
+/* |   |         |                          |    |
+/* |   |         |                          |    |
+/* |   |         |                          |    |
+/* |   |         |                          |    |
+/* |   .---------.--------------------------.    |
+/* |   |  div3   | div4                     |    |
+/* |   .------------------------------------.    |
+/* |   |  .note                             |    |
+/* |   .------------------------------------.    |
+/* .---------------------------------------------.
+*/
+
+
+.two-rows-notes {
+    grid-template-rows:  $phi * 1fr 1fr auto;
+}
+
+.note {
+     grid-column: 1 / span 2;
+     grid-row: 3;
+}
+
+.top-left {
+     grid-column: 1;
+     grid-row: 1;
+}
+
+.top-right {
+     grid-column: 2;
+     grid-row: 1;
+}
+
+.bottom-left {
+     grid-column: 1;
+     grid-row: 2;
+}
+
+.bottom-right {
+     grid-column: 2;
+     grid-row: 2;
+}
+
+.two-cols-wide {
+     grid-column-end:  span 2;
+}

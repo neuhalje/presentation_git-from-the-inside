@@ -7,12 +7,108 @@
 #+SETUPFILE: setupfile-d3graphviz.inc
 #+INCLUDE: git-tooling.inc
 
-* Example: images
+* Examples
+The following examples can be skipped via a =:noexport= tag on this headline
+** CSS
+:PROPERTIES:
+:CUSTOM_ID: example_css
+:END:
+
+*** Two Coloumns
+=.two-columns=
+#+begin_export html
+<div class="container two-columns r-stretch" style="background:black">
+<div style="background:red">Left</div>
+<div style="background:blue">Right</div>
+</div>
+#+end_export
+
+*** Two Coloumns, two rows
+=.two-columns .two-rows=
+#+begin_export html
+<div class="container two-columns two-rows r-stretch" style="background:black">
+<div style="background:red">Top Left</div>
+<div style="background:blue">Top Right</div>
+<div style="background:green">Bottom Left</div>
+<div style="background:yellow">Bottom Right</div>
+</div>
+#+end_export
+*** Two Coloumns, two rows - row 1 spans two cols
+=.two-columns .two-rows=
+#+begin_export html
+<div class="container two-columns two-rows r-stretch" style="background:black">
+<div style="background:red" class="top-left two-cols-wide">Top Left and right</div>
+<div style="background:green" class="bottom-left">Bottom Left</div>
+<div style="background:yellow" class="bottom-right">Bottom Right</div>
+</div>
+#+end_export
+*** Two Coloumns, two rows + notes
+=.two-columns .two-rows-notes=
+#+begin_export html
+<div class="container two-columns two-rows-notes r-stretch" style="background:black">
+<div style="background:red">Top Left</div>
+<div style="background:blue">Top Right</div>
+<div style="background:green">Bottom Left</div>
+<div style="background:yellow">Bottom Right</div>
+<div style="background:orange" class="note">NOTE</div>
+</div>
+#+end_export
+*** Two Coloumns, two rows + notes (long notes)
+=.two-columns .two-rows-notes=
+#+begin_export html
+<div class="container two-columns two-rows-notes r-stretch" style="background:black">
+<div style="background:red">Top Left</div>
+<div style="background:blue">Top Right</div>
+<div style="background:green">Bottom Left</div>
+<div style="background:yellow">Bottom Right</div>
+#+end_export
+
+#+HTML: <div style="background:orange" class="note">
+The notes
+
+- can span multiple
+- lines and will resize
+- automatically
+#+HTML: </div>
+#+HTML: </div> <!-- container-->
+*** Two Coloumns, two rows + notes (placed via CSS class)
+=.two-columns .two-rows-notes= but placed via CSS class
+#+HTML: <div class="container two-columns two-rows-notes r-stretch" style="background:black">
+
+#+HTML: <div style="background:orange" class="note">
+The notes
+
+- can span multiple
+- lines and will resize
+- automatically
+#+HTML: </div> <!-- notes -->
+
+#+HTML: <div style="background:blue" class="top-right">
+Top Right
+#+HTML: </div> <!-- top right -->
+
+#+HTML: <div style="background:yellow" class="bottom-right">
+Bottom Right
+#+HTML: </div> <!-- bottom right -->
+
+#+HTML: <div style="background:green" class="bottom-left">
+Bottom Left
+#+HTML: </div> <!-- bottom left -->
+
+#+HTML: <div style="background:red" class="top-left">
+Top Left
+#+HTML: </div> <!-- top left -->
+
+#+HTML: </div> <!-- container -->
+** Images
 :PROPERTIES:
 :CUSTOM_ID: example_image
 :END:
+
+Images should be generated into =org-gen/= (see =doc/BUILD.org=):
+
 #+NAME: example-image-plantuml
-#+begin_src plantuml :file "XXXexample-image-plantuml.png"
+#+begin_src plantuml :file "org-gen/example-image-plantuml.png"
 @startuml
 title Example
 
@@ -23,7 +119,8 @@ Class05 --> "1" Class060
 Class06 -> Class060 : pointing right
 @enduml
 #+end_src
-* Halt on Error
+** Halt on Error                                                               :noexport:
+Failure case: This page /should/ halt the generator.
 #+begin_src python
 raise Exception("please stop")
 #+end_src
@@ -37,8 +134,40 @@ echo Hello there
 echo Hello there to stderr >&2
 exit 1
 #+end_src
+** Add Elements to Lists                                                       :noexport:
+#+ATTR_REVEAL: :frag (grow shrink roll-in fade-out none appear) :frag_idx (6 5 4 3 2 1)
+- I will grow. (6)
+- I will shrink. (5)
+- I rolled in. (4)
+- I will fade out. (3)
+- I don't fragment. (2)
+- I appear (1)
+** Combined
+#+HTML: <div class="container two-columns two-rows r-stretch">
+#+HTML: <div class="top-right">
+#+NAME: includeme
+#+begin_src plantuml :file "org-gen/example-image2-plantuml.png"
+@startuml
+title Example #2
 
-* Better
+' https://plantuml.com/class-diagram
+$Class01 "1" *-- "many" Class02 : contains
+Class03 o-- Class04 : aggregation
+Class05 --> "1" Class060
+Class06 -> Class060 : pointing right
+@enduml
+#+end_src
+#+HTML: </div><div class="bottom-left two-cols-wide">
+This is how the source code looks like:
+#+begin_src plantuml :exports code :noweb yes
+<<includeme>>
+#+end_src
+#+HTML: </div><div class="top-left">
+See the graph on the right side?
+#+HTML: </div> <!-- top left -->
+#+HTML: </div> <!-- container -->
+/The source spans two columns to give us enough space./
+** Example Git
 :PROPERTIES:
 :header-args: :var repo="/tmp/x/number-of-the-beast2"
 :repo: /tmp/x/number-of-the-beast2
@@ -75,48 +204,8 @@ git commit -m'2nd commit' --allow-empty
 #+end_src
 
 {{{git_with_diff_result(number1src)}}}
-
-* XXX                                                                           :noexport:
-#+ATTR_REVEAL: :frag (grow shrink roll-in fade-out none appear) :frag_idx (6 5 4 3 2 1)
-- I will grow.
-- I will shrink.
-- I rolled in.
-- I will fade out.
-- I don't fragment.
-- I appear
-
-* Source                                                                        :noexport:
-bla
-
-#+ATTR_REVEAL: :code_attribs data-line-numbers='1,3'
-#+BEGIN_SRC c++
-int main()
-{
-  cout << "Hello" << endl;
-  cout << "World" << endl;
-}
-#+END_SRC
-
-* Two                                                                           :noexport:
-blubb
-
-** Three
-threeeeee
-
-** Four
-444444
-
-** Table
-#+ATTR_HTML: :width 100%
-| column_title1  | column_title2 |
-|----------------+---------------|
-| a              | b             |
-| a              | b             |
-| a              | b             |
-
-* MATH
+** MATH
 ${n! \over k!(n-k)!} = {n \choose k}$
-
 * Licensing
    :PROPERTIES:
    :CUSTOM_ID: licensing
