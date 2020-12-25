@@ -550,6 +550,22 @@ exports.prepare_build.description = `Prepare ${pkg.cfg.paths.build.base} with no
 :PROPERTIES:
 :ID:       a74072d1-de6c-4083-91db-b9f9c3a09513
 :END:
+
+#+begin_src javascript
+function build_org_create_gen_dir(cb) {
+   const dir = `${pkg.cfg.paths.build.base}/org-gen`
+
+   $.log(`Create ${pkg.cfg.paths.build.base}/org-gen`)
+
+   if (! $.fs.existsSync(dir)) {
+       $.fs.mkdirSync(dir)
+   }
+   cb()
+}
+
+build_org_create_gen_dir.displayName = `Create ${pkg.cfg.paths.build.base}/org-gen`
+#+end_src
+
 TODO: This has still some issues
 - The resulting files are owned by root
 
@@ -573,9 +589,12 @@ function build_org_file_with_docker()
             }
         })
 }
-exports.build_org_file_with_docker = build_org_file_with_docker
-exports.build_org_file_with_docker.displayName = "Transform index.org via Docker"
-exports.build_org_file_with_docker.description = `Build index.org with "${pkg.cfg.vars.build_org_docker_local}" docker container.`
+build_org_file_with_docker.displayName = "Transform index.org via Docker"
+build_org_file_with_docker.description = `Build index.org with "${pkg.cfg.vars.build_org_docker_local}" docker container.`
+
+exports.build_org_file_with_docker = series(build_org_create_gen_dir, build_org_file_with_docker)
+exports.build_org_file_with_docker.displayName = build_org_file_with_docker.displayName
+exports.build_org_file_with_docker.description = build_org_file_with_docker.description
 #+end_src
 **** Create licenses
 :PROPERTIES:
@@ -667,7 +686,8 @@ build_favicons.description = `Derive favicons from ${pkg.cfg.favicon.src}.`
 exports.finish_build = parallel(build_gather_node_modules_licenses,
                                 build_favicons,
                                 series(build_prepare_build_compose(),
-                                       build_org_file_with_docker))
+                                        exports.build_org_file_with_docker))
+
 exports.finish_build.displayName = "build"
 exports.finish_build.description = `Populate and build ${pkg.cfg.paths.build.base}.`
 #+end_src
@@ -736,7 +756,7 @@ function serve_watch_org() {
     $.log(`Watching ${pkg.cfg.paths.src.base + '*.org'} ...`)
     return watch(pkg.cfg.paths.src.base + '*.org',
             series(src_root_to_build,
-                   build_org_file_with_docker,
+                   exports.build_org_file_with_docker,
                    public_copy_from_build,
                    reload
                   ))
