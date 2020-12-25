@@ -22,6 +22,7 @@ const { terser } = require('rollup-plugin-terser')
 const Vinyl = require('vinyl')
 
 const path = require('path')
+const { Readable, Writable } = require('stream');
 
 const $ = {
     if : require('gulp-if'),
@@ -69,18 +70,23 @@ const banner = `/*!
 
 process.setMaxListeners(20)
 
-function string_src(filename, string) {
-  var src = require('stream').Readable({ objectMode: true })
-  src._read = function () {
-    this.push(new Vinyl({
-      cwd: '',
-      base: null,
-      path: filename,
-      contents: Buffer.from(string)
-    }))
-    this.push(null)
-  }
-  return src
+/*
+ * Create a stream useable in =src=. The stream contains
+ * one file named =filename= with the content =content=.
+ */
+function string_src(filename, content) {
+  return new Readable({
+    objectMode: true,
+    read() {
+        this.push(new Vinyl({
+        cwd: '',
+        base: null,
+        path: filename,
+        contents: Buffer.from(content)
+        }))
+        this.push(null)
+    }
+  })
 }
 
 /*
