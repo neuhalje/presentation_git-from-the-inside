@@ -188,6 +188,11 @@ function src_lint_js() {
 src_lint_js.displayName = "Lint my JS"
 src_lint_js.description = `Lint ${pkg.cfg.paths.src.js}.`
 
+// Use a lambda bc. otherwise gulp would use the functions display name with spaces as target
+exports.lint = () => src_lint_js()
+exports.lint.description = src_lint_js.description
+
+
 function src_copy_js_to_build() {
   return src(pkg.cfg.paths.src.js + '**/*.js') // .cfg.paths.src.js := "./src/js/"
     .pipe($.header(banner))
