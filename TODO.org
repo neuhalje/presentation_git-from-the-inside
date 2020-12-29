@@ -89,9 +89,15 @@ Add PlantUML to the load path:
 #+end_example
 
 Fixed in [[orgit-rev:.::621794b][621794b master Generate PlantUML]].
-**** TODO Make Docker container  configurable via CLI
+**** DONE Make Docker container configurable via CLI
+CLOSED: [2020-12-29 Tue 18:22]
+:LOGBOOK:
+- State "DONE"       from "TODO"       [2020-12-29 Tue 18:22]
+:END:
 1. As a reference to a json config in package.json
 2. As an image name
+
+--> "--docker-image"
 *** STARTED Fail Export babel-error
 :LOGBOOK:
 - State "STARTED"    from "TODO"       [2020-12-21 Mon 12:46]
@@ -128,10 +134,18 @@ CLOSED: [2020-12-23 Wed 11:30]
 :END:
 **** TODO Gulp script to generate =ghpages=
 ** Layout
-*** TODO [#A] Add a grid to the slides
+*** DONE [#A] Add a grid to the slides
+CLOSED: [2020-12-25 Fri 16:20]
+:LOGBOOK:
+- State "DONE"       from "TODO"       [2020-12-25 Fri 16:20]
+:END:
 Maybe use [[https://bulma.io/][bulma.io]]?
-**** TODO Custom CSS
+**** DONE Custom CSS
+CLOSED: [2020-12-25 Fri 16:19]
+:LOGBOOK:
+- State "DONE"       from "TODO"       [2020-12-25 Fri 16:19]
+:END:
 Add custom css
-**** TODO Clone reveal.js Theme
+*** TODO Custom reveal.js Theme
 Clone a theme and make it mine
 * Archived TODOs

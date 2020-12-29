@@ -56,7 +56,10 @@ const $ = {
     log   : require('fancy-log'),
     sourcemaps   : require('gulp-sourcemaps'),
     del : require('del'),
-    favicons : require('favicons').stream
+    favicons : require('favicons').stream,
+    notify : require("gulp-notify"),
+    notifier : require('node-notifier')
+
 }
 
 const banner = `/*!
@@ -69,6 +72,36 @@ const banner = `/*!
 `
 
 process.setMaxListeners(20)
+
+// CLI arguments
+const args = $.yargs.options({
+    'root': {
+        demandOption: true,
+        default: pkg.cfg.paths.dist.base,
+        describe: 'serve: Directory to be served via http. Default from package.json: cfg.paths.dist.base',
+        type: 'string'
+      },
+    'host': {
+        demandOption: true,
+        default: pkg.cfg.vars.serve.host || '127.0.0.1',
+        describe: 'serve: Address to bind to (e.g. localhost, 127.0.0.1 or 0.0.0.0). Configure in package.json: cfg.vars.serve.host',
+        type: 'string'
+    },
+    'port': {
+        demandOption: true,
+        default: pkg.cfg.vars.serve.port || 8000,
+        describe: 'serve: Port to listen on. Configure in package.json: cfg.vars.serve.port',
+        type: 'string'
+    },
+    'docker_image': {
+        alias: 'docker-image',
+        demandOption: true,
+        default:  pkg.cfg.vars.build_org_docker_local ||  pkg.cfg.vars.build_org_docker,
+        describe: 'publish: Docker image used to convert org->html. Default taken from cfg.vars.build_org_docker (for local dev you can override this in pkg.cfg.vars.build_org_docker_local).',
+        type: 'string'
+    },
+})
+const argv = args.argv
 
 /*
  * Create a stream useable in =src=. The stream contains
@@ -274,21 +307,28 @@ build_org_create_gen_dir.displayName = `Create ${pkg.cfg.paths.build.base}/org-g
 
 function build_org_file_with_docker()
 {
-    const docker_image = pkg.cfg.vars.build_org_docker_local
+    const docker_image = argv.docker_image
     const build_dir = path.join(__dirname, pkg.cfg.paths.build.base)
 
-    $.log(`-> Configured docker container: ${docker_image}. Sources from ${build_dir}`)
     const docker_cmd = `docker run --rm -v "${build_dir}":/tmp/build  "${docker_image}"  /root/convert-to-html.sh /tmp/build`
+    const options = {}
 
-    $.log(docker_cmd)
-    var exec = require('child_process').exec;
+    $.log(`-> Configured docker container: ${docker_image}. Building files in from ${build_dir}`)
+    $.log(`-> Running: ${docker_cmd}`)
 
-    return exec(docker_cmd, (err, stdout, stderr) =>
-        {
+    const exec = require('child_process').exec
+
+    // This is nearly 1:1 from the documentation (https://nodejs.org/api/child_process.html#child_process_child_process_exec_command_options_callback).
+    // Still the callback is not executed on errors
+    return exec(docker_cmd,  options, (err, stdout, stderr) => {
             if (err) {
               $.log.error(stderr)
+              $.notify.onError("Error building docker <%= error.message =%> with command <%= docker_cmd =%>")
               throw new Error('kaboom: ' + err)
-            }
+            } else {
+              $.log.error(stderr)
+              $.notify.onError("Docker done <%= docker_cmd =%>")
+        }
         })
 }
 build_org_file_with_docker.displayName = "Transform index.org via Docker"
@@ -399,13 +439,10 @@ exports.publish.description = `Build the project and publish to ${pkg.cfg.paths.
  * Utility functions
  */
 
-const root = $.yargs.argv.root || pkg.cfg.paths.dist.base // .cfg.paths.dist.base := "./public/"
-const port = $.yargs.argv.port || pkg.cfg.vars.serve.port || 8000
-const host = $.yargs.argv.host || pkg.cfg.vars.serve.host || '127.0.0.1'
-
 async function reload() {
     // FIXME: not working
     $.connect.reload()
+    $.notifier.notify({ title: "Build succeeded", message: "Build output updated, please reoad web page."})
 }
 
 function serve_watch_org() {
@@ -435,17 +472,17 @@ serve_watch_scss.description = `Watchi ${pkg.cfg.paths.src.scss + '**/*.scss'} a
 
 function serve_webserver() {
     $.connect.server({
-        root: root,
-        port: port,
-        host: host,
+        root: argv.root,
+        port: argv.port,
+        host: argv.host,
         livereload: true
     })
 }
-serve_webserver.displayName =  `Serve ${root} as http://${host}:${port}/.`
-serve_webserver.description =  `Serve ${root} as http://${host}:${port}/. Override with --{host,port,root}.`
+serve_webserver.displayName =  `Serve ${root} as http://${argv.host}:${argv.port}/.`
+serve_webserver.description =  `Serve ${root} as http://${argv.host}:${argv.port}/. Override with --{host,port,root}.`
 
 exports.serve = parallel(serve_webserver, serve_watch_org, serve_watch_scss)
-exports.serve.description = `Serve ${root} as http://${host}:${port}/. Override with --{host,port,root}.`
+exports.serve.description = `Serve ${argv.root} as http://${argv.host}:${argv.port}/. Override with --{host,port,root}.`
 
 function clean() {
 
@@ -480,3 +517,8 @@ exports.package.displayName = "package"
 exports.package.description = `Build & create ${pkg.cfg.vars.distZip}.`
 
 exports.default = exports.publish
+
+async function check_out() {
+    $.notifier.notify( {title:'title', message:'message'})
+}
+ exports.check_out = check_out

@@ -1,41 +1,42 @@
-- [Overview](#org4dd77e7)
-  - [Important targets](#org027bc93)
-    - [`gulp publish` - build `public/`](#orgca8fa25)
-    - [`gulp serve` - development webserver with watch](#orga949853)
-    - [`gulp package` - create a ZIP](#orgbf6e6d5)
-    - [`gulp clean` - clean `build/` and `public/`](#orgf39349a)
-  - [Design decisions](#org5366d49)
-  - [Directory layout](#orgc55a6e9)
-    - [Flow between folders](#org8726eb8)
-  - [Configuration in `packages.json`](#orga918bc0)
-  - [Edit the presentation](#org103466c)
-  - [Required tools for building](#orgc260d29)
-  - [Tools used by the author](#orgafa7cf4)
-    - [`gulp` for building](#org0e72c4c)
-    - [`reveal.js` as presentation framework](#org32b77cf)
-    - [`emacs` with `org-mode`, `org-babel`, `org-re-reveal` for writing/exporting](#org5981957)
-    - [`Docker` for transforming `org` to `html`](#org81d03c8)
-- [Building this document](#orgb0e9e35)
-- [Building `gulpfile.js`](#orgb59edc1)
-  - [Red Tape](#org1efa9f6)
-    - [Make package.json available](#orge9c621a)
-    - [Setup plugins for gulpfile](#org2e670c0)
-    - [Configure Plugins](#org5d89125)
-  - [Custom Functions](#org19a778d)
-  - [Folders](#org8ecc40b)
-    - [node\_modules/](#org323642e)
-    - [src/](#orge79d89a)
-    - [build/](#orga50f6d5)
-    - [public/](#org932378e)
-  - [Utility Functions](#org2bb0630)
-    - [serve](#orgbccff36)
-    - [clean](#org8a8c90b)
-    - [package](#orga17afa1)
-    - [default](#org101de11)
+- [Overview](#org94d5711)
+  - [Important targets](#org3fdda8f)
+    - [`gulp publish` - build `public/`](#org827e5a5)
+    - [`gulp serve` - development webserver with watch](#orgde3dc2e)
+    - [`gulp package` - create a ZIP](#orge4c1120)
+    - [`gulp clean` - clean `build/` and `public/`](#org42d8259)
+  - [Design decisions](#orge180df9)
+  - [Directory layout](#org43ab20c)
+    - [Flow between folders](#org1c8974b)
+  - [Configuration in `packages.json`](#org59cd309)
+  - [Edit the presentation](#org50eced0)
+  - [Required tools for building](#orgc0cc975)
+  - [Tools used by the author](#org1c25864)
+    - [`gulp` for building](#orgab3a3fe)
+    - [`reveal.js` as presentation framework](#orgae07240)
+    - [`emacs` with `org-mode`, `org-babel`, `org-re-reveal` for writing/exporting](#org3d28955)
+    - [`Docker` for transforming `org` to `html`](#orged3f236)
+- [Building this document](#orgbc63e85)
+- [Building `gulpfile.js`](#orgef8268c)
+  - [Red Tape](#orgffbd7ca)
+    - [Make package.json available](#orge464276)
+    - [Setup plugins for gulpfile](#org7c00b30)
+    - [Configure Plugins](#org3684407)
+  - [Custom Functions](#org96125d8)
+  - [Folders](#org04d83d1)
+    - [node\_modules/](#orgfc1a301)
+    - [src/](#org99fdb4d)
+    - [build/](#org5e20f73)
+    - [public/](#orgec29e8d)
+  - [Utility Functions](#org9424d37)
+    - [serve](#orge1f60a0)
+    - [clean](#org98c491e)
+    - [package](#orgba3cafa)
+    - [default](#orgf52301e)
+    - [Playground](#org6d405bd)
 
 
 
-<a id="org4dd77e7"></a>
+<a id="org94d5711"></a>
 
 # Overview
 
@@ -44,65 +45,71 @@ This (rather lengthy) file describes the build process and is used to generate t
 The task of the build process is the transformation of `index.org` to a [reveal.js](https://revealjs.com/) presentation.
 
 
-<a id="org027bc93"></a>
+<a id="org3fdda8f"></a>
 
 ## Important targets
 
 Calling `gulp` (or `gulp default`) will build the whole presentation. The final version will be published into the `public/` directory.
 
-**It is important that the presentation is viewed via http(s)** since some JS libraries will not work correctly when served via the file system. The task [`gulp serve`](#orga949853) starts a small webserver for that.
+**It is important that the presentation is viewed via http(s)** since some JS libraries will not work correctly when served via the file system. The task [`gulp serve`](#orgde3dc2e) starts a small webserver for that.
 
 
-<a id="orgca8fa25"></a>
+<a id="org827e5a5"></a>
 
 ### `gulp publish` - build `public/`
 
-`gulp` or `gulp publish` will update `public/` to the latest result (see [here](#org44fbe74)).
+`gulp` or `gulp publish` will update `public/` to the latest result (see [here](#org3a32127)).
 
-[`gulp clean`](#orgf39349a) is **not** called as a part of publish.
+[`gulp clean`](#org42d8259) is **not** called as a part of publish.
 
     # Serve rebuild the presentation and serve it via a local http server
     gulp clean publish serve --series
 
+1.  Options
 
-<a id="orga949853"></a>
+    -   **docker-image:** The docker image to use to convert `index.org` into `index.html`.
+
+
+<a id="orgde3dc2e"></a>
 
 ### `gulp serve` - development webserver with watch
 
 `gulp serve` will start a small webserver to view the results (via [gulp-serve](https://www.npmjs.com/package/gulp-serve)).
 
-To override the port/path use `--port` and `--root`:
+1.  Options
 
-    # Serve /tmp via port 9999
-    gulp serve --port 9999 --root /tmp
+    To override the port/path use `--port` and `--root`:
+    
+        # Serve /tmp via port 9999
+        gulp serve --port 9999 --root /tmp
+    
+    Changes to `index.org` will be detected and automatically build & deployed to `public/`. `gulp serve` will *not* do the initial build.
+    
+        # A good way to start the day
+        gulp clean publish serve --series
+    
+    The task is defined [here](#orge1f60a0).
 
-Changes to `index.org` will be detected and automatically build & deployed to `public/`. `gulp serve` will *not* do the initial build.
 
-    # A good way to start the day
-    gulp clean publish serve --series
-
-The task is defined [here](#orgbccff36).
-
-
-<a id="orgbf6e6d5"></a>
+<a id="orge4c1120"></a>
 
 ### `gulp package` - create a ZIP
 
 `gulp package` will create a ZIP file of `public/**/*`.
 
-The task is defined [here](#orga17afa1).
+The task is defined [here](#orgba3cafa).
 
 
-<a id="orgf39349a"></a>
+<a id="org42d8259"></a>
 
 ### `gulp clean` - clean `build/` and `public/`
 
 `gulp clean` will delete all build outputs.
 
-The task is defined [here](#org8a8c90b).
+The task is defined [here](#org98c491e).
 
 
-<a id="org5366d49"></a>
+<a id="orge180df9"></a>
 
 ## Design decisions
 
@@ -111,7 +118,7 @@ The whole process serves the simple matter of *creating a presentation*. That me
 These are the primary design goals, from more general to more specific:
 
 -   **Get the Job Done:** In the end the result in `public/` matters.
--   **Ease of Use:** The whole process must be easy to use with a [minimum set of required tools](#orgc260d29).
+-   **Ease of Use:** The whole process must be easy to use with a [minimum set of required tools](#orgc0cc975).
 -   **Automated Build:** The whole process needs to be automated.
 -   **Support for `org-mode`:** This was the trigger. I wanted to use [emacs](https://www.gnu.org/software/emacs/) with [org-mode](https://orgmode.org/), [org-babel](https://orgmode.org/worg/org-contrib/babel/), and [org-re-reveal](https://gitlab.com/oer/org-re-reveal) for writing slides.
 -   **Reuseable:** The whole system should be reusable across multiple presentations. *Ideally* a new presentation just needs some bootstrap (repository) and *content*.
@@ -119,49 +126,49 @@ These are the primary design goals, from more general to more specific:
 -   **Configuration in [package.json](../package.json):** Ideally (see *Reuseable*) a new presentation only needs changes in [package.json](../package.json) and [index.org](../src/index.md).
 
 
-<a id="orgc55a6e9"></a>
+<a id="org43ab20c"></a>
 
 ## Directory layout
 
 The directory layout is quite simple: Files are moved from `{src, node_modules}` to `build`. In `build` files are generated (e.g. `.org` &#x2013;> `.html`) and then copied to `public`.
 
--   **node\_modules/:** [Modules](../package.json) installed via [npm](https://www.npmjs.com/). Copied to `build/js` via specific targets. (see [node\_modules/](#org323642e))
+-   **node\_modules/:** [Modules](../package.json) installed via [npm](https://www.npmjs.com/). Copied to `build/js` via specific targets. (see [node\_modules/](#orgfc1a301))
 -   **src/:** Source files (*read-only* during build)
-    -   **.:** files that will end up in `build/` via copy. `index.org` is located here. (see[src/](#orge79d89a))
-    -   **img/:** images, will be copied to `build/img/.`. ([src/img/](#org4c3068a))
-    -   **js/:** JavaScript files, will be copied (and potentially minified & uglified) to `build/js`. ([src/js/](#org67f5f29))
-    -   **css/:** CSS files, will be copied (and potentially minified) to `build/css`. ([src/css/](#orge8d37b1))
-    -   **scss/:** [SCSS](https://sass-lang.com/documentation/syntax) files, will be run through [Sass](https://sass-lang.com/) and copied (and potentially minified) to `build/css`. ([src/scss/](#org6a64b17))
--   **build/:** *Not in version control*. Root folder for all build related activities. E.g. the [building of index.org](#org027bc93) happens in here. ([build/](#orga50f6d5)). Later copied to `public/` by [Fill `public/`](#org44fbe74).
-    -   **.:** files that will end up in `public/` via copy. Before that, files will be transformed, e.g. by creating `index.html` by running [index.org](../src/index.md). ([Build index.org](#org3932b27))
+    -   **.:** files that will end up in `build/` via copy. `index.org` is located here. (see[src/](#org99fdb4d))
+    -   **img/:** images, will be copied to `build/img/.`. ([src/img/](#org6836cf8))
+    -   **js/:** JavaScript files, will be copied (and potentially minified & uglified) to `build/js`. ([src/js/](#orgc4cb35b))
+    -   **css/:** CSS files, will be copied (and potentially minified) to `build/css`. ([src/css/](#orgd2a68d5))
+    -   **scss/:** [SCSS](https://sass-lang.com/documentation/syntax) files, will be run through [Sass](https://sass-lang.com/) and copied (and potentially minified) to `build/css`. ([src/scss/](#org34348e1))
+-   **build/:** *Not in version control*. Root folder for all build related activities. E.g. the [building of index.org](#org3fdda8f) happens in here. ([build/](#org5e20f73)). Later copied to `public/` by [Fill `public/`](#org3a32127).
+    -   **.:** files that will end up in `public/` via copy. Before that, files will be transformed, e.g. by creating `index.html` by running [index.org](../src/index.md). ([Build index.org](#org65d5cf4))
     -   **img/:** images, will be copied to `public/img/.`
     -   **js/:** JavaScript files, will be copied to `public/js`. No further minification/uglification.
     -   **css/:** CSS files, will be copied (and potentially minified) to `public/css`.
 -   **public/:** The final build result.
-    -   **.:** Can be served via [`gulp serve`](#orga949853) and packaged as a ZIP via [`gulp package`](#orgbf6e6d5).
+    -   **.:** Can be served via [`gulp serve`](#orgde3dc2e) and packaged as a ZIP via [`gulp package`](#orge4c1120).
     -   **img/:** images
     -   **js/:** JavaScript files
     -   **css/:** CSS files
 
 
-<a id="org8726eb8"></a>
+<a id="org1c8974b"></a>
 
 ### TODO Flow between folders
 
 
-<a id="orga918bc0"></a>
+<a id="org59cd309"></a>
 
 ## TODO Configuration in `packages.json`
 
 
-<a id="org103466c"></a>
+<a id="org50eced0"></a>
 
 ## Edit the presentation
 
 The whole presentation is contained in <../src/index.md> and build via org-mode.
 
 
-<a id="orgc260d29"></a>
+<a id="orgc0cc975"></a>
 
 ## Required tools for building
 
@@ -169,12 +176,12 @@ The whole presentation is contained in <../src/index.md> and build via org-mode.
 -   **Docker:** [index.org](../src/index.md) is compiled to html via [xuxxux/org-re-reveal-builder](https://hub.docker.com/repository/docker/xuxxux/org-re-reveal-builder) ([Dockerfile](../docker/Dockerfile))
 
 
-<a id="orgafa7cf4"></a>
+<a id="org1c25864"></a>
 
 ## Tools used by the author
 
 
-<a id="org0e72c4c"></a>
+<a id="orgab3a3fe"></a>
 
 ### `gulp` for building
 
@@ -184,31 +191,31 @@ The build is automated via [gulp](https://gulpjs.com/docs/en/getting-started/qui
 -   **package.json:** Configures dependencies for build (`--save-dev`), runtime (`--save-prod`) and configuration like paths, urls, globs.
 
 
-<a id="org32b77cf"></a>
+<a id="orgae07240"></a>
 
 ### `reveal.js` as presentation framework
 
 [reveal.js](https://revealjs.com/) 4.x is used as presentation framework.
 
 
-<a id="org5981957"></a>
+<a id="org3d28955"></a>
 
 ### `emacs` with `org-mode`, `org-babel`, `org-re-reveal` for writing/exporting
 
 
-<a id="org81d03c8"></a>
+<a id="orged3f236"></a>
 
 ### `Docker` for transforming `org` to `html`
 
 
-<a id="orgb0e9e35"></a>
+<a id="orgbc63e85"></a>
 
 # Building this document
 
 [BUILD.md](BUILD.md) is generated by exporting [BUILD.org](BUILD.md) via `C-c C-e g g` (via `org-gfm-export-to-markdown` from [ox-gfm](https://github.com/larstvei/ox-gfm)).
 
 
-<a id="orgb59edc1"></a>
+<a id="orgef8268c"></a>
 
 # Building `gulpfile.js`
 
@@ -277,14 +284,14 @@ A lot of the behavior is driven by the configuration in [package.json](../packag
 ```
 
 
-<a id="org1efa9f6"></a>
+<a id="orgffbd7ca"></a>
 
 ## Red Tape
 
 Red tape to set up `gulp`.
 
 
-<a id="orge9c621a"></a>
+<a id="orge464276"></a>
 
 ### Make package.json available
 
@@ -293,7 +300,7 @@ const pkg = require('./package.json')
 ```
 
 
-<a id="org2e670c0"></a>
+<a id="org7c00b30"></a>
 
 ### Setup plugins for gulpfile
 
@@ -345,12 +352,15 @@ const $ = {
     log   : require('fancy-log'),
     sourcemaps   : require('gulp-sourcemaps'),
     del : require('del'),
-    favicons : require('favicons').stream
+    favicons : require('favicons').stream,
+    notify : require("gulp-notify"),
+    notifier : require('node-notifier')
+
 }
 ```
 
 
-<a id="org5d89125"></a>
+<a id="org3684407"></a>
 
 ### Configure Plugins
 
@@ -373,8 +383,42 @@ Prevent warnings from opening too many test pages:
 process.setMaxListeners(20)
 ```
 
+Configure command line flags via yargs:
 
-<a id="org19a778d"></a>
+```javascript
+// CLI arguments
+const args = $.yargs.options({
+    'root': {
+        demandOption: true,
+        default: pkg.cfg.paths.dist.base,
+        describe: 'serve: Directory to be served via http. Default from package.json: cfg.paths.dist.base',
+        type: 'string'
+      },
+    'host': {
+        demandOption: true,
+        default: pkg.cfg.vars.serve.host || '127.0.0.1',
+        describe: 'serve: Address to bind to (e.g. localhost, 127.0.0.1 or 0.0.0.0). Configure in package.json: cfg.vars.serve.host',
+        type: 'string'
+    },
+    'port': {
+        demandOption: true,
+        default: pkg.cfg.vars.serve.port || 8000,
+        describe: 'serve: Port to listen on. Configure in package.json: cfg.vars.serve.port',
+        type: 'string'
+    },
+    'docker_image': {
+        alias: 'docker-image',
+        demandOption: true,
+        default:  pkg.cfg.vars.build_org_docker_local ||  pkg.cfg.vars.build_org_docker,
+        describe: 'publish: Docker image used to convert org->html. Default taken from cfg.vars.build_org_docker (for local dev you can override this in pkg.cfg.vars.build_org_docker_local).',
+        type: 'string'
+    },
+})
+const argv = args.argv
+```
+
+
+<a id="org96125d8"></a>
 
 ## Custom Functions
 
@@ -402,12 +446,12 @@ function string_src(filename, content) {
 ```
 
 
-<a id="org8ecc40b"></a>
+<a id="org04d83d1"></a>
 
 ## Folders
 
 
-<a id="org323642e"></a>
+<a id="orgfc1a301"></a>
 
 ### node\_modules/
 
@@ -521,7 +565,7 @@ function string_src(filename, content) {
     ```
 
 
-<a id="orge79d89a"></a>
+<a id="org99fdb4d"></a>
 
 ### src/
 
@@ -655,7 +699,7 @@ function string_src(filename, content) {
     ```
 
 
-<a id="orga50f6d5"></a>
+<a id="org5e20f73"></a>
 
 ### build/
 
@@ -684,26 +728,34 @@ function string_src(filename, content) {
     
     TODO: This has still some issues
     
-    -   The resulting files are owned by root
+    -   [ ] The resulting files are owned by root (needs to be fixed in the Dockerfile)
+    -   [ ] Errors halt the process before notifications are shown
     
     ```javascript
     function build_org_file_with_docker()
     {
-        const docker_image = pkg.cfg.vars.build_org_docker_local
+        const docker_image = argv.docker_image
         const build_dir = path.join(__dirname, pkg.cfg.paths.build.base)
     
-        $.log(`-> Configured docker container: ${docker_image}. Sources from ${build_dir}`)
         const docker_cmd = `docker run --rm -v "${build_dir}":/tmp/build  "${docker_image}"  /root/convert-to-html.sh /tmp/build`
+        const options = {}
     
-        $.log(docker_cmd)
-        var exec = require('child_process').exec;
+        $.log(`-> Configured docker container: ${docker_image}. Building files in from ${build_dir}`)
+        $.log(`-> Running: ${docker_cmd}`)
     
-        return exec(docker_cmd, (err, stdout, stderr) =>
-            {
+        const exec = require('child_process').exec
+    
+        // This is nearly 1:1 from the documentation (https://nodejs.org/api/child_process.html#child_process_child_process_exec_command_options_callback).
+        // Still the callback is not executed on errors
+        return exec(docker_cmd,  options, (err, stdout, stderr) => {
                 if (err) {
                   $.log.error(stderr)
+                  $.notify.onError("Error building docker <%= error.message =%> with command <%= docker_cmd =%>")
                   throw new Error('kaboom: ' + err)
-                }
+                } else {
+                  $.log.error(stderr)
+                  $.notify.onError("Docker done <%= docker_cmd =%>")
+            }
             })
     }
     build_org_file_with_docker.displayName = "Transform index.org via Docker"
@@ -808,7 +860,7 @@ function string_src(filename, content) {
     ```
 
 
-<a id="org932378e"></a>
+<a id="orgec29e8d"></a>
 
 ### public/
 
@@ -841,7 +893,7 @@ function string_src(filename, content) {
     ```
 
 
-<a id="org2bb0630"></a>
+<a id="org9424d37"></a>
 
 ## Utility Functions
 
@@ -852,29 +904,21 @@ function string_src(filename, content) {
 ```
 
 
-<a id="orgbccff36"></a>
+<a id="orge1f60a0"></a>
 
 ### serve
-
-Default values for the server started by [serve](#orgbccff36):
-
-```javascript
-const root = $.yargs.argv.root || pkg.cfg.paths.dist.base // .cfg.paths.dist.base := "./public/"
-const port = $.yargs.argv.port || pkg.cfg.vars.serve.port || 8000
-const host = $.yargs.argv.host || pkg.cfg.vars.serve.host || '127.0.0.1'
-```
 
 ```javascript
 async function reload() {
     // FIXME: not working
     $.connect.reload()
+    $.notifier.notify({ title: "Build succeeded", message: "Build output updated, please reoad web page."})
 }
 ```
 
 `gulp serve` automatically reloads on changes to the `.org` file.
 
 ```javascript
-
 function serve_watch_org() {
     $.log(`Watching ${pkg.cfg.paths.src.base + '*.org'} ...`)
     return watch(pkg.cfg.paths.src.base + '*.org',
@@ -902,21 +946,21 @@ serve_watch_scss.description = `Watchi ${pkg.cfg.paths.src.scss + '**/*.scss'} a
 
 function serve_webserver() {
     $.connect.server({
-        root: root,
-        port: port,
-        host: host,
+        root: argv.root,
+        port: argv.port,
+        host: argv.host,
         livereload: true
     })
 }
-serve_webserver.displayName =  `Serve ${root} as http://${host}:${port}/.`
-serve_webserver.description =  `Serve ${root} as http://${host}:${port}/. Override with --{host,port,root}.`
+serve_webserver.displayName =  `Serve ${root} as http://${argv.host}:${argv.port}/.`
+serve_webserver.description =  `Serve ${root} as http://${argv.host}:${argv.port}/. Override with --{host,port,root}.`
 
 exports.serve = parallel(serve_webserver, serve_watch_org, serve_watch_scss)
-exports.serve.description = `Serve ${root} as http://${host}:${port}/. Override with --{host,port,root}.`
+exports.serve.description = `Serve ${argv.root} as http://${argv.host}:${argv.port}/. Override with --{host,port,root}.`
 ```
 
 
-<a id="org8a8c90b"></a>
+<a id="org98c491e"></a>
 
 ### clean
 
@@ -947,7 +991,7 @@ exports.clean = clean
 ```
 
 
-<a id="orga17afa1"></a>
+<a id="orgba3cafa"></a>
 
 ### package
 
@@ -968,10 +1012,24 @@ exports.package.description = `Build & create ${pkg.cfg.vars.distZip}.`
 ```
 
 
-<a id="org101de11"></a>
+<a id="orgf52301e"></a>
 
 ### default
 
 ```javascript
 exports.default = exports.publish
+```
+
+
+<a id="org6d405bd"></a>
+
+### Playground
+
+This is where new tasks are evaluated &#x2026;
+
+```javascript
+async function check_out() {
+    $.notifier.notify( {title:'title', message:'message'})
+}
+ exports.check_out = check_out
 ```
