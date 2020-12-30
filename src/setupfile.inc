@@ -6,15 +6,18 @@
 
 #+OPTIONS: reveal_center:nil reveal_progress:t reveal_history:t reveal_control:t
 #+OPTIONS: reveal_mathjax:t reveal_rolling_links:t reveal_keyboard:t reveal_overview:t
-#+OPTIONS: reveal_width:1200 reveal_height:800
+
 #+OPTIONS: toc:1 num:nil
 #+OPTIONS: timestamp:nil
+#+OPTIONS: ^:nil
+
 
 #+REVEAL_VERSION: 4
 #+REVEAL_ROOT: js/reveal.js
 #+REVEAL_MATHJAX_URL:   js/tex-chtml.js
 
-#+REVEAL_MARGIN: 0.2
+#+OPTIONS: reveal_width:1200 reveal_height:800
+#+REVEAL_MARGIN: 0.00
 #+REVEAL_MIN_SCALE: 0.5
 #+REVEAL_MAX_SCALE: 2.5
 

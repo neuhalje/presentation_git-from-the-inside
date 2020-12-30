@@ -15,7 +15,11 @@ Ideas:
 :LOGBOOK:
 - State "STARTED"    from "TODO"       [2020-12-21 Mon 12:48]
 :END:
-**** Requirements
+**** DONE Requirements
+CLOSED: [2020-12-30 Wed 15:20]
+:LOGBOOK:
+- State "DONE"       from              [2020-12-30 Wed 15:20]
+:END:
 - Read only =src= :: =src= should be used ~read only~.
 - Documented in GitHub :: Have a document readable in GitHub (markdown, images)
 **** TODO Update flow diagram
@@ -32,8 +36,10 @@ CLOSED: [2020-12-23 Wed 20:39]
 :END:
 Made difficult by duplicate configurations for dependencies (e.g. "watch").
 *** TODO [#C] Load fonts locally, not from google
-*** STARTED Generate =html= via Docker
+*** DONE Generate =html= via Docker
+CLOSED: [2020-12-30 Wed 15:20]
 :LOGBOOK:
+- State "DONE"       from "STARTED"    [2020-12-30 Wed 15:20]
 - State "STARTED"    from "TODO"       [2020-12-21 Mon 12:46]
 :END:
 Extend the Dockerfile from https://gitlab.com/oer/emacs-reveal and add [[https://github.com/fniessen/orgmk][orkmk]] support.
@@ -42,7 +48,6 @@ CLOSED: [2020-12-20 Sun 21:02]
 :LOGBOOK:
 - State "DONE"       from "TODO"       [2020-12-20 Sun 21:02]
 :END:
-**** TODO evaluate org-oer-publish
 **** DONE Fix 'build output owned by root'
 CLOSED: [2020-12-30 Wed 10:44]
 :LOGBOOK:
@@ -117,6 +122,21 @@ CLOSED: [2020-12-23 Wed 20:40]
 :LOGBOOK:
 - State "DONE"       from "TODO"       [2020-12-23 Wed 20:40]
 :END:
+*** TODO evaluate org-oer-publish
+*** TODO licenses.txt contains local paths: fix
+#+begin_example
+├─ @hpcc-js/wasm@0.3.13
+│  ├─ licenses: Apache-2.0
+│  ├─ repository: https://github.com/hpcc-systems/hpcc-js-wasm
+│  ├─ publisher: Gordon Smith
+│  ├─ email: gordonjsmith@gmail.com
+│  ├─ path: /home/jens/Projects/Vortraege/git-from-the-inside/node_modules/@hpcc-js/wasm
+│  └─ licenseFile: /home/jens/Projects/Vortraege/git-from-the-inside/node_modules/@hpcc-js/wasm/LICENSE
+#+end_example
+
+Options:
+- remove path
+- Package all licenses
 ** Content
 *** TODO Add Chapter: Content addressed storage
 *** TODO Add Chapter: What is a hash?

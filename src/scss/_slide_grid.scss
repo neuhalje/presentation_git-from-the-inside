@@ -29,10 +29,12 @@ $phi: 1.6180339887498948482;
 }
 
 .two-columns {
+     @extend .container;
     grid-template-columns: 1fr $phi * 1fr;
 }
 
 .two-columns-small-right {
+     @extend .container;
     grid-template-columns: $phi * 1fr 1fr;
 }
 
@@ -55,6 +57,7 @@ $phi: 1.6180339887498948482;
 */
 
 .two-rows {
+     @extend .container;
     grid-template-rows:  $phi * 1fr 1fr;
 }
 
@@ -80,6 +83,7 @@ $phi: 1.6180339887498948482;
 
 
 .two-rows-notes {
+     @extend .container;
     grid-template-rows:  $phi * 1fr 1fr auto;
 }
 

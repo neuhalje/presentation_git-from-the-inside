@@ -7,24 +7,49 @@
 #+SETUPFILE: setupfile.inc
 #+SETUPFILE: setupfile-d3graphviz.inc
 #+INCLUDE: git-tooling.inc
+#+REVEAL_PLUGINS: (highlight d3graphviz notes search zoom)
+
+#+REVEAL_EXTRA_OPTIONS: totalTime:2700
 
 #+REVEAL_TALK_URL: http://neuhalje.github.io/presentation_git-from-the-inside
 #+REVEAL_TALK_QR_CODE: does not exist
 
 #+REVEAL_TITLE_SLIDE: <h1>%t</h1><h2>%s</h2><h3>%A %a</h3><p>View online: <a href="%u">%u</a></p> <p><div class="r-stretch"><a href="http://creativecommons.org/licenses/by-sa/4.0/"><img src="/img/cc/cc.svg"/><img src="/img/cc/by.svg"/><img src="/img/cc/sa.svg"/></a></div><a href="/#/slide-LICENSE">LICENSE</a></p>
 
-
 * Examples
 The following examples can be skipped via a =:noexport= tag on this headline
+** Notes and timing
+:PROPERTIES:
+:reveal_extra_attr: data-timing="300"
+:END:
+#+BEGIN_NOTES
+These notes are shown in the speakers view.
+#+END_NOTES
+- Press =S= to see notes (see [[https://revealjs.com/speaker-view/][the reveal.js documentation]]).
+- Set =#+REVEAL_EXTRA_OPTIONS: totalTime:2700= to set the total time for the slides
+- Set ~:reveal_extra_attr: data-timing="120"~ to set a timer for this slide (shown in the speakers notes).
+- Reveal automatically calculates the duration of the slides without ~data-timing~
+
+| Duration in minutes | Value for =data-timing= / =totalTime= |
+|---------------------+---------------------------------------|
+|                   1 |                                    60 |
+|                   5 |                                   300 |
+|                  10 |                                   600 |
+|                  30 |                                  1800 |
+|                  45 |                                  2700 |
+|                  60 |                                  3600 |
+|                  90 |                                  5400 |
+#+TBLFM: $2=$1*60
+
 ** CSS
 :PROPERTIES:
 :CUSTOM_ID: example_css
 :END:
-
+Some CSS classes have been defined
 *** Two Coloumns
 =.two-columns=
 #+begin_export html
-<div class="container two-columns r-stretch" style="background:black">
+<div class="two-columns r-stretch" style="background:black">
 <div style="background:red">Left</div>
 <div style="background:blue">Right</div>
 </div>
@@ -33,7 +58,7 @@ The following examples can be skipped via a =:noexport= tag on this headline
 *** Two Coloumns, two rows
 =.two-columns .two-rows=
 #+begin_export html
-<div class="container two-columns two-rows r-stretch" style="background:black">
+<div class="two-columns two-rows r-stretch" style="background:black">
 <div style="background:red">Top Left</div>
 <div style="background:blue">Top Right</div>
 <div style="background:green">Bottom Left</div>
@@ -43,7 +68,7 @@ The following examples can be skipped via a =:noexport= tag on this headline
 *** Two Coloumns, two rows - row 1 spans two cols
 =.two-columns .two-rows=
 #+begin_export html
-<div class="container two-columns two-rows r-stretch" style="background:black">
+<div class="two-columns two-rows r-stretch" style="background:black">
 <div style="background:red" class="top-left two-cols-wide">Top Left and right</div>
 <div style="background:green" class="bottom-left">Bottom Left</div>
 <div style="background:yellow" class="bottom-right">Bottom Right</div>
@@ -52,7 +77,7 @@ The following examples can be skipped via a =:noexport= tag on this headline
 *** Two Coloumns, two rows + notes
 =.two-columns .two-rows-notes=
 #+begin_export html
-<div class="container two-columns two-rows-notes r-stretch" style="background:black">
+<div class="two-columns two-rows-notes r-stretch" style="background:black">
 <div style="background:red">Top Left</div>
 <div style="background:blue">Top Right</div>
 <div style="background:green">Bottom Left</div>
@@ -63,7 +88,7 @@ The following examples can be skipped via a =:noexport= tag on this headline
 *** Two Coloumns, two rows + notes (long notes)
 =.two-columns .two-rows-notes=
 #+begin_export html
-<div class="container two-columns two-rows-notes r-stretch" style="background:black">
+<div class="two-columns two-rows-notes r-stretch" style="background:black">
 <div style="background:red">Top Left</div>
 <div style="background:blue">Top Right</div>
 <div style="background:green">Bottom Left</div>
@@ -80,7 +105,7 @@ The notes
 #+HTML: </div> <!-- container-->
 *** Two Coloumns, two rows + notes (placed via CSS class)
 =.two-columns .two-rows-notes= but placed via CSS class
-#+HTML: <div class="container two-columns two-rows-notes r-stretch" style="background:black">
+#+HTML: <div class="two-columns two-rows-notes r-stretch" style="background:black">
 
 #+HTML: <div style="background:orange" class="note">
 The notes
@@ -218,6 +243,7 @@ ${n! \over k!(n-k)!} = {n \choose k}$
 #+end_example
 
 ${n! \over k!(n-k)!} = {n \choose k}$
+
 * Licensing
    :PROPERTIES:
    :CUSTOM_ID: LICENSE
@@ -238,3 +264,5 @@ ${n! \over k!(n-k)!} = {n \choose k}$
   </div>
 </a>
 #+end_export
+
+- [[file:licenses.txt][licenses collected from node_modules]]
