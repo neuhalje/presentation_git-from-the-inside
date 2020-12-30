@@ -26,8 +26,8 @@ The following examples can be skipped via a =:noexport= tag on this headline
 These notes are shown in the speakers view.
 #+END_NOTES
 - Press =S= to see notes (see [[https://revealjs.com/speaker-view/][the reveal.js documentation]]).
-- Set =#+REVEAL_EXTRA_OPTIONS: totalTime:2700= to set the total time for the slides
-- Set ~:reveal_extra_attr: data-timing="120"~ to set a timer for this slide (shown in the speakers notes).
+- Set ~#+REVEAL_EXTRA_OPTIONS: totalTime:2700~ to set the total time for the slides to 45min
+- Set ~:reveal_extra_attr: data-timing="120"~ to set a timer for this slide (shown in the speakers notes) to 2min
 - Reveal automatically calculates the duration of the slides without ~data-timing~
 
 | Duration in minutes | Value for =data-timing= / =totalTime= |
@@ -109,7 +109,6 @@ The notes
 
 #+HTML: <div style="background:orange" class="note">
 The notes
-
 - can span multiple
 - lines and will resize
 - automatically
