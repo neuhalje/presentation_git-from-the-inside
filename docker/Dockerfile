@@ -4,16 +4,26 @@
 FROM registry.gitlab.com/oer/emacs-reveal/emacs-reveal
 LABEL maintainer="Jens Neuhalfen"
 
-RUN echo "\n;; --- JeNe\n(setq org-confirm-babel-evaluate nil)\n(org-babel-do-load-languages 'org-babel-load-languages\n '((shell . t)))" >> /root/.emacs
+RUN mkdir /emacs && cp -rp  /root/.emacs /root/.emacs.d /emacs/. && sed -i -e 's/root/emacs/g' /emacs/.emacs
 
+RUN echo "\n;; --- JeNe\n(setq org-confirm-babel-evaluate nil)\n(org-babel-do-load-languages 'org-babel-load-languages\n '((shell . t)))" >> /emacs/.emacs
+
+COPY  convert-to-html.sh /emacs/.
+
+RUN cp /root/plantuml-*/plantuml.jar /emacs/.
+RUN echo "\n(setq org-plantuml-jar-path (expand-file-name \"/emacs/plantuml.jar\"))\n(add-to-list 'org-src-lang-modes '(\"plantuml\" . plantuml))\n(org-babel-do-load-languages 'org-babel-load-languages '((plantuml . t)))" >> /emacs/.emacs
+
+COPY  elisp /emacs/elisp
+COPY  publish.sh /emacs/.
+COPY  oer-publish.sh /emacs/.
+
+# make /emacs world readable and run the container via --user $(id -u):$(id -g)
+RUN find /emacs -type f -executable -exec chmod 777  \{\} \;
+RUN find /emacs -type f -not -executable -exec chmod 666  \{\} \;
+RUN find /emacs -type d -exec chmod 777  \{\} \;
+
+RUN useradd -rm -d /home/builder -s /bin/bash  -u 1001 builder
+
+USER builder
+WORKDIR /home/builder
 RUN git config --global user.email "alice@neuhalfen.name" &&  git config --global user.name "Alice (me)"
-
-ADD convert-to-html.sh /root/.
-RUN chmod 755 /root/convert-to-html.sh
-
-RUN cp /root/plantuml-*/plantuml.jar /root/.
-RUN echo "\n(setq org-plantuml-jar-path (expand-file-name \"/root/plantuml.jar\"))\n(add-to-list 'org-src-lang-modes '(\"plantuml\" . plantuml))\n(org-babel-do-load-languages 'org-babel-load-languages '((plantuml . t)))" >> /root/.emacs
-
-ADD elisp /root/elisp
-ADD publish.sh /root/.
-ADD oer-publish.sh /root/.

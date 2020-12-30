@@ -43,7 +43,11 @@ CLOSED: [2020-12-20 Sun 21:02]
 - State "DONE"       from "TODO"       [2020-12-20 Sun 21:02]
 :END:
 **** TODO evaluate org-oer-publish
-**** TODO Fix 'build output owned by root'
+**** DONE Fix 'build output owned by root'
+CLOSED: [2020-12-30 Wed 10:44]
+:LOGBOOK:
+- State "DONE"       from "TODO"       [2020-12-30 Wed 10:44]
+:END:
 **** DONE Don't pollute =src= with build artifacts (e.g. images)
 CLOSED: [2020-12-23 Wed 10:50]
 :LOGBOOK:
@@ -139,7 +143,7 @@ CLOSED: [2020-12-25 Fri 16:20]
 :LOGBOOK:
 - State "DONE"       from "TODO"       [2020-12-25 Fri 16:20]
 :END:
-Maybe use [[https://bulma.io/][bulma.io]]?
+Maybe use [[https://bulma.io/][bulma.io]]? --> no, custom CSS
 **** DONE Custom CSS
 CLOSED: [2020-12-25 Fri 16:19]
 :LOGBOOK:

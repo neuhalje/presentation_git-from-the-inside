@@ -100,6 +100,14 @@ const args = $.yargs.options({
         describe: 'publish: Docker image used to convert org->html. Default taken from cfg.vars.build_org_docker (for local dev you can override this in pkg.cfg.vars.build_org_docker_local).',
         type: 'string'
     },
+    'build_command' : {
+        alias: 'docker-build-command',
+        demandOption: true,
+        default:  pkg.cfg.vars.build_org_docker_build_command,
+        describe: 'publish: Command executed in the docker container.',
+        type: 'string'
+    }
+
 })
 const argv = args.argv
 
@@ -307,10 +315,14 @@ build_org_create_gen_dir.displayName = `Create ${pkg.cfg.paths.build.base}/org-g
 
 function build_org_file_with_docker()
 {
+
+    const userInfo = require('os').userInfo()
+
     const docker_image = argv.docker_image
     const build_dir = path.join(__dirname, pkg.cfg.paths.build.base)
+    const build_command = argv.build_command
 
-    const docker_cmd = `docker run --rm -v "${build_dir}":/tmp/build  "${docker_image}"  /root/convert-to-html.sh /tmp/build`
+    const docker_cmd = `docker run --rm -v "${build_dir}":/tmp/build --user ${userInfo.uid}:${userInfo.gid} -e HOME="/emacs"  "${docker_image}" ${build_command}`
     const options = {}
 
     $.log(`-> Configured docker container: ${docker_image}. Building files in from ${build_dir}`)
