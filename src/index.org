@@ -209,6 +209,12 @@ Test note
 bla note
 #+END_NOTES
 
+#+begin_src bash :exports results :results silent
+git config --get user.name || git config --global --add user.name "Alice"
+git config --get user.email || git config --global --add user.email "alice@neuhalfen.name"
+git config -l
+#+end_src
+
 # setup
 #+CALL: init_repo()
 
