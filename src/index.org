@@ -1,5 +1,5 @@
 #+TITLE: GIT from the inside
-#+Subtitle: How GIT sees the world
+#+Subtitle: or: How GIT sees the world
 #+AUTHOR: Jens Neuhalfen
 #+EMAIL: jens@neuhalfen.name
 #+DATE: 2020-12-31
@@ -14,9 +14,62 @@
 #+REVEAL_TALK_URL: http://neuhalje.github.io/presentation_git-from-the-inside
 #+REVEAL_TALK_QR_CODE: does not exist
 
-#+REVEAL_TITLE_SLIDE: <h1>%t</h1><h2>%s</h2><h3>%A %a</h3><p>View online: <a href="%u">%u</a></p> <p><div class="r-stretch"><a href="http://creativecommons.org/licenses/by-sa/4.0/"><img src="/img/cc/cc.svg"/><img src="/img/cc/by.svg"/><img src="/img/cc/sa.svg"/></a></div><a href="/#/slide-LICENSE">LICENSE</a></p>
+#+REVEAL_TITLE_SLIDE: <h1>%t</h1><h2>%s</h2><h3>%A %a</h3><p>View online: <a href="%u">%u</a></p> <p><div class="r-stretch license-container"><a href="/#/slide-LICENSE"><img class="inline-icon" src="/img/cc/cc.svg"/><img class="inline-icon" src="/img/cc/by.svg"/><img class="inline-icon" src="/img/cc/sa.svg"/> <b>LICENSE</b></a></div</p><p><ul><li>Press <b>s</b> for speakers view</li><li>Press <b>o</b> for overview</li></ul></p>
 
-* Examples
+* Why SCM?
+* Git basics
+** What is a hash?
+** What is /content addressed storage/?
+** Tree, Blob, Commit
+** Branch
+** Merge
+** Rebase
+** Remote
+* Git Use Cases
+** Example Git
+:PROPERTIES:
+:header-args: :var repo="/tmp/x/number-of-the-beast2"
+:repo: /tmp/x/number-of-the-beast2
+:END:
+#+BEGIN_NOTES
+Test note
+bla note
+#+END_NOTES
+
+#+begin_src bash :exports results :results silent
+git config --get user.name || git config --global --add user.name "Alice"
+git config --get user.email || git config --global --add user.email "alice@neuhalfen.name"
+git config -l
+#+end_src
+
+# setup
+#+CALL: init_repo()
+
+# source/output is hidden
+#+begin_src bash :exports results :results silent
+echo "$(date +%s%N) 1st in $repo" >> /tmp/log
+cd "${repo}" || exit 1
+git commit -m'1st commit' --allow-empty
+#+end_src
+
+{{{git_with_diff(number1src)}}}
+
+# source is hidden, code is executed via macro
+#+NAME: number1src
+#+begin_src bash :exports none :results output
+echo "$(date +%s%N) 2nd in $repo" >> /tmp/log
+cd "${repo}" || exit 1
+git commit -m'2nd commit' --allow-empty
+#+end_src
+
+#+HTML: <div id='number1src-result' class='r-stretch' scale='2'></div>
+
+#+begin_src bash :exports code :noweb yes
+<<number1src>>
+#+end_src
+
+{{{git_with_diff_result(number1src)}}}
+* Examples                                                                      :noexport:
 The following examples can be skipped via a =:noexport= tag on this headline
 ** Notes and timing
 :PROPERTIES:
@@ -165,7 +218,7 @@ echo Hello there
 echo Hello there to stderr >&2
 exit 1
 #+end_src
-** Add Elements to Lists                                                       :noexport:
+** Add Elements to Lists
 #+ATTR_REVEAL: :frag (grow shrink roll-in fade-out none appear) :frag_idx (6 5 4 3 2 1)
 - I will grow. (6)
 - I will shrink. (5)

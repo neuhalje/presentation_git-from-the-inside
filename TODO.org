@@ -142,8 +142,17 @@ Options:
 *** TODO Add Chapter: What is a hash?
 *** TODO Add Chapter: Tree, blob, commit
 *** TODO Add Chapter: Branch
-*** TODO Add License (CC)
-*** TODO Add speaker notes
+*** DONE Add License (CC)
+CLOSED: [2020-12-30 Wed 16:36]
+:LOGBOOK:
+- State "DONE"       from "TODO"       [2020-12-30 Wed 16:36]
+:END:
+*** DONE Add speaker notes
+CLOSED: [2020-12-30 Wed 16:36]
+:LOGBOOK:
+- State "DONE"       from "TODO"       [2020-12-30 Wed 16:36]
+- State "DONE"       from "TODO"       [2020-12-30 Wed 16:36]
+:END:
 ** Publishing
 *** TODO Publish to GitHub
 **** DONE Rescue old repo
