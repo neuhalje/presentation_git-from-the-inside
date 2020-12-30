@@ -58,6 +58,13 @@ The task is defined [[id:9ad0ef3f-43f0-49d7-bf8f-6d71c5c3f6e4][here]].
 =gulp clean= will delete all build outputs.
 
 The task is defined [[id:122614dd-080f-421c-bc9a-e5ea6589da36][here]].
+*** =gulp help=
+Shows the options for the gulpfile:
+#+begin_example sh
+gulp help
+#+end_example
+*** =gulp daily-work=
+Wraps up =clean=, =publish= and =serve=.
 ** Design decisions
 The whole process serves the simple matter of /creating a presentation/. That means neither bandwitdh nor page load speed are a primary consideration.
 
@@ -638,7 +645,7 @@ build_org_file_with_docker.displayName = "Transform index.org via Docker"
 build_org_file_with_docker.description = `Build index.org with "${pkg.cfg.vars.build_org_docker_local}" docker container.`
 
 exports.build_org_file_with_docker = series(build_org_create_gen_dir, build_org_file_with_docker)
-exports.build_org_file_with_docker.displayName = build_org_file_with_docker.displayName
+exports.build_org_file_with_docker.displayName = "build-org"
 exports.build_org_file_with_docker.description = build_org_file_with_docker.description
 #+end_src
 **** Create licenses
@@ -878,6 +885,15 @@ package_public.description = `Create ${pkg.cfg.vars.distZip}.`
 exports.package = series(exports.clean, exports.publish, package_public)
 exports.package.displayName = "package"
 exports.package.description = `Build & create ${pkg.cfg.vars.distZip}.`
+#+end_src
+*** day-to-day working
+:PROPERTIES:
+:ID:       4c36230b-33bb-40d8-b909-ba1c4f5af8a3
+:END:
+#+begin_src javascript
+exports.daily = series(exports.clean, exports.publish, exports.serve)
+exports.daily.displayName = "daily-work"
+exports.daily.description = "Mode for hacking away: clean, publish & serve."
 #+end_src
 *** default
 :PROPERTIES:

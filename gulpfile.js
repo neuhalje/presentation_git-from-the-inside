@@ -335,7 +335,7 @@ build_org_file_with_docker.displayName = "Transform index.org via Docker"
 build_org_file_with_docker.description = `Build index.org with "${pkg.cfg.vars.build_org_docker_local}" docker container.`
 
 exports.build_org_file_with_docker = series(build_org_create_gen_dir, build_org_file_with_docker)
-exports.build_org_file_with_docker.displayName = build_org_file_with_docker.displayName
+exports.build_org_file_with_docker.displayName = "build-org"
 exports.build_org_file_with_docker.description = build_org_file_with_docker.description
 
 function build_gather_node_modules_licenses(cb) {
@@ -515,6 +515,10 @@ package_public.description = `Create ${pkg.cfg.vars.distZip}.`
 exports.package = series(exports.clean, exports.publish, package_public)
 exports.package.displayName = "package"
 exports.package.description = `Build & create ${pkg.cfg.vars.distZip}.`
+
+exports.daily = series(exports.clean, exports.publish, exports.serve)
+exports.daily.displayName = "daily-work"
+exports.daily.description = "Mode for hacking away: clean, publish & serve."
 
 exports.default = exports.publish
 
