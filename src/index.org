@@ -1,4 +1,5 @@
 #+TITLE: GIT from the inside
+#+Subtitle: How GIT sees the world
 #+AUTHOR: Jens Neuhalfen
 #+EMAIL: jens@neuhalfen.name
 #+DATE: 2020-12-31
@@ -6,6 +7,12 @@
 #+SETUPFILE: setupfile.inc
 #+SETUPFILE: setupfile-d3graphviz.inc
 #+INCLUDE: git-tooling.inc
+
+#+REVEAL_TALK_URL: http://neuhalje.github.io/presentation_git-from-the-inside
+#+REVEAL_TALK_QR_CODE: does not exist
+
+#+REVEAL_TITLE_SLIDE: <h1>%t</h1><h2>%s</h2><h3>%A %a</h3><p>View online: <a href="%u">%u</a></p> <p><div class="r-stretch"><a href="http://creativecommons.org/licenses/by-sa/4.0/"><img src="/img/cc/cc.svg"/><img src="/img/cc/by.svg"/><img src="/img/cc/sa.svg"/></a></div><a href="/#/slide-LICENSE">LICENSE</a></p>
+
 
 * Examples
 The following examples can be skipped via a =:noexport= tag on this headline
@@ -213,6 +220,21 @@ ${n! \over k!(n-k)!} = {n \choose k}$
 ${n! \over k!(n-k)!} = {n \choose k}$
 * Licensing
    :PROPERTIES:
-   :CUSTOM_ID: licensing
+   :CUSTOM_ID: LICENSE
+   :ID:       e3e9e398-eb48-4a16-821d-e0df3f688ea4
    :END:
-   - TODO
+#+begin_export html
+<div class="license-container">
+  <a href="http://creativecommons.org/licenses/by-sa/4.0/">
+    <img class="inline-icon" src="/img/cc/cc.svg"/>
+    <img class="inline-icon" src="/img/cc/by.svg"/>
+    <img class="inline-icon" src="/img/cc/sa.svg"/>
+    <p>This work is licensed under a <i>Creative Commons Attribution-ShareAlike 4.0 International</i> license.</p>
+  </a>
+</div>
+<a href="https://neuhalfen.name/">
+  <div class="license-container">
+    <img class="inline-icon" src="/img/wikimedia/Copyright.svg"/><span> by Jens Neuhalfen</span>
+  </div>
+</a>
+#+end_export
