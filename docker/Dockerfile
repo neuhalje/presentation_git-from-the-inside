@@ -18,9 +18,9 @@ COPY  publish.sh /emacs/.
 COPY  oer-publish.sh /emacs/.
 
 # make /emacs world readable and run the container via --user $(id -u):$(id -g)
-RUN find /emacs -type f -executable -exec chmod 777  \{\} \;
-RUN find /emacs -type f -not -executable -exec chmod 666  \{\} \;
-RUN find /emacs -type d -exec chmod 777  \{\} \;
+RUN find /emacs -type f -executable -exec chmod 777  \{\} \; && \
+    find /emacs -type f -not -executable -exec chmod 666  \{\} \; && \
+    find /emacs -type d -exec chmod 777  \{\} \;
 
 RUN useradd -rm -d /home/builder -s /bin/bash  -u 1001 builder
 
