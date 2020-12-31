@@ -4,7 +4,7 @@
 #+EMAIL: jens@neuhalfen.name
 #+DATE: 2020-12-31
 
-#+REVEAL_THEME: /css/light-theme.css
+#+REVEAL_THEME: /css/themes/simple.css
 #+SETUPFILE: setupfile.inc
 #+SETUPFILE: setupfile-d3graphviz.inc
 #+INCLUDE: git-tooling.inc
@@ -361,6 +361,12 @@ ${n! \over k!(n-k)!} = {n \choose k}$
    :END:
 #+begin_export html
 <div class="license-container">
+<a href="https://neuhalfen.name/">
+    <img class="inline-icon" src="/img/wikimedia/Copyright.svg"/><span> by Jens Neuhalfen</span>
+</a>
+</div>
+
+<div class="license-container">
   <a href="http://creativecommons.org/licenses/by-sa/4.0/">
     <img class="inline-icon" src="/img/cc/cc.svg"/>
     <img class="inline-icon" src="/img/cc/by.svg"/>
@@ -368,10 +374,10 @@ ${n! \over k!(n-k)!} = {n \choose k}$
     <p>This work is licensed under a <i>Creative Commons Attribution-ShareAlike 4.0 International</i> license.</p>
   </a>
 </div>
-<a href="https://neuhalfen.name/">
+
   <div class="license-container">
-    <img class="inline-icon" src="/img/wikimedia/Copyright.svg"/><span> by Jens Neuhalfen</span>
-  </div>
+    <img class="inline-icon" src="/img/github/GitHub-Mark-120px-plus.png"> <a href="https://github.com/neuhalje/presentation_git-from-the-inside">github.com/neuhalje/presentation_git-from-the-inside</a>
+  <div class="license-container">
 </a>
 #+end_export
 

@@ -51,7 +51,7 @@
       },
       "include": {
         "scssIncludePaths": [
-          "./node_modules/reveal.js/css/theme/template"
+          "./node_modules/reveal.js/css/theme"
         ]
       }
     },

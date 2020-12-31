@@ -8,15 +8,17 @@
 
 
 // Default mixins and settings -----------------
-@import "mixins";
-@import "settings";
+@import "template/mixins";
+@import "template/settings";
 // ---------------------------------------------
 
 
 
 // Include theme-specific fonts
 @import url(./fonts/league-gothic/league-gothic.css);
-@import url(https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic);
+
+// No Google Fonts due to privacy concerns
+//@import url(https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic);
 
 
 /**
@@ -62,5 +64,5 @@ $selectionBackgroundColor: $magenta;
 
 
 // Theme template ------------------------------
-@import "theme";
+@import "template/theme";
 // ---------------------------------------------
