@@ -18,7 +18,9 @@
 #+REVEAL_TITLE_SLIDE: <h1>%t</h1><h2>%s</h2><h3>%A %a</h3><p>View online: <a href="%u">%u</a></p> <p><div class="r-stretch license-container"><a href="/#/slide-LICENSE"><img class="inline-icon" src="/img/cc/cc.svg"/><img class="inline-icon" src="/img/cc/by.svg"/><img class="inline-icon" src="/img/cc/sa.svg"/> <b>LICENSE</b></a></div</p><p><ul><li>Press <b>s</b> for speakers view</li><li>Press <b>o</b> for overview</li></ul></p>
 
 
-#+MACRO: red @@latex:{\color{red} $1 }@@ @@html: <span style="color: red">$1</span> @@
+#+MACRO: red @@latex:{\color{red} $1 }@@ @@html: <span class="red">$1</span> @@
+#+MACRO: blue @@latex:{\color{blue} $1 }@@ @@html: <span class="blue">$1</span> @@
+#+MACRO: green @@latex:{\color{green} $1 }@@ @@html: <span class="green">$1</span> @@
 
 * Why SCM?
 * Git basics
@@ -35,6 +37,57 @@ For our purposes the following properties are important:
 - fixed length :: The length of $h$ is always the same, e.g. 160 bit for SHA-1.
 - deterministic :: The same data always computes to the same hash: $data_1 == data_2 \Rightarrow h(data_1) == h(data_2)$
 - collision resistant :: It is /{{{red(very unlikely)}}}/ that different data hashes to the same value: $h(data_1) == h(data_2) \Rightarrow data_1 == data_2$
+*** Hash collisions I/II
+A hash /collision/ is when two different =data= values hash to the same hash.
+
+#+begin_quote
+Given =n= random integers drawn from a discrete uniform distribution with range =[1,d]=, *what is the probability =p(n; d)= that at least two numbers are the same?* -- [[https://en.wikipedia.org/wiki/Birthday_problem][source]]
+
+$p(n; d) \approx 1-\left({\frac {d-1}{d}}\right)^{\frac {n(n-1)}{2}}$
+#+end_quote
+
+For =sha1= and =git=:
+- =d= - The length of the hash function ($2^{160}$)
+- =n= - The total sum of all files, directories, commits, tags
+*** Hash collisions II/II
+#+NAME: probability-of-collisions
+#+begin_src gnuplot :exports results :file org-gen/hash-collision-probability.svg
+reset
+
+set terminal svg enhanced
+set xlabel 'Number of commits/files/..'
+set ylabel 'Probability of a collision'
+# set arrow from 23,0 to 23,0.5073 nohead
+# set arrow from 0,0.5073 to 23,0.5073 nohead
+# set label '23' at 22,-0.025 font ",16"
+set grid ytics
+
+set title "Putting it all together"
+d = 2**160
+lottery = 1.0 / 139838160.0
+
+# set yrange [0:1]
+f(x) =  1 - exp( -1 * x * (x - 1) / (2*d)   )
+
+plot [1:5*10**20] f(x) title "probability of collision" with lines lw 3, lottery title "lottery win" lw 3
+#+end_src
+#+HTML: <div class="two-columns r-stretch">
+
+#+HTML: <div>
+Chance of a lottery win (6 of 49 + 1 in 10):
+
+~1 : 139.838.160~
+
+Ergo: {{{blue(Don't create more than 10^20 (100 trillion) files and/or commits per repository.)}}}
+#+HTML: </div>
+
+#+HTML: <div>
+#+attr_html: :class scale-to-cell
+#+RESULTS: probability-of-collisions
+[[file:org-gen/hash-collision-probability.svg]]
+#+HTML: </div>
+
+#+HTML: </div> <!-- container -->
 ** What is /content addressed storage/?
 :PROPERTIES:
 :END:
@@ -54,9 +107,10 @@ Disadvantages:
 
 #+HTML: <div class="two-rows two-columns r-stretch">
 #+HTML: <div class="bottom-left two-cols-wide">
-| PRO                                                                | CON                              |
-|--------------------------------------------------------------------+----------------------------------|
-| simple                                                             | no =query= method besides /hash/ |
+| PRO                   | CON                                |
+|-----------------------+------------------------------------|
+| - simple              | - no =query= method besides /hash/ |
+| - data not duplicated |                                    |
 #+HTML: </div>
 #+HTML: <div  class="top-right">
 #+NAME: tree_objectstore.svg
@@ -67,7 +121,7 @@ Disadvantages:
 - put :: $put(data) \to hash_{data}$
 - get :: $get(hash_{data}) \to data$
 
-$sha1(data) == hash$
+{{{blue(sha1(data) == hash)}}}
 #+HTML: </div>
 #+HTML: </div>
 ** Tree, Blob, Commit

@@ -266,7 +266,7 @@ src_css_to_build.description = `Copy ${pkg.cfg.paths.src.css} to build, create s
 function src_scss_to_build() {
   return src(pkg.cfg.paths.src.scss + '**/*.scss') // .cfg.paths.src.scss := "./src/scss/"
         .pipe($.sourcemaps.init({loadMaps: true}))
-        .pipe($.sass({includePaths: pkg.cfg.paths.include.scssIncludePaths /* .cfg.paths.include.scssIncludePaths := [ "./node_modules/reveal.js/css/template" ] */
+        .pipe($.sass({includePaths: pkg.cfg.paths.include.scssIncludePaths /* .cfg.paths.include.scssIncludePaths := [ "./node_modules/reveal.js/css/theme" ] */
             })
             .on("error", $.sass.logError))
         .pipe($.autoprefixer())
