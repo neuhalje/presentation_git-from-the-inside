@@ -17,6 +17,10 @@ COPY  elisp /emacs/elisp
 COPY  publish.sh /emacs/.
 COPY  oer-publish.sh /emacs/.
 
+# Until merged: https://gitlab.com/oer/org-re-reveal/-/merge_requests/32
+RUN rm -rf /emacs/.emacs.d/elpa/emacs-reveal/org-re-reveal && \
+    git clone -b pr/custom-themes https://gitlab.com/neuhalje/org-re-reveal.git /emacs/.emacs.d/elpa/emacs-reveal/org-re-reveal
+
 # make /emacs world readable and run the container via --user $(id -u):$(id -g)
 RUN find /emacs -type f -executable -exec chmod 777  \{\} \; && \
     find /emacs -type f -not -executable -exec chmod 666  \{\} \; && \

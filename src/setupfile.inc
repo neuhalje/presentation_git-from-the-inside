@@ -22,7 +22,6 @@
 #+REVEAL_MAX_SCALE: 2.5
 
 #+REVEAL_TRANS: fade
-#+REVEAL_THEME: solarized
 #+REVEAL_HLEVEL: 1
 #+REVEAL_EXTRA_CSS: ./css/slides.css
 

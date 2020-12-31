@@ -4,6 +4,7 @@
 #+EMAIL: jens@neuhalfen.name
 #+DATE: 2020-12-31
 
+#+REVEAL_THEME: /css/light-theme.css
 #+SETUPFILE: setupfile.inc
 #+SETUPFILE: setupfile-d3graphviz.inc
 #+INCLUDE: git-tooling.inc

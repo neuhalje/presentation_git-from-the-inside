@@ -50,7 +50,9 @@
         "img": "./public/img/"
       },
       "include": {
-        "scssIncludePaths": []
+        "scssIncludePaths": [
+          "./node_modules/reveal.js/css/theme/template"
+        ]
       }
     },
     "favicon": {
