@@ -16,10 +16,59 @@
 
 #+REVEAL_TITLE_SLIDE: <h1>%t</h1><h2>%s</h2><h3>%A %a</h3><p>View online: <a href="%u">%u</a></p> <p><div class="r-stretch license-container"><a href="/#/slide-LICENSE"><img class="inline-icon" src="/img/cc/cc.svg"/><img class="inline-icon" src="/img/cc/by.svg"/><img class="inline-icon" src="/img/cc/sa.svg"/> <b>LICENSE</b></a></div</p><p><ul><li>Press <b>s</b> for speakers view</li><li>Press <b>o</b> for overview</li></ul></p>
 
+
+#+MACRO: red @@latex:{\color{red} $1 }@@ @@html: <span style="color: red">$1</span> @@
+
 * Why SCM?
 * Git basics
 ** What is a hash?
+#+BEGIN_NOTES
+- fixed length :: The length of $h$ is always the same, e.g. 160 bit for SHA-1.
+- deterministic :: $\forall data_1, data_2 \in world: data_1 == data_2 \Rightarrow h(data_1) == h(data_2)$
+- collision resistant ::  $\forall data_1, data_2 \in world: h(data_1) == h(data_2) \Rightarrow data_1 == data_2$
+#+END_NOTES
+
+A /hash/ is a fixed length value derived from some data.
+
+For our purposes the following properties are important:
+- fixed length :: The length of $h$ is always the same, e.g. 160 bit for SHA-1.
+- deterministic :: The same data always computes to the same hash: $data_1 == data_2 \Rightarrow h(data_1) == h(data_2)$
+- collision resistant :: It is /{{{red(very unlikely)}}}/ that different data hashes to the same value: $h(data_1) == h(data_2) \Rightarrow data_1 == data_2$
 ** What is /content addressed storage/?
+:PROPERTIES:
+:END:
+#+BEGIN_NOTES
+A /content addressable storage/ is a very simple database with two operations:
+- put(data) --> hash_{data} :: Write an object into the storage and get the objects hash back as key.
+- get(hash_data) --> data :: Pass a hash and get the data. Git uses [[https://en.wikipedia.org/wiki/SHA-1][SHA-1]] as hashing function (=sha1(data) == hash_{data}=).
+
+The main /advantages/ of such a storage is:
+- Storing one =data= multiple times takes /no/ additional storage space
+- The implementation is extremely simple
+
+Disadvantages:
+- Deleting objects needs additional work (/reference counting/)
+- /Bootstrapping/ - the hashes themselves say nothing about the data. At least some external storage is needed.
+#+END_NOTES
+
+#+HTML: <div class="two-rows two-columns r-stretch">
+#+HTML: <div class="bottom-left two-cols-wide">
+| PRO                                                                | CON                              |
+|--------------------------------------------------------------------+----------------------------------|
+| simple                                                             | no =query= method besides /hash/ |
+#+HTML: </div>
+#+HTML: <div  class="top-right">
+#+NAME: tree_objectstore.svg
+#+attr_html: :class scale-to-cell
+[[./img/tree_objectstore.svg]]
+#+HTML: </div>
+#+HTML: <div  class="top-left">
+- put :: $put(data) \to hash_{data}$
+- get :: $get(hash_{data}) \to data$
+
+$sha1(data) == hash$
+#+HTML: </div>
+#+HTML: </div>
 ** Tree, Blob, Commit
 ** Branch
 ** Merge
@@ -69,7 +118,7 @@ git commit -m'2nd commit' --allow-empty
 #+end_src
 
 {{{git_with_diff_result(number1src)}}}
-* Examples                                                                      :noexport:
+* Examples
 The following examples can be skipped via a =:noexport= tag on this headline
 ** Notes and timing
 :PROPERTIES:
@@ -184,7 +233,9 @@ Top Left
 #+HTML: </div> <!-- top left -->
 
 #+HTML: </div> <!-- container -->
-** Images
+** Included Images
+
+** Generated Images
 :PROPERTIES:
 :CUSTOM_ID: example_image
 :END:

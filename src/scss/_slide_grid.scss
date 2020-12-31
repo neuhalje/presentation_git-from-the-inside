@@ -115,3 +115,13 @@ $phi: 1.6180339887498948482;
 .two-cols-wide {
      grid-column-end:  span 2;
 }
+
+
+// Images
+
+// fill a complete cell
+.scale-to-cell {
+    min-width: cover-content;
+    min-height: cover-content;
+    object-fit: fit-content;
+}
