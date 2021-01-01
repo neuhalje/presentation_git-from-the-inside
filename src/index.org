@@ -17,10 +17,11 @@
 
 #+REVEAL_TITLE_SLIDE: <h1>%t</h1><h2>%s</h2><h3>%A %a</h3><p>View online: <a href="%u">%u</a></p> <p><div class="r-stretch license-container"><a href="/#/slide-LICENSE"><img class="inline-icon" src="/img/cc/cc.svg"/><img class="inline-icon" src="/img/cc/by.svg"/><img class="inline-icon" src="/img/cc/sa.svg"/> <b>LICENSE</b></a></div</p><p><ul><li>Press <b>s</b> for speakers view</li><li>Press <b>o</b> for overview</li></ul></p>
 
+#+MACRO: color @@latex:{\color{$1}@@ @@html: <span class="$1">@@ $2 @@latex:\@@@@html:</span>@@
 
-#+MACRO: red @@latex:{\color{red} $1 }@@ @@html: <span class="red">$1</span> @@
-#+MACRO: blue @@latex:{\color{blue} $1 }@@ @@html: <span class="blue">$1</span> @@
-#+MACRO: green @@latex:{\color{green} $1 }@@ @@html: <span class="green">$1</span> @@
+#+MACRO: red {{{color(red, $1)}}}
+#+MACRO: blue {{{color(blue, $1)}}}
+#+MACRO: green {{{color(green, $1)}}}
 
 * Why SCM?
 * Git basics
