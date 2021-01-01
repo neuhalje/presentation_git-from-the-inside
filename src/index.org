@@ -9,13 +9,14 @@
 #+SETUPFILE: setupfile-d3graphviz.inc
 #+INCLUDE: git-tooling.inc
 #+REVEAL_PLUGINS: (highlight d3graphviz notes search zoom)
+#+REVEAL_EXPORT_NOTES_TO_PDF: separate-page
 
 #+REVEAL_EXTRA_OPTIONS: totalTime:2700
 
-#+REVEAL_TALK_URL: http://neuhalje.github.io/presentation_git-from-the-inside
+#+REVEAL_TALK_URL: https://neuhalje.github.io/presentation_git-from-the-inside
 #+REVEAL_TALK_QR_CODE: does not exist
 
-#+REVEAL_TITLE_SLIDE: <h1>%t</h1><h2>%s</h2><h3>%A %a</h3><p>View online: <a href="%u">%u</a></p> <p><div class="r-stretch license-container"><a href="/#/slide-LICENSE"><img class="inline-icon" src="/img/cc/cc.svg"/><img class="inline-icon" src="/img/cc/by.svg"/><img class="inline-icon" src="/img/cc/sa.svg"/> <b>LICENSE</b></a></div</p><p><ul><li>Press <b>s</b> for speakers view</li><li>Press <b>o</b> for overview</li></ul></p>
+#+REVEAL_TITLE_SLIDE: <h1>%t</h1><h2>%s</h2><h3>%A %a</h3><p><a href="%u">View online</a> &mdash; <a href="%u?print-pdf">Speakers notes</a></p> <p><div class="r-stretch license-container"><a href="/#/slide-LICENSE"><img class="inline-icon" src="/img/cc/cc.svg"/><img class="inline-icon" src="/img/cc/by.svg"/><img class="inline-icon" src="/img/cc/sa.svg"/> <b>LICENSE</b></a></div</p><p><ul><li>Press <b>s</b> for speakers view</li><li>Press <b>o</b> for overview</li></ul></p>
 
 #+MACRO: color @@latex:{\color{$1}@@ @@html: <span class="$1">@@ $2 @@latex:\@@@@html:</span>@@
 
@@ -27,29 +28,38 @@
 * Git basics
 ** What is a hash?
 #+BEGIN_NOTES
-- fixed length :: The length of $h$ is always the same, e.g. 160 bit for SHA-1.
-- deterministic :: $\forall data_1, data_2 \in world: data_1 == data_2 \Rightarrow h(data_1) == h(data_2)$
-- collision resistant ::  $\forall data_1, data_2 \in world: h(data_1) == h(data_2) \Rightarrow data_1 == data_2$
-#+END_NOTES
-
-A /hash/ is a fixed length value derived from some data.
-
 For our purposes the following properties are important:
 - fixed length :: The length of $h$ is always the same, e.g. 160 bit for SHA-1.
 - deterministic :: The same data always computes to the same hash: $data_1 == data_2 \Rightarrow h(data_1) == h(data_2)$
 - collision resistant :: It is /{{{red(very unlikely)}}}/ that different data hashes to the same value: $h(data_1) == h(data_2) \Rightarrow data_1 == data_2$
-*** Hash collisions I/II
-A hash /collision/ is when two different =data= values hash to the same hash.
 
-#+begin_quote
+Since arbitrary long values can be hashed the [[https://en.wikipedia.org/wiki/Pigeonhole_principle][pigeon hole principle]] tells us that there must be collisions.
+#+END_NOTES
+
+A /hash/ $h(x)$ is a *fixed length* value derived from some data $x$.
+
+\begin{align}
+A == B  &\Rightarrow h(A) == h(B) & \text{always} \\
+h(A) == h(B)  &\Rightarrow A == B & \text{almost always (*)}
+\end{align}
+
+(*) It is /{{{red(very unlikely)}}}/ that different values hashes to the same hash. If this happens it is called a /hash collision/.
+*** Hash collisions I/II
+Since arbitrary long values can be hashed to a fixed length hash the [[https://en.wikipedia.org/wiki/Pigeonhole_principle][pigeon hole principle]] tells us that there *must* be collisions.
+
+For =sha1= and =git= this probability depends on the number of changed files & commits (=n=):
+
+\begin{equation}
+p_{collision}(n) \approx 1-\left({\frac {2^{160}-1}{2^{160}}}\right)^{\frac {n(n-1)}{2}}
+\end{equation}
+
+#+BEGIN_NOTES
 Given =n= random integers drawn from a discrete uniform distribution with range =[1,d]=, *what is the probability =p(n; d)= that at least two numbers are the same?* -- [[https://en.wikipedia.org/wiki/Birthday_problem][source]]
 
-$p(n; d) \approx 1-\left({\frac {d-1}{d}}\right)^{\frac {n(n-1)}{2}}$
-#+end_quote
-
-For =sha1= and =git=:
-- =d= - The length of the hash function ($2^{160}$)
-- =n= - The total sum of all files, directories, commits, tags
+\begin{equation}
+p(n; d) \approx 1-\left({\frac {d-1}{d}}\right)^{\frac {n(n-1)}{2}}
+\end{equation}
+#+END_NOTES
 *** Hash collisions II/II
 #+NAME: probability-of-collisions
 #+begin_src gnuplot :exports results :file org-gen/hash-collision-probability.svg
@@ -72,6 +82,8 @@ f(x) =  1 - exp( -1 * x * (x - 1) / (2*d)   )
 
 plot [1:5*10**20] f(x) title "probability of collision" with lines lw 3, lottery title "lottery win" lw 3
 #+end_src
+
+How likely is a hash collision in an average project?
 #+HTML: <div class="two-columns r-stretch">
 
 #+HTML: <div>
@@ -79,7 +91,7 @@ Chance of a lottery win (6 of 49 + 1 in 10):
 
 ~1 : 139.838.160~
 
-Ergo: {{{blue(Don't create more than 10^20 (100 trillion) files and/or commits per repository.)}}}
+Rule of thumb: {{{green(Don't create more than $10^{10}$ (ten US-billion) files and $10^{10}$ commits per repository)}}}
 #+HTML: </div>
 
 #+HTML: <div>
@@ -94,18 +106,18 @@ Ergo: {{{blue(Don't create more than 10^20 (100 trillion) files and/or commits p
 :END:
 #+BEGIN_NOTES
 A /content addressable storage/ is a very simple database with two operations:
-- put(data) --> hash_{data} :: Write an object into the storage and get the objects hash back as key.
-- get(hash_data) --> data :: Pass a hash and get the data. Git uses [[https://en.wikipedia.org/wiki/SHA-1][SHA-1]] as hashing function (=sha1(data) == hash_{data}=).
+- put(data) --> hash_data :: Write an object into the storage and get the objects hash back as key.
+- get(hash_data) --> data :: Pass a hash and get the data. Git uses [[https://en.wikipedia.org/wiki/SHA-1][SHA-1]] as hashing function (=sha1(data) == hash_data=).
 
-The main /advantages/ of such a storage is:
-- Storing one =data= multiple times takes /no/ additional storage space
-- The implementation is extremely simple
+The main advantages of such a storage are:
+- Storing one =data= multiple times takes /no/ additional storage space.
+- The implementation is extremely simple.
 
 Disadvantages:
-- Deleting objects needs additional work (/reference counting/)
 - /Bootstrapping/ - the hashes themselves say nothing about the data. At least some external storage is needed.
+- Deleting objects needs additional work (/reference counting/).
 #+END_NOTES
-
+{{{green(A /content addressed storage/ is a very simple database)}}}
 #+HTML: <div class="two-rows two-columns r-stretch">
 #+HTML: <div class="bottom-left two-cols-wide">
 | PRO                   | CON                                |
@@ -122,7 +134,7 @@ Disadvantages:
 - put :: $put(data) \to hash_{data}$
 - get :: $get(hash_{data}) \to data$
 
-{{{blue(sha1(data) == hash)}}}
+{{{green(sha1(data) == hash)}}}
 #+HTML: </div>
 #+HTML: </div>
 ** Tree, Blob, Commit
