@@ -5,6 +5,13 @@
 // phi: goden ratio
 $phi: 1.6180339887498948482;
 
+.container {
+    display: grid;
+    grid-gap: 1em;
+    max-width:  none;
+    max-height: none;
+}
+
 /*
 /* Two columns:
 /* .---------------------------------------------.
@@ -22,15 +29,15 @@ $phi: 1.6180339887498948482;
 /* .---------------------------------------------.
 */
 
-.container {
-    display: grid;
-    max-width:  none;
-    max-height: none;
-}
 
 .two-columns {
      @extend .container;
     grid-template-columns: 1fr $phi * 1fr;
+}
+
+.two-columns-equal {
+     @extend .container;
+    grid-template-columns: 1fr 1fr;
 }
 
 .two-columns-small-right {
@@ -61,6 +68,10 @@ $phi: 1.6180339887498948482;
     grid-template-rows:  $phi * 1fr 1fr;
 }
 
+.two-rows-equal {
+     @extend .container;
+    grid-template-rows:  $phi * 1fr 1fr;
+}
 
 /*
 /* Two columns, two rows plus area for notes:
@@ -87,27 +98,36 @@ $phi: 1.6180339887498948482;
     grid-template-rows:  $phi * 1fr 1fr auto;
 }
 
+.grid-cell {
+     overflow: hidden;
+}
+
 .note {
+     @extend .grid-cell;
      grid-column: 1 / span 2;
      grid-row: 3;
 }
 
 .top-left {
+     @extend .grid-cell;
      grid-column: 1;
      grid-row: 1;
 }
 
 .top-right {
+     @extend .grid-cell;
      grid-column: 2;
      grid-row: 1;
 }
 
 .bottom-left {
+     @extend .grid-cell;
      grid-column: 1;
      grid-row: 2;
 }
 
 .bottom-right {
+     @extend .grid-cell;
      grid-column: 2;
      grid-row: 2;
 }
@@ -116,12 +136,20 @@ $phi: 1.6180339887498948482;
      grid-column-end:  span 2;
 }
 
+.two-rows-high {
+     grid-row-end:  span 2;
+}
+
 
 // Images
 
 // fill a complete cell
 .scale-to-cell {
-    min-width: cover-content;
-    min-height: cover-content;
-    object-fit: fit-content;
+    //min-width: cover-content;
+    //min-height: cover-content;
+    min-width: inherit;
+    min-height: inherit;
+    object-fit: contain;
+    width: 100%;
+    height: auto;
 }

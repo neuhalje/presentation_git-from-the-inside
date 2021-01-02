@@ -16,14 +16,10 @@
 #+REVEAL_MISCINFO: https://github.com/neuhalje/presentation_git-from-the-inside
 #+REVEAL_TALK_URL: https://neuhalje.github.io/presentation_git-from-the-inside
 #+REVEAL_TALK_QR_CODE: does not exist
-# TODO: Add
+
+# TODO: Add icons
 #+REVEAL_TITLE_SLIDE: <h1>%t</h1><h2>%s</h2><h3>%A %a</h3><p><a href="%u">View Online</a> &mdash; <a href="%u?print-pdf">Speakers Notes</a> &mdash; <a href="%m">Source Code</a></p> <p><div class="r-stretch license-container"><a href="/#/slide-LICENSE"><img class="inline-icon" src="/img/cc/cc.svg"/><img class="inline-icon" src="/img/cc/by.svg"/><img class="inline-icon" src="/img/cc/sa.svg"/> <b>LICENSE</b></a></div</p><p><ul><li>Press <b>s</b> for speakers view</li><li>Press <b>o</b> for overview</li></ul></p>
 
-#+MACRO: color @@latex:{\color{$1}@@ @@html: <span class="$1">@@ $2 @@latex:\@@@@html:</span>@@
-
-#+MACRO: red {{{color(red, $1)}}}
-#+MACRO: blue {{{color(blue, $1)}}}
-#+MACRO: green {{{color(green, $1)}}}
 
 * Why SCM?
 * Git basics
@@ -92,7 +88,9 @@ Chance of a lottery win (6 of 49 + 1 in 10):
 
 ~1 : 139.838.160~
 
-Rule of thumb: {{{green(Don't create more than $10^{10}$ (ten US-billion) files and $10^{10}$ commits per repository)}}}
+**Rule of thumb:**
+
+{{{green(Don't create more than $10^{10}$ (ten US-billion) files and $10^{10}$ commits per repository)}}}
 #+HTML: </div>
 
 #+HTML: <div>
@@ -119,19 +117,19 @@ Disadvantages:
 - Deleting objects needs additional work (/reference counting/).
 #+END_NOTES
 {{{green(A /content addressed storage/ is a very simple database)}}}
-#+HTML: <div class="two-rows two-columns r-stretch">
+#+HTML: <div class="two-rows two-columns-equal r-stretch">
 #+HTML: <div class="bottom-left two-cols-wide">
 | PRO                   | CON                                |
 |-----------------------+------------------------------------|
 | - simple              | - no =query= method besides /hash/ |
 | - data not duplicated |                                    |
 #+HTML: </div>
-#+HTML: <div  class="top-right">
+#+HTML: <div  class="top-left">
 #+NAME: tree_objectstore.svg
 #+attr_html: :class scale-to-cell
 [[./img/tree_objectstore.svg]]
 #+HTML: </div>
-#+HTML: <div  class="top-left">
+#+HTML: <div  class="top-right">
 - put :: $put(data) \to hash_{data}$
 - get :: $get(hash_{data}) \to data$
 
@@ -139,6 +137,19 @@ Disadvantages:
 #+HTML: </div>
 #+HTML: </div>
 ** Tree, Blob, Commit
+:PROPERTIES:
+:CUSTOM_ID: store-to-commit
+:END:
+
+
+#    
+#+begin_export html
+<div class="r-stretch two-rows two-columns-equal">
+    <div class="scale-to-cell top-left"><img class="scale-to-cell top-left" src="img/objectstore.svg"></img></div>
+    <img class="scale-to-cell top-right two-rows-high" src="img/tree_complete.svg#svgView(viewBox(140,370,300,353))"></img>
+    <div class="bottom-left" style="background-color: red">djfjsdjfsdfl</div>
+</div>
+#+end_export
 ** Branch
 ** Merge
 ** Rebase
