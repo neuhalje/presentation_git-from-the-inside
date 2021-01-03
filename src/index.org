@@ -20,59 +20,6 @@
 # TODO: Add icons
 #+REVEAL_TITLE_SLIDE: <h1>%t</h1><h2>%s</h2><h3>%A %a</h3><p><a href="%u">View Online</a> &mdash; <a href="%u?print-pdf">Speakers Notes</a> &mdash; <a href="%m">Source Code</a></p> <p><div class="r-stretch license-container"><a href="/#/slide-LICENSE"><img class="inline-icon" src="/img/cc/cc.svg"/><img class="inline-icon" src="/img/cc/by.svg"/><img class="inline-icon" src="/img/cc/sa.svg"/> <b>LICENSE</b></a></div</p><p><ul><li>Press <b>s</b> for speakers view</li><li>Press <b>o</b> for overview</li></ul></p>
 
-* XXX
-:PROPERTIES:
-:CUSTOM_ID: XXX
-:END:
-
-** a
-#+BEGIN_NOTES
-#+END_NOTES
-
-#+HTML: <div class="two-rows r-stretch">
-#+html:  <img class="top-left scale-height" src="img/objectstore-1.png"></img>
-#+HTML: <div class="bottom-left text">
-- one
-- two
-- three
-#+HTML: </div>
-#+HTML: </div> <!-- container -->
-** b
-#+BEGIN_NOTES
-#+END_NOTES
-
-#+HTML: <div class="two-rows r-stretch">
-#+html:  <img class="top-left scale-height" src="img/objectstore-2.png"></img>
-#+HTML: <div class="bottom-left text">
-- one
-- two
-- three
-#+HTML: </div>
-#+HTML: </div> <!-- container -->
-** c
-#+BEGIN_NOTES
-#+END_NOTES
-
-#+HTML: <div class="two-rows r-stretch">
-#+html:  <img class="top-left scale-height" src="img/objectstore-3.png"></img>
-#+HTML: <div class="bottom-left text">
-- one
-- two
-- three
-#+HTML: </div>
-#+HTML: </div> <!-- container -->
-** d
-#+BEGIN_NOTES
-#+END_NOTES
-
-#+HTML: <div class="two-rows r-stretch">
-#+html:  <img class="top-left scale-height" src="img/objectstore-4.png"></img>
-#+HTML: <div class="bottom-left text">
-- one
-- two
-- three
-#+HTML: </div>
-#+HTML: </div> <!-- container -->
 * Why SCM?
 - SCM System :: *S*ource *C*code *M*anagement System
 - Tracks changes :: Who, When, What and Why
@@ -190,17 +137,76 @@ Disadvantages:
 #+HTML: </div>
 #+HTML: </div>
 ** Tree, Blob, Commit
-:PROPERTIES:
-:CUSTOM_ID: store-to-commit
-:END:
-#+begin_export html
-<div class="r-stretch two-rows two-columns-equal">
-    <div class="scale-to-cell top-left"><img class="scale-to-cell top-left" src="img/objectstore.svg"></img></div>
-    <img class="scale-to-cell top-right two-rows-high" src="img/tree_complete.svg#svgView(viewBox(140,370,300,353))"></img>
-    <div class="bottom-left" style="background-color: red">djfjsdjfsdfl</div>
-</div>
-#+end_export
+The following pages show how =git= implements the "file system" used for its magic. Files, directories and commits are handled all in the same way!
+*** Empty Object Storage
+#+BEGIN_NOTES
+#+END_NOTES
+
+#+HTML: <div class="two-rows two-columns-equal r-stretch">
+#+html:  <img class="top-left scale-height" src="img/objectstore-0.png"></img>
+#+HTML: <div class="bottom-left text">
+This is the empty object store. It is located in the =.git/= directory
+#+HTML: </div>
+#+HTML: </div> <!-- container -->
+*** File Content
+#+BEGIN_NOTES
+#+END_NOTES
+
+#+HTML: <div class="two-rows two-columns-equal r-stretch">
+#+html:  <img class="top-left scale-height" src="img/objectstore-1.png"></img>
+#+html:  <img class="top-right scale-height two-rows-high" src="img/tree_complete-1.png"></img>
+#+HTML: <div class="bottom-left text">
+We can store the /content/ of =README.txt= but not the /file name/. Git calls this a =blob=.
+#+HTML: </div>
+#+HTML: </div> <!-- container -->
+*** Directories
+#+BEGIN_NOTES
+#+END_NOTES
+
+#+HTML: <div class="two-rows two-columns-equal r-stretch">
+#+html:  <img class="top-left scale-height" src="img/objectstore-2.png"></img>
+#+html:  <img class="top-right scale-height two-rows-high" src="img/tree_complete-2.png"></img>
+#+HTML: <div class="bottom-left text">
+A directory (=tree= in git-speak) is a special file that contains /file names/ and links to the content via the /hash/.
+E.g. {{{red(=B 0xafde README.txt=)}}} is the README.
+#+HTML: </div>
+#+HTML: </div> <!-- container -->
+*** The First Commit
+#+BEGIN_NOTES
+#+END_NOTES
+
+#+HTML: <div class="two-rows two-columns-equal r-stretch">
+#+html:  <img class="top-left scale-height" src="img/objectstore-3.png"></img>
+#+html:  <img class="top-right scale-height two-rows-high" src="img/tree_complete-3.png"></img>
+#+HTML: <div class="bottom-left text">
+A commit (circle) points to a =tree= (the files) and has e.g. a commit message.
+#+HTML: </div>
+#+HTML: </div> <!-- container -->
+*** The Second Commit
+#+HTML: <div class="two-rows two-columns-equal r-stretch">
+#+html:  <img class="top-left scale-height" src="img/objectstore-4.png"></img>
+#+html:  <img class="top-right scale-height two-rows-high" src="img/tree_complete-4.png"></img>
+#+HTML: <div class="bottom-left text">
+- Most of the time a commit points to a /parent/ commit.
+- See how someone edited =README.txt= ({{{red(=B 0xdead README.txt=)}}})?
+#+HTML: </div>
+#+HTML: </div> <!-- container -->
+*** What do changes mean?
+#+BEGIN_NOTES
+This is very important to understand!
+#+END_NOTES
+
+#+HTML: <div class="two-rows two-columns-equal r-stretch">
+#+html:  <img class="top-right scale-height two-rows-high" src="img/tree_complete-4.png"></img>
+#+HTML: <div class="top-left two-rows-high text">
+Changing =README.txt= also changes the =tree=! The hash changed from {{{red(=0x4711=)}}} to {{{red(=0x0815=)}}}.
+
+{{{green(*This is very important*)}}}: Changing a file will change its hash. This will change the content of the parent tree. This will change the hash of the parent tree. *This will change all the tree hashes up to the top*.
+#+HTML: </div>
+#+HTML: </div> <!-- container -->
 ** Branch
+*** HEAD
+*** BRANCH
 ** Merge
 ** Rebase
 ** Remote
