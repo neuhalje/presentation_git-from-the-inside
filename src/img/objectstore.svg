@@ -564,9 +564,9 @@
   </metadata>
   <g
      inkscape:groupmode="layer"
-     id="objectstore"
+     id="objectstore-layer-l0"
      inkscape:label="l0 - empty"
-     style="display:inline"
+     style=""
      transform="translate(-6.976028,-7.0097017)">
     <path
        id="rect7969-2"
@@ -843,9 +843,9 @@
   </g>
   <g
      inkscape:groupmode="layer"
-     id="objectstore_after_commit"
+     id="objectstore-layer-l1"
      inkscape:label="l1 - first dir"
-     style="display:none;opacity:1"
+     style="opacity:1"
      transform="translate(-6.976028,-7.0097017)">
     <g
        id="g6020"
@@ -914,9 +914,9 @@
   </g>
   <g
      inkscape:groupmode="layer"
-     id="g1075"
+     id="objectstore-layer-l2"
      inkscape:label="l2 - Update, change README"
-     style="display:none"
+     style=""
      transform="translate(-6.976028,-7.0097017)">
     <g
        id="g1019"
@@ -1043,9 +1043,9 @@
   </g>
   <g
      inkscape:groupmode="layer"
-     id="g1189"
-     inkscape:label="l2 commit 1234"
-     style="display:none;opacity:1"
+     id="objectstore-layer-l3"
+     inkscape:label="l3 commit 1234"
+     style="opacity:1"
      transform="translate(-6.976028,-7.0097017)">
     <g
        id="g1173"
