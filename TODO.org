@@ -35,7 +35,12 @@ CLOSED: [2020-12-23 Wed 20:39]
 - State "STARTED"    from "TODO"       [2020-12-23 Wed 10:50]
 :END:
 Made difficult by duplicate configurations for dependencies (e.g. "watch").
-*** TODO [#C] Load fonts locally, not from google
+*** CANCELLED [#C] Load fonts locally, not from google
+CLOSED: [2021-01-03 Sun 22:44]
+:LOGBOOK:
+- State "CANCELLED"  from "TODO"       [2021-01-03 Sun 22:44] \\
+  Obsolete: Using system fonts with custom theme.
+:END:
 *** DONE Generate =html= via Docker
 CLOSED: [2020-12-30 Wed 15:20]
 :LOGBOOK:
@@ -138,9 +143,26 @@ Options:
 - remove path
 - Package all licenses
 ** Content
-*** TODO Add Chapter: Content addressed storage
-*** TODO Add Chapter: What is a hash?
-*** TODO Add Chapter: Tree, blob, commit
+*** STARTED Add Chapter: Content addressed storage
+:LOGBOOK:
+- State "STARTED"    from "TODO"       [2021-01-03 Sun 22:45]
+:END:
+**** TODO Update Speaker Notes
+**** DONE Add images, tell story
+CLOSED: [2021-01-03 Sun 22:43]
+:LOGBOOK:
+- State "DONE"       from "TODO"       [2021-01-03 Sun 22:43]
+:END:
+*** DONE Add Chapter: What is a hash?
+CLOSED: [2021-01-03 Sun 22:43]
+:LOGBOOK:
+- State "DONE"       from "TODO"       [2021-01-03 Sun 22:43]
+:END:
+*** STARTED Add Chapter: Tree, blob, commit
+:LOGBOOK:
+- State "STARTED"    from "TODO"       [2021-01-03 Sun 22:45]
+:END:
+**** TODO Update Speaker Notes
 *** TODO Add Chapter: Branch
 *** DONE Add License (CC)
 CLOSED: [2020-12-30 Wed 16:36]
@@ -179,6 +201,10 @@ CLOSED: [2020-12-25 Fri 16:19]
 - State "DONE"       from "TODO"       [2020-12-25 Fri 16:19]
 :END:
 Add custom css
-*** TODO Custom reveal.js Theme
+*** DONE Custom reveal.js Theme
+CLOSED: [2021-01-03 Sun 22:44]
+:LOGBOOK:
+- State "DONE"       from "TODO"       [2021-01-03 Sun 22:44]
+:END:
 Clone a theme and make it mine
 * Archived TODOs

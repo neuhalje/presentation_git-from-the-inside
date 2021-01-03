@@ -617,14 +617,12 @@ build_org_create_gen_dir.displayName = `Create ${pkg.cfg.paths.build.base}/org-g
 #+end_src
 
 TODO: This has still some issues
-- [ ] The resulting files are owned by root (needs to be fixed in the Dockerfile)
+- [X] The resulting files are owned by root (needs to be fixed in the Dockerfile)
 - [ ] Errors halt the process before notifications are shown
-
 
 #+begin_src javascript
 function build_org_file_with_docker()
 {
-
     const userInfo = require('os').userInfo()
 
     const docker_image = argv.docker_image
@@ -652,6 +650,7 @@ function build_org_file_with_docker()
         }
         })
 }
+
 build_org_file_with_docker.displayName = "Transform index.org via Docker"
 build_org_file_with_docker.description = `Build index.org with "${pkg.cfg.vars.build_org_docker_local}" docker container.`
 
@@ -923,5 +922,5 @@ This is where new tasks are evaluated ...
 async function check_out() {
     $.notifier.notify( {title:'title', message:'message'})
 }
- exports.check_out = check_out
+// exports.check_out = check_out
 #+end_src

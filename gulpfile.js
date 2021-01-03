@@ -315,7 +315,6 @@ build_org_create_gen_dir.displayName = `Create ${pkg.cfg.paths.build.base}/org-g
 
 function build_org_file_with_docker()
 {
-
     const userInfo = require('os').userInfo()
 
     const docker_image = argv.docker_image
@@ -343,6 +342,7 @@ function build_org_file_with_docker()
         }
         })
 }
+
 build_org_file_with_docker.displayName = "Transform index.org via Docker"
 build_org_file_with_docker.description = `Build index.org with "${pkg.cfg.vars.build_org_docker_local}" docker container.`
 
@@ -537,4 +537,4 @@ exports.default = exports.publish
 async function check_out() {
     $.notifier.notify( {title:'title', message:'message'})
 }
- exports.check_out = check_out
+// exports.check_out = check_out
