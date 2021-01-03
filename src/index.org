@@ -20,8 +20,16 @@
 # TODO: Add icons
 #+REVEAL_TITLE_SLIDE: <h1>%t</h1><h2>%s</h2><h3>%A %a</h3><p><a href="%u">View Online</a> &mdash; <a href="%u?print-pdf">Speakers Notes</a> &mdash; <a href="%m">Source Code</a></p> <p><div class="r-stretch license-container"><a href="/#/slide-LICENSE"><img class="inline-icon" src="/img/cc/cc.svg"/><img class="inline-icon" src="/img/cc/by.svg"/><img class="inline-icon" src="/img/cc/sa.svg"/> <b>LICENSE</b></a></div</p><p><ul><li>Press <b>s</b> for speakers view</li><li>Press <b>o</b> for overview</li></ul></p>
 
+* XXX
+
+#+INCLUDE: "img/objectstore.svg" export html
+
 
 * Why SCM?
+- SCM System :: *S*ource *C*code *M*anagement System
+- Tracks changes :: Who, When, What and Why
+- Time Machine :: Go back to any point in the past
+- Collaborative :: Allows multiple people to collaborate on a source set
 * Git basics
 ** What is a hash?
 #+BEGIN_NOTES
