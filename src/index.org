@@ -25,19 +25,70 @@
 :CUSTOM_ID: XXX
 :END:
 
-#+begin_src javascript :exports none
-function myFunction() {
-  var element = document.getElementById("svg-objectstore");
-  element.classList.remove("objectstore-layer-l1");
-}
-#+end_src
+** a
+#+BEGIN_NOTES
+#+END_NOTES
 
-#+html:  <div id="svg-objectstore" class="scale-height objectstore-show-l1">
+#+HTML: <div class="two-rows r-stretch">
+
+#+html:  <div class="top-left scale-height objectstore-show-l0">
 #+INCLUDE: "img/objectstore.svg" export html
 #+html: </div>
 
-# #+HTML: <img src="img/objectstore.svg" class="objectstore-show-l1"></img>
+#+HTML: <div class="bottom-left text">
+- one
+- two
+- three
+#+HTML: </div>
+#+HTML: </div> <!-- container -->
+** b
+#+BEGIN_NOTES
+#+END_NOTES
 
+#+HTML: <div class="two-rows r-stretch">
+
+#+html:  <div class="top-left scale-height objectstore-show-l1">
+#+INCLUDE: "img/objectstore.svg" export html
+#+html: </div>
+
+#+HTML: <div class="bottom-left text">
+- one
+- two
+- three
+#+HTML: </div>
+#+HTML: </div> <!-- container -->
+** c
+#+BEGIN_NOTES
+#+END_NOTES
+
+#+HTML: <div class="two-rows r-stretch">
+
+#+html:  <div class="top-left scale-height objectstore-show-l2">
+#+INCLUDE: "img/objectstore.svg" export html
+#+html: </div>
+
+#+HTML: <div class="bottom-left text">
+- one
+- two
+- three
+#+HTML: </div>
+#+HTML: </div> <!-- container -->
+** d
+#+BEGIN_NOTES
+#+END_NOTES
+
+#+HTML: <div class="two-rows r-stretch">
+
+#+html:  <div class="top-left scale-height objectstore-show-l3">
+#+INCLUDE: "img/objectstore.svg" export html
+#+html: </div>
+
+#+HTML: <div class="bottom-left text">
+- one
+- two
+- three
+#+HTML: </div>
+#+HTML: </div> <!-- container -->
 * Why SCM?
 - SCM System :: *S*ource *C*code *M*anagement System
 - Tracks changes :: Who, When, What and Why
