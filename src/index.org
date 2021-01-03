@@ -41,23 +41,22 @@ h(A) == h(B)  &\Rightarrow A == B & \text{almost always (*)}
 \end{align}
 
 (*) It is /{{{red(very unlikely)}}}/ that different values hashes to the same hash. If this happens it is called a /hash collision/.
-*** Hash collisions I/II
-Since arbitrary long values can be hashed to a fixed length hash the [[https://en.wikipedia.org/wiki/Pigeonhole_principle][pigeon hole principle]] tells us that there *must* be collisions.
-
-For =sha1= and =git= this probability depends on the number of changed files & commits (=n=):
-
-\begin{equation}
-p_{collision}(n) \approx 1-\left({\frac {2^{160}-1}{2^{160}}}\right)^{\frac {n(n-1)}{2}}
-\end{equation}
 
 #+BEGIN_NOTES
-Given =n= random integers drawn from a discrete uniform distribution with range =[1,d]=, *what is the probability =p(n; d)= that at least two numbers are the same?* -- [[https://en.wikipedia.org/wiki/Birthday_problem][source]]
+Given =n= random integers drawn from a discrete uniform distribution with range =[1,d]=, *what is the probability =p(n; d)= that at least two numbers are the same?*
 
 \begin{equation}
 p(n; d) \approx 1-\left({\frac {d-1}{d}}\right)^{\frac {n(n-1)}{2}}
 \end{equation}
+
+Source: [[https://en.wikipedia.org/wiki/Birthday_problem]]
 #+END_NOTES
-*** Hash collisions II/II
+*** How likely is a hash collision in an average project?
+#+BEGIN_NOTES
+Since arbitrary long values can be hashed to a fixed length hash the [[https://en.wikipedia.org/wiki/Pigeonhole_principle][pigeon hole principle]] tells us that there *must* be collisions.
+For =sha1= and =git= this probability depends on the number of changed files & commits (=n=).
+#+END_NOTES
+
 #+NAME: probability-of-collisions
 #+begin_src gnuplot :exports results :file org-gen/hash-collision-probability.svg
 reset
@@ -65,40 +64,38 @@ reset
 set terminal svg enhanced
 set xlabel 'Number of commits/files/..'
 set ylabel 'Probability of a collision'
-# set arrow from 23,0 to 23,0.5073 nohead
 # set arrow from 0,0.5073 to 23,0.5073 nohead
-# set label '23' at 22,-0.025 font ",16"
+# set label 'jackpot at 22,-0.025 font ",16"
 set grid ytics
 
 set title "Putting it all together"
 d = 2**160
 lottery = 1.0 / 139838160.0
+break = 144577865770750394368
+set arrow from break,0 to break,lottery nohead
 
 # set yrange [0:1]
 f(x) =  1 - exp( -1 * x * (x - 1) / (2*d)   )
 
-plot [1:5*10**20] f(x) title "probability of collision" with lines lw 3, lottery title "lottery win" lw 3
+plot [1:2.5*10**20] f(x) title "probability of collision" with lines lw 3, lottery title "lottery win (1 : 139.838.160)" lw 3
 #+end_src
 
-How likely is a hash collision in an average project?
-#+HTML: <div class="two-columns r-stretch">
 
-#+HTML: <div>
-Chance of a lottery win (6 of 49 + 1 in 10):
+#+HTML: <div class="two-rows r-stretch">
 
-~1 : 139.838.160~
-
-**Rule of thumb:**
-
-{{{green(Don't create more than $10^{10}$ (ten US-billion) files and $10^{10}$ commits per repository)}}}
-#+HTML: </div>
-
-#+HTML: <div>
-#+attr_html: :class scale-to-cell
+#+HTML: <div class="top-left">
+#+attr_html: :class scale-height
 #+RESULTS: probability-of-collisions
 [[file:org-gen/hash-collision-probability.svg]]
 #+HTML: </div>
 
+
+#+HTML: <div class="bottom-left text">
+Collisions depend on the number of changed files & commits.
+
+**Rule of thumb:**
+{{{green(Don't create more than $10^{10}$ (ten US-billion) files and $10^{10}$ commits per repository)}}}
+#+HTML: </div>
 #+HTML: </div> <!-- container -->
 ** What is /content addressed storage/?
 :PROPERTIES:

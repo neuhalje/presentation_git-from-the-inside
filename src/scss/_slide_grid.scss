@@ -145,11 +145,24 @@ $phi: 1.6180339887498948482;
 
 // fill a complete cell
 .scale-to-cell {
-    //min-width: cover-content;
-    //min-height: cover-content;
     min-width: inherit;
     min-height: inherit;
     object-fit: contain;
-    width: 100%;
+}
+
+.scale-width {
+     @extend .scale-to-cell;
+    width: 95%;
     height: auto;
+}
+
+.scale-height {
+     @extend .scale-to-cell;
+    width: auto;
+    height: 95%;
+}
+
+// Text
+.text {
+    text-align: left;
 }
