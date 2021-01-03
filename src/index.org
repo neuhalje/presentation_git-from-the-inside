@@ -21,9 +21,22 @@
 #+REVEAL_TITLE_SLIDE: <h1>%t</h1><h2>%s</h2><h3>%A %a</h3><p><a href="%u">View Online</a> &mdash; <a href="%u?print-pdf">Speakers Notes</a> &mdash; <a href="%m">Source Code</a></p> <p><div class="r-stretch license-container"><a href="/#/slide-LICENSE"><img class="inline-icon" src="/img/cc/cc.svg"/><img class="inline-icon" src="/img/cc/by.svg"/><img class="inline-icon" src="/img/cc/sa.svg"/> <b>LICENSE</b></a></div</p><p><ul><li>Press <b>s</b> for speakers view</li><li>Press <b>o</b> for overview</li></ul></p>
 
 * XXX
+:PROPERTIES:
+:CUSTOM_ID: XXX
+:END:
 
+#+begin_src javascript :exports none
+function myFunction() {
+  var element = document.getElementById("svg-objectstore");
+  element.classList.remove("objectstore-layer-l1");
+}
+#+end_src
+
+#+html:  <div id="svg-objectstore" class="scale-height objectstore-show-l1">
 #+INCLUDE: "img/objectstore.svg" export html
+#+html: </div>
 
+# #+HTML: <img src="img/objectstore.svg" class="objectstore-show-l1"></img>
 
 * Why SCM?
 - SCM System :: *S*ource *C*code *M*anagement System
@@ -145,9 +158,6 @@ Disadvantages:
 :PROPERTIES:
 :CUSTOM_ID: store-to-commit
 :END:
-
-
-#    
 #+begin_export html
 <div class="r-stretch two-rows two-columns-equal">
     <div class="scale-to-cell top-left"><img class="scale-to-cell top-left" src="img/objectstore.svg"></img></div>

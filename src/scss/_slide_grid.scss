@@ -7,7 +7,7 @@ $phi: 1.6180339887498948482;
 
 .container {
     display: grid;
-    grid-gap: 1em;
+    grid-gap: 0.5ex;
     max-width:  none;
     max-height: none;
 }
@@ -165,4 +165,47 @@ $phi: 1.6180339887498948482;
 // Text
 .text {
     text-align: left;
+}
+
+
+// Objectstore
+
+.objectstore-empty svg {
+    #objectstore-layer-l1 {
+        display: none;
+    }
+
+    #objectstore-layer-l2 {
+        display: none;
+    }
+
+    #objectstore-layer-l2 {
+        display: none;
+    }
+
+    #objectstore-layer-l3 {
+        display: none;
+    }
+}
+
+.objectstore-show-l1 svg {
+    #objectstore-layer-l1 {
+        display: block;
+    }
+
+    #objectstore-layer-l2 {
+        display: none;
+    }
+
+    #objectstore-layer-l2 {
+        display: none;
+    }
+
+    #objectstore-layer-l3 {
+        display: none;
+    }
+}
+
+.hidden {
+     display:none;
 }
