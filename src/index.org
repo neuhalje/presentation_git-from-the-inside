@@ -30,11 +30,7 @@
 #+END_NOTES
 
 #+HTML: <div class="two-rows r-stretch">
-
-#+html:  <div class="top-left scale-height objectstore-show-l0">
-#+INCLUDE: "img/objectstore.svg" export html
-#+html: </div>
-
+#+html:  <img class="top-left scale-height" src="img/objectstore-1.png"></img>
 #+HTML: <div class="bottom-left text">
 - one
 - two
@@ -46,11 +42,7 @@
 #+END_NOTES
 
 #+HTML: <div class="two-rows r-stretch">
-
-#+html:  <div class="top-left scale-height objectstore-show-l1">
-#+INCLUDE: "img/objectstore.svg" export html
-#+html: </div>
-
+#+html:  <img class="top-left scale-height" src="img/objectstore-2.png"></img>
 #+HTML: <div class="bottom-left text">
 - one
 - two
@@ -62,11 +54,7 @@
 #+END_NOTES
 
 #+HTML: <div class="two-rows r-stretch">
-
-#+html:  <div class="top-left scale-height objectstore-show-l2">
-#+INCLUDE: "img/objectstore.svg" export html
-#+html: </div>
-
+#+html:  <img class="top-left scale-height" src="img/objectstore-3.png"></img>
 #+HTML: <div class="bottom-left text">
 - one
 - two
@@ -78,11 +66,7 @@
 #+END_NOTES
 
 #+HTML: <div class="two-rows r-stretch">
-
-#+html:  <div class="top-left scale-height objectstore-show-l3">
-#+INCLUDE: "img/objectstore.svg" export html
-#+html: </div>
-
+#+html:  <img class="top-left scale-height" src="img/objectstore-4.png"></img>
 #+HTML: <div class="bottom-left text">
 - one
 - two
