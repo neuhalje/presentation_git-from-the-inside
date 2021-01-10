@@ -17,7 +17,7 @@ RUN echo "\n;; --- JeNe\n(setq org-confirm-babel-evaluate nil)\n(org-babel-do-lo
 COPY  convert-to-html.sh /emacs/.
 
 RUN cp /root/plantuml-*/plantuml.jar /emacs/.
-RUN echo "\n(setq org-plantuml-jar-path (expand-file-name \"/emacs/plantuml.jar\"))\n(add-to-list 'org-src-lang-modes '(\"plantuml\" . plantuml))\n(org-babel-do-load-languages 'org-babel-load-languages '((plantuml . t) (gnuplot . t)))" >> /emacs/.emacs
+RUN echo "\n(setq org-plantuml-jar-path (expand-file-name \"/emacs/plantuml.jar\"))\n(add-to-list 'org-src-lang-modes '(\"plantuml\" . plantuml))\n(org-babel-do-load-languages 'org-babel-load-languages '((plantuml . t) (gnuplot . t) (dot . t)))" >> /emacs/.emacs
 
 COPY  elisp /emacs/elisp
 COPY  publish.sh /emacs/.
