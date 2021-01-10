@@ -225,6 +225,15 @@ function src_img_to_build() {
 src_img_to_build.displayName = "img to build"
 src_img_to_build.description = `Copy ${pkg.cfg.paths.src.img} to build.`
 
+function src_fonts_to_build() {
+  $.log(`-> Copy fonts from ${pkg.cfg.paths.src.fonts} to ${pkg.cfg.paths.build.fonts}`)
+
+  return src(pkg.cfg.paths.src.fonts + '**/*.{eot,woff,woff2,ttf,txt}') // .cfg.paths.src.img := "./src/img/"
+    .pipe(dest(pkg.cfg.paths.build.fonts))                            // .cfg.paths.build.img := "./build/img/"
+}
+src_fonts_to_build.displayName = "fonts to build"
+src_fonts_to_build.description = `Copy ${pkg.cfg.paths.src.fonts} to build.`
+
 function src_lint_js() {
   $.log(`-> Linting ${[pkg.cfg.paths.src.js + '**/*.js', 'gulpfile.js']}`)
 
@@ -282,6 +291,7 @@ exports.scss.description = src_scss_to_build.description
 function src_to_build_compose() {
   return parallel(src_root_to_build,
                       src_img_to_build,
+                      src_fonts_to_build,
                       src_js_to_build_compose(),
                       src_css_to_build,
                       src_scss_to_build)

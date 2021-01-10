@@ -83,6 +83,7 @@ The directory layout is quite simple: Files are moved from ={src, node_modules}=
 - src/ :: Source files (/read-only/ during build)
   + . :: files that will end up in =build/= via copy. =index.org= is located here. (see[[id:3dd4b9ae-afb2-44cc-869c-de1a1e9e7b0f][src/]])
   + img/ :: images, will be copied to =build/img/.=. ([[id:3e134761-ac77-4e84-82ba-0330e5ec7397][src/img/]])
+  + fonts/ :: fonts, will be copied to =build/fonts/.=.
   + js/ :: JavaScript files, will be copied (and potentially minified & uglified) to =build/js=. ([[id:b87d6643-1595-47aa-9a42-9404a5e0505f][src/js/]])
   + css/ :: CSS files, will be copied (and potentially minified) to =build/css=. ([[id:fd9305bd-518c-45cf-9391-684c9a1bf65b][src/css/]])
   + scss/ :: [[https://sass-lang.com/documentation/syntax][SCSS]] files, will be run through [[https://sass-lang.com/][Sass]] and copied (and potentially minified) to =build/css=.  ([[id:86401845-3984-4e0a-b4c3-ffea05c5b6e8][src/scss/]])
@@ -489,6 +490,22 @@ function src_img_to_build() {
 src_img_to_build.displayName = "img to build"
 src_img_to_build.description = `Copy ${pkg.cfg.paths.src.img} to build.`
 #+end_src
+**** src/fonts/
+:PROPERTIES:
+:ID:       f1a1edae-ff26-422c-b3fa-ff6f98878110
+:END:
+Copy all fonts into the build directory.
+
+#+begin_src javascript
+function src_fonts_to_build() {
+  $.log(`-> Copy fonts from ${pkg.cfg.paths.src.fonts} to ${pkg.cfg.paths.build.fonts}`)
+
+  return src(pkg.cfg.paths.src.fonts + '**/*.{woff,woff2,eot,ttf,txt}') // <<js-jq(q=".cfg.paths.src.fonts")>>
+    .pipe(dest(pkg.cfg.paths.build.fonts))                            // <<js-jq(q=".cfg.paths.build.fonts")>>
+}
+src_fonts_to_build.displayName = "fonts to build"
+src_fonts_to_build.description = `Copy ${pkg.cfg.paths.src.fonts} to build.`
+#+end_src
 **** src/js/
 :PROPERTIES:
 :ID:       b87d6643-1595-47aa-9a42-9404a5e0505f
@@ -568,6 +585,7 @@ exports.scss.description = src_scss_to_build.description
 function src_to_build_compose() {
   return parallel(src_root_to_build,
                       src_img_to_build,
+                      src_fonts_to_build,
                       src_js_to_build_compose(),
                       src_css_to_build,
                       src_scss_to_build)
