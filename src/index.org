@@ -361,6 +361,26 @@ digraph D {
 }
 #+end_src
 
+*** Working on one branch
+
+{{{git_with_diff(one-branch-2nd-commit)}}}
+#+HTML: <div class="two-rows r-stretch">
+#+HTML: <div  class="bottom-left">
+#+begin_src bash :exports code :noweb yes
+<<one-branch-2nd-commit>>
+#+end_src
+
+{{{git_with_diff_result(one-branch-2nd-commit)}}}
+#+HTML: </div>
+#+HTML: <div id='one-branch-2nd-commit-result'  scale='3' class="top-left">
+#+HTML: </div> <!-- container -->
+
+#+NAME: one-branch-2nd-commit
+#+begin_src bash :exports none :results output
+git commit -m'2nd commit' --allow-empty
+#+end_src
+
+
 *** Multiple Branches
 #+BEGIN_NOTES
 Before the commit =HEAD= points to =devel= and =devel= points to =D=. After the commit =devel= points to =E=.
