@@ -21,12 +21,17 @@
 #+REVEAL_TITLE_SLIDE: <h1>%t</h1><h2>%s</h2><h3>%A %a</h3><p><a href="%u">View Online</a> &mdash; <a href="%u?print-pdf">Speakers Notes</a> &mdash; <a href="%m">Source Code</a></p> <p><div class="r-stretch license-container"><a href="/#/slide-LICENSE"><img class="inline-icon" src="/img/cc/cc.svg"/><img class="inline-icon" src="/img/cc/by.svg"/><img class="inline-icon" src="/img/cc/sa.svg"/> <b>LICENSE</b></a></div</p><p><ul><li>Press <b>s</b> for speakers view</li><li>Press <b>o</b> for overview</li></ul></p>
 
 * Why SCM?
+:PROPERTIES:
+:CUSTOM_ID: WHY_SCM
+:END:
 - SCM System :: *S*ource *C*code *M*anagement System
 - Tracks changes :: Who, When, What and Why
 - Time Machine :: Go back to any point in the past
 - Collaborative :: Allows multiple people to collaborate on a source set
-* Git basics
-** What is a hash?
+* What is a hash?
+:PROPERTIES:
+:CUSTOM_ID: WHAT_IS_A_HASH
+:END:
 #+BEGIN_NOTES
 For our purposes the following properties are important:
 - fixed length :: The length of $h$ is always the same, e.g. 160 bit for SHA-1.
@@ -54,10 +59,10 @@ p(n; d) \approx 1-\left({\frac {d-1}{d}}\right)^{\frac {n(n-1)}{2}}
 
 Source: [[https://en.wikipedia.org/wiki/Birthday_problem]]
 #+END_NOTES
-*** How likely is a hash collision in an average project?
+** How likely is a hash collision in an average project?
 #+BEGIN_NOTES
 Since arbitrary long values can be hashed to a fixed length hash the [[https://en.wikipedia.org/wiki/Pigeonhole_principle][pigeon hole principle]] tells us that there *must* be collisions.
-For =sha1= and =git= this probability depends on the number of changed files & commits (=n=).
+For =sha1= and ~git~ this probability depends on the number of changed files & commits (=n=).
 #+END_NOTES
 
 #+NAME: probability-of-collisions
@@ -100,13 +105,15 @@ Collisions depend on the number of changed files & commits.
 {{{green(Don't create more than $10^{10}$ (ten US-billion) files and $10^{10}$ commits per repository)}}}
 #+HTML: </div>
 #+HTML: </div> <!-- container -->
+* ~Git~ basics
 ** What is /content addressed storage/?
 :PROPERTIES:
+:CUSTOM_ID: CONTENT_ADDRESSED_STORAGE
 :END:
 #+BEGIN_NOTES
 A /content addressable storage/ is a very simple database with two operations:
 - put(data) --> hash_data :: Write an object into the storage and get the objects hash back as key.
-- get(hash_data) --> data :: Pass a hash and get the data. Git uses [[https://en.wikipedia.org/wiki/SHA-1][SHA-1]] as hashing function (=sha1(data) == hash_data=).
+- get(hash_data) --> data :: Pass a hash and get the data. ~Git~ uses [[https://en.wikipedia.org/wiki/SHA-1][SHA-1]] as hashing function (=sha1(data) == hash_data=).
 
 The main advantages of such a storage are:
 - Storing one =data= multiple times takes /no/ additional storage space.
@@ -136,8 +143,11 @@ Disadvantages:
 {{{green(sha1(data) == hash)}}}
 #+HTML: </div>
 #+HTML: </div>
-** Tree, Blob, Commit
-The following pages show how =git= implements the "file system" used for its magic. Files, directories and commits are handled all in the same way!
+** The "git file system"
+:PROPERTIES:
+:CUSTOM_ID: GIT_FILE_SYSTEM
+:END:
+The following pages show how ~git~ implements the "file system" used for its magic. Files, directories and commits are handled all in the same way!
 *** Empty Object Storage
 #+BEGIN_NOTES
 #+END_NOTES
@@ -156,7 +166,7 @@ This is the empty object store. It is located in the =.git/= directory
 #+html:  <img class="top-left scale-height" src="img/objectstore-1.png"></img>
 #+html:  <img class="top-right scale-height two-rows-high" src="img/tree_complete-1.png"></img>
 #+HTML: <div class="bottom-left text">
-We can store the /content/ of =README.txt= but not the /file name/. Git calls this a =blob=.
+We can store the /content/ of =README.txt= but {{{red(not the /file name/.)}}} ~Git~ calls this a =blob=.
 #+HTML: </div>
 #+HTML: </div> <!-- container -->
 *** Directories
@@ -167,7 +177,7 @@ We can store the /content/ of =README.txt= but not the /file name/. Git calls th
 #+html:  <img class="top-left scale-height" src="img/objectstore-2.png"></img>
 #+html:  <img class="top-right scale-height two-rows-high" src="img/tree_complete-2.png"></img>
 #+HTML: <div class="bottom-left text">
-A directory (=tree= in git-speak) is a special file that contains /file names/ and links to the content via the /hash/.
+A directory (=tree= in ~git~-speak) is a special file that contains /file names/ and links to the content via the /hash/.
 E.g. {{{red(=B 0xafde README.txt=)}}} is the README.
 #+HTML: </div>
 #+HTML: </div> <!-- container -->
@@ -204,17 +214,126 @@ Changing =README.txt= also changes the =tree=! The hash changed from {{{red(=0x4
 {{{green(*This is very important*)}}}: Changing a file will change its hash. This will change the content of the parent tree. This will change the hash of the parent tree. *This will change all the tree hashes up to the top*.
 #+HTML: </div>
 #+HTML: </div> <!-- container -->
+** The first branch
+:PROPERTIES:
+:header-args: :var repo="/tmp/git-from-the-inside/branches" :dir /tmp/git-from-the-inside/branches
+:repo: /tmp/git-from-the-inside/branches
+:CUSTOM_ID: FIRST_BRANCH
+:END:
+Starting out from the filesystem, let's have a look at how a branch can be constructed.
+
+In order to to so, we need to answer a very important question:
+
+*How does ~git~ know which commit is the /current/ commit?*
+*** How ~git~ finds the parent commit
+:PROPERTIES:
+:ID:       cbf6a54d-0e1f-4622-8424-2d9a1c8abbb6
+:END:
+*Let's recapitulate*:
+- ~Git~ heavily relies on /content addressed storage/
+- Content addressed storage is like /chaotic storage/
+  + Very efficient
+  + no query method besides ~get(hash)~
+  + *Needs external paperwork*
+
+In order to know the /current/ commit, we need to look at the paper work.
+*** Initialize repository
+#+BEGIN_NOTES
+The content of =.git/= an implementation specific.
+#+END_NOTES
+
+*Create a fresh repository:*
+
+#+ATTR_REVEAL: :code_attribs data-line-numbers
+#+begin_src bash :exports both :results code :noweb strip-export :dir /tmp
+<<force-temp-repo>>
+mkdir -p "${repo}" && cd "${repo}"
+git init
+#+end_src
+
+#+ATTR_REVEAL: :code_attribs data-line-numbers="1"
+#+RESULTS:
+
+#+begin_src bash :exports results :results silent
+git config --get user.name || git config --add user.name "Alice"
+git config --get user.email || git config --add user.email "alice@neuhalfen.name"
+# git config -l
+#+end_src
+
+*and commit something:*
+
+#+ATTR_REVEAL: :code_attribs data-line-numbers
+#+begin_src bash :exports both :results code
+echo "Please read me" >README.txt
+git add README.txt
+git commit -m"1st commit"
+#+end_src
+
+#+ATTR_REVEAL: :code_attribs data-line-numbers="1"
+#+RESULTS:
+/The value call_git(cmd="rev-parse --short HEAD") in the first line of the output is the ID of the new commit./
+*** External storage in =.git/=
+*Question:* How does ~git~ know which commit is the /current/ commit?
+*Answer:* The =.git/= directory provides additional context for ~git~:
+
+#+ATTR_REVEAL: :code_attribs data-line-numbers
+#+begin_src bash :exports both :results code
+tree -L 1 -hF  "${repo}/.git"
+#+end_src
+#+ATTR_REVEAL: :code_attribs data-line-numbers="3,4,12"
+#+RESULTS:
+
+- =.git/HEAD= - Tells ~git~ what the current commit is
+- =.git/refs/..= and =.git/branches/..=  - We'll look into that later on
+*** =./git/HEAD=
+:PROPERTIES:
+:CUSTOM_ID: HEAD
+:END:
+
+#+ATTR_REVEAL: :code_attribs data-line-numbers
+#+begin_src bash :exports both :results code
+git log
+#+end_src
+
+#+ATTR_REVEAL: :code_attribs data-line-numbers="3,4,12"
+#+RESULTS:
+
+#+ATTR_REVEAL: :code_attribs data-line-numbers
+#+begin_src bash :exports both :results code
+cat .git/HEAD
+#+end_src
+
+#+ATTR_REVEAL: :code_attribs data-line-numbers
+#+begin_src bash :exports both :results code
+git rev-parse  refs/heads/master
+#+end_src
+
+*** XXX
+Commit something
+#+ATTR_REVEAL: :code_attribs data-line-numbers
+#+begin_src bash :exports both :results code
+echo "License" >LICENSE.txt
+git add LICENSE.txt
+git commit -m"2nd commit"
+#+end_src
+
+What is the current commit?
+#+ATTR_REVEAL: :code_attribs data-line-numbers
+#+begin_src bash :exports both :results code
+cat .git/HEAD
+git rev-parse  refs/heads/master
+#+end_src
+
 ** Branch
-*** HEAD
 *** BRANCH
 ** Merge
 ** Rebase
 ** Remote
-* Git Use Cases
-** Example Git
+* ~Git~ Use Cases
+** Example ~Git~
 :PROPERTIES:
-:header-args: :var repo="/tmp/x/number-of-the-beast2"
-:repo: /tmp/x/number-of-the-beast2
+:header-args: :var repo="/tmp/git-from-the-inside/number-of-the-beast2"
+:repo: /tmp/git-from-the-inside/number-of-the-beast2
 :END:
 #+BEGIN_NOTES
 Test note
@@ -440,8 +559,8 @@ See the graph on the right side?
 /The source spans two columns to give us enough space./
 ** Example Git
 :PROPERTIES:
-:header-args: :var repo="/tmp/x/number-of-the-beast2"
-:repo: /tmp/x/number-of-the-beast2
+:header-args: :var repo="/tmp/git-from-the-inside/number-of-the-beast2"
+:repo: /tmp/git-from-the-inside/number-of-the-beast2
 :END:
 #+BEGIN_NOTES
 Test note

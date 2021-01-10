@@ -9,8 +9,30 @@ Pass =repo= per header args, e.g.
 ,#+CALL: init_repo()
 ,#+CALL: dot-graph-from-git()
 #+end_example
+** =git=: Call git
+#+NAME: git
+#+begin_src bash :exports results :results silent :var cmd="status"
+git ${cmd}
+#+end_src
+
+#+begin_example
+The current head is call_git(cmd="rev-parse --short HEAD") ...
+#+end_example
+
 
 ** =init_repo=: Initialize a repository at =repo=
+
+#+name: force-temp-repo
+#+begin_src bash :results silent
+if [[ ${repo} == "/tmp/"* ]];then
+    rm -rf "${repo}"
+else
+    echo "Not in a temp directory: '${repo}'"
+    exit 1
+fi
+#+end_src
+
+
 #+name: init_repo
 #+header: :var repo=(org-entry-get nil "repo" t)
 #+begin_src bash :results output

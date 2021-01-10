@@ -31,7 +31,7 @@
 #+HTML_HEAD: <link rel="icon" type="image/png" sizes="32x32" href="/img/site/favicon-32x32.png">
 #+HTML_HEAD: <link rel="icon" type="image/png" sizes="48x48" href="/img/site/favicon-48x48.png">
 
-#+MACRO: color @@latex:{\color{$1}@@ @@html: <span class="$1">@@ $2 @@latex:\@@@@html:</span>@@
+#+MACRO: color @@latex:{\color{$1}@@ @@html:<span class="$1">@@ $2 @@latex:\@@@@html:</span>@@
 
 #+MACRO: red {{{color(red, $1)}}}
 #+MACRO: blue {{{color(blue, $1)}}}

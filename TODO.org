@@ -188,6 +188,7 @@ CLOSED: [2020-12-23 Wed 11:30]
 - State "DONE"       from "TODO"       [2020-12-23 Wed 11:30]
 :END:
 **** TODO Gulp script to generate =ghpages=
+Maybe vie gh-actions?
 ** Layout
 *** DONE [#A] Add a grid to the slides
 CLOSED: [2020-12-25 Fri 16:20]

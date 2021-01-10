@@ -4,7 +4,7 @@
 FROM registry.gitlab.com/oer/emacs-reveal/emacs-reveal
 LABEL maintainer="Jens Neuhalfen"
 
-RUN apt-get update && apt-get install gnuplot -y
+RUN apt-get update && apt-get install gnuplot tree -y
 
 RUN emacs --batch --load /tmp/manage-packages.el \
     --eval="(setq gnutls-algorithm-priority \"NORMAL:-VERS-TLS1.3\")" \
