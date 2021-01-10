@@ -80,7 +80,7 @@ set arrow from break,0 to break,lottery nohead
 # set yrange [0:1]
 f(x) =  1 - exp( -1 * x * (x - 1) / (2*d)   )
 
-plot [1:2.5*10**20] f(x) title "probability of collision" with lines lw 3, lottery title "lottery win (1 : 139.838.160)" lw 3
+plot [1:2.5*10**20] f(x) title "probability of collision" with lines lw 3, lottery title "lottery win (1 : 139.838.160)" lw 3 dashtype 8
 #+end_src
 
 
