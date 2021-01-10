@@ -244,6 +244,7 @@ The content of =.git/= an implementation specific.
 
 *Create a fresh repository:*
 
+#+NAME: first-branch-init-repo
 #+ATTR_REVEAL: :code_attribs data-line-numbers
 #+begin_src bash :exports both :results code :noweb strip-export :dir /tmp
 <<force-temp-repo>>
@@ -252,16 +253,16 @@ git init
 #+end_src
 
 #+ATTR_REVEAL: :code_attribs data-line-numbers="1"
-#+RESULTS:
+#+RESULTS: first-branch-init-repo
 
 #+begin_src bash :exports results :results silent
 git config --get user.name || git config --add user.name "Alice"
 git config --get user.email || git config --add user.email "alice@neuhalfen.name"
-# git config -l
 #+end_src
 
 *and commit something:*
 
+#+NAME: first-branch-first-commit
 #+ATTR_REVEAL: :code_attribs data-line-numbers
 #+begin_src bash :exports both :results code
 echo "Please read me" >README.txt
@@ -270,62 +271,104 @@ git commit -m"1st commit"
 #+end_src
 
 #+ATTR_REVEAL: :code_attribs data-line-numbers="1"
-#+RESULTS:
+#+RESULTS: first-branch-first-commit
 /The value call_git(cmd="rev-parse --short HEAD") in the first line of the output is the ID of the new commit./
 *** External storage in =.git/=
 *Question:* How does ~git~ know which commit is the /current/ commit?
-*Answer:* The =.git/= directory provides additional context for ~git~:
 
+*Answer:* The =.git/= directory provides additional context:
+
+#+NAME: first-branch-dot-git-tree
 #+ATTR_REVEAL: :code_attribs data-line-numbers
 #+begin_src bash :exports both :results code
 tree -L 1 -hF  "${repo}/.git"
 #+end_src
+
 #+ATTR_REVEAL: :code_attribs data-line-numbers="3,4,12"
-#+RESULTS:
+#+RESULTS: first-branch-dot-git-tree
 
 - =.git/HEAD= - Tells ~git~ what the current commit is
-- =.git/refs/..= and =.git/branches/..=  - We'll look into that later on
+- =.git/refs/..= and =.git/branches/..=  - later...
 *** =./git/HEAD=
 :PROPERTIES:
 :CUSTOM_ID: HEAD
 :END:
+Let's see what =.git/HEAD= contains.
+#+NAME: first-branch-dot-git-HEAD--show-HEAD
+#+ATTR_REVEAL: :code_attribs data-line-numbers
+#+begin_src bash :exports both :results code
+cat .git/HEAD
+#+end_src
 
+#+ATTR_REVEAL: :code_attribs data-line-numbers
+#+RESULTS: first-branch-dot-git-HEAD--show-HEAD
+
+What does ~git~ make of call_shell(cmd="cat .git/HEAD")?
+#+NAME: first-branch-dot-git-HEAD--rev-parse
+#+ATTR_REVEAL: :code_attribs data-line-numbers
+#+begin_src bash :exports both :results code
+git rev-parse  refs/heads/master
+#+end_src
+
+What is the last commit?
+#+NAME: first-branch-dot-git-HEAD--git-log
 #+ATTR_REVEAL: :code_attribs data-line-numbers
 #+begin_src bash :exports both :results code
 git log
 #+end_src
 
-#+ATTR_REVEAL: :code_attribs data-line-numbers="3,4,12"
-#+RESULTS:
+#+ATTR_REVEAL: :code_attribs data-line-numbers="1"
+#+RESULTS: first-branch-dot-git-HEAD--git-log
 
-#+ATTR_REVEAL: :code_attribs data-line-numbers
-#+begin_src bash :exports both :results code
-cat .git/HEAD
+*** =./git/HEAD= part II
+*Question:* How does ~git~ know which commit is the /current/ commit?
+
+*Answer:* =HEAD= points to the current branch. The branch resolves to the current commit.
+#+begin_src dot :file "org-gen/dot-git-head.svg" :cmdline -Tsvg :dir . :exports results
+digraph D {
+    rankdir=LR;
+    bgcolor=transparent;
+    HEAD [shape=record    label=<<b>.git/HEAD</b>| ref: refs/heads/master> ];
+    master [shape=record label=<<b>refs/heads/master</b>| 0x1234...>];
+    commit [shape=circle label=<commit<br/><b>0x1234...</b>>];
+
+    cas [ shape = none
+          label = <<table border="0" cellspacing="0">
+                    <tr>
+                        <td  border="1" colspan="2" bgcolor="lightgray"><b>content addressed storage</b></td>
+                    </tr>
+                    <tr>
+                        <td  border="1" bgcolor="lightgray"><i>hash</i></td>
+                        <td  border="1" bgcolor="lightgray"><i>Content</i></td>
+                    </tr>
+                    <tr>
+                       <td port="port1" border="1">0x4711</td>
+                       <td  border="1">'Please read me' ..</td>
+                    </tr>
+                    <tr>
+                       <td port="port2" border="1">0x1234</td>
+                       <td port="port2b" border="1">commit: '1st commit' </td>
+                    </tr>
+                    <tr>
+                       <td port="port3" border="1">0xabcd</td>
+                       <td  border="1">tree: '0x4711 T README.txt...' </td>
+                    </tr>
+                </table>>
+                ]
+    HEAD -> master;
+    master -> cas:port2;
+    cas:port2b -> commit;
+}
 #+end_src
 
-#+ATTR_REVEAL: :code_attribs data-line-numbers
-#+begin_src bash :exports both :results code
-git rev-parse  refs/heads/master
-#+end_src
+*** Multiple Branches
+#+BEGIN_NOTES
+Before the commit =HEAD= points to =devel= and =devel= points to =D=. After the commit =devel= points to =E=.
+#+END_NOTES
 
-*** XXX
-Commit something
-#+ATTR_REVEAL: :code_attribs data-line-numbers
-#+begin_src bash :exports both :results code
-echo "License" >LICENSE.txt
-git add LICENSE.txt
-git commit -m"2nd commit"
-#+end_src
-
-What is the current commit?
-#+ATTR_REVEAL: :code_attribs data-line-numbers
-#+begin_src bash :exports both :results code
-cat .git/HEAD
-git rev-parse  refs/heads/master
-#+end_src
-
-** Branch
-*** BRANCH
+#+HTML: <div class="scale-width r-stretch">
+[[file:img/commits_devel_branch.svg]]
+#+HTML: </div>
 ** Merge
 ** Rebase
 ** Remote

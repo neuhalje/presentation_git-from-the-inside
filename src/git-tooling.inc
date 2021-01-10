@@ -15,6 +15,11 @@ Pass =repo= per header args, e.g.
 git ${cmd}
 #+end_src
 
+#+NAME: shell
+#+begin_src bash :exports results :results silent :var cmd="pwd"
+${cmd}
+#+end_src
+
 #+begin_example
 The current head is call_git(cmd="rev-parse --short HEAD") ...
 #+end_example
