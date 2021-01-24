@@ -55,7 +55,7 @@ fi) 1>/dev/null
 #+end_src
 ** =dot-graph-from-git=: Generate a graphviz graph from a repository at =repo=
 #+NAME: dot-graph-from-git
-#+begin_src bash :results output :exports none :noweb yes
+#+begin_src bash :results output
 if [[ ${repo} == "/tmp/"* ]];then
     if [[ ! -d ${repo} ]];then
        echo "${repo} is not a repository!"
@@ -90,6 +90,9 @@ else
     exit 1
 fi
 #+end_src
+
+#+RESULTS: dot-graph-from-git
+
 ** =git_with_diff=: Run a =git= command and show the result as an animation
 Takes a =source= block named =command_id= and a repository (=repo=) and runs the source block in the repository. Before and after running the command a snapshot of the repository is taken and exported as an animation.
 
@@ -105,7 +108,6 @@ The result is:
 
 *** Parameters
 - $1: command_id ::  calls ~command_id~ with variable ~repo~ set to =repo=
-- $2: repo :: path of the repository. Must be in =/tmp/...=
 *** Code
 =org-sbe= is a strange beast, to say the least. It only accepts parameters via macro calls. The source code is written in a =#+begin_src:= block and then manually joined. The =repo= is read via macro call, passed to the generator script and from there woven into the generated script.
 

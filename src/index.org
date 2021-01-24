@@ -1,13 +1,16 @@
+:PROPERTIES:
+:on:       <2021-01-10 Sun 23:57>
+:END:
 #+TITLE: GIT from the inside
 #+Subtitle: or: How GIT sees the world
 #+AUTHOR: Jens Neuhalfen
 #+EMAIL: jens@neuhalfen.name
 #+DATE: 2020-12-31
-
-#+REVEAL_THEME: /css/themes/simple.css
 #+SETUPFILE: setupfile.inc
 #+SETUPFILE: setupfile-d3graphviz.inc
 #+INCLUDE: git-tooling.inc
+
+#+REVEAL_THEME: /css/themes/simple.css
 #+REVEAL_PLUGINS: (highlight d3graphviz notes search zoom)
 #+REVEAL_EXPORT_NOTES_TO_PDF: separate-page
 
@@ -17,7 +20,6 @@
 #+REVEAL_TALK_URL: https://neuhalje.github.io/presentation_git-from-the-inside
 #+REVEAL_TALK_QR_CODE: does not exist
 
-# TODO: Add icons
 #+REVEAL_TITLE_SLIDE: <h1>%t</h1><h2>%s</h2><h3>%A %a</h3><p><a href="%u">View Online</a> &mdash; <a href="%u?print-pdf">Speakers Notes</a> &mdash; <a href="%m">Source Code</a></p> <p><div class="r-stretch license-container"><a href="/#/slide-LICENSE"><img class="inline-icon" src="/img/cc/cc.svg"/><img class="inline-icon" src="/img/cc/by.svg"/><img class="inline-icon" src="/img/cc/sa.svg"/> <b>LICENSE</b></a></div</p><p><ul><li>Press <b>s</b> for speakers view</li><li>Press <b>o</b> for overview</li></ul></p>
 
 * Why SCM?
@@ -59,7 +61,7 @@ p(n; d) \approx 1-\left({\frac {d-1}{d}}\right)^{\frac {n(n-1)}{2}}
 
 Source: [[https://en.wikipedia.org/wiki/Birthday_problem]]
 #+END_NOTES
-** How likely is a hash collision in an average project?
+** How likely is a hash collision?
 #+BEGIN_NOTES
 Since arbitrary long values can be hashed to a fixed length hash the [[https://en.wikipedia.org/wiki/Pigeonhole_principle][pigeon hole principle]] tells us that there *must* be collisions.
 For =sha1= and ~git~ this probability depends on the number of changed files & commits (=n=).
@@ -102,11 +104,38 @@ plot [1:2.5*10**20] f(x) title "probability of collision" with lines lw 3, lotte
 Collisions depend on the number of changed files & commits.
 
 **Rule of thumb:**
-{{{green(Don't create more than $10^{10}$ (ten US-billion) files and $10^{10}$ commits per repository)}}}
+{{{green(Don't create more than $10^{10}$ (ten US-billion) files with $10^{10}$ commits per repository)}}}
 #+HTML: </div>
 #+HTML: </div> <!-- container -->
 * ~Git~ basics
-** What is /content addressed storage/?
+:PROPERTIES:
+:header-args: :var repo="/tmp/git-from-the-inside/branches" :dir /tmp/git-from-the-inside/branches
+:repo: /tmp/git-from-the-inside/branches
+:CUSTOM_ID: FIRST_BRANCH
+:END:
+** Mental model
+Think of git as {{{green(a filesystem with extra dimensions)}}}, or, if you like math, a {{{green(directed acyclic graph.)}}}
+
+#+name: dag
+#+begin_src dot :file org-gen/dag.svg :cmdline -Tsvg :exports results :dir .
+digraph G {
+     directed -> acyclic  [label="directed: edges have a direction"];
+    acyclic -> "graph";
+    acyclic -> "error" [style = dashed; arrowhead = none; color = red; fontcolor = red; label="error: edges need a direction"]
+    "graph" -> "directed" [style = dashed; color = red;fontcolor = red; label="error: no cycles"]
+    directed -> "graph";
+}
+#+end_src
+
+#+RESULTS: dag
+[[file:org-gen/dag.svg]]
+
+** The "git file system"
+:PROPERTIES:
+:CUSTOM_ID: GIT_FILE_SYSTEM
+:END:
+The following pages show how ~git~ implements the "file system" used for its magic. Files, directories and commits are handled all in the same way!
+*** What is /content addressed storage/?
 :PROPERTIES:
 :CUSTOM_ID: CONTENT_ADDRESSED_STORAGE
 :END:
@@ -143,11 +172,6 @@ Disadvantages:
 {{{green(sha1(data) == hash)}}}
 #+HTML: </div>
 #+HTML: </div>
-** The "git file system"
-:PROPERTIES:
-:CUSTOM_ID: GIT_FILE_SYSTEM
-:END:
-The following pages show how ~git~ implements the "file system" used for its magic. Files, directories and commits are handled all in the same way!
 *** Empty Object Storage
 #+BEGIN_NOTES
 #+END_NOTES
@@ -215,11 +239,6 @@ Changing =README.txt= also changes the =tree=! The hash changed from {{{red(=0x4
 #+HTML: </div>
 #+HTML: </div> <!-- container -->
 ** The first branch
-:PROPERTIES:
-:header-args: :var repo="/tmp/git-from-the-inside/branches" :dir /tmp/git-from-the-inside/branches
-:repo: /tmp/git-from-the-inside/branches
-:CUSTOM_ID: FIRST_BRANCH
-:END:
 Starting out from the filesystem, let's have a look at how a branch can be constructed.
 
 In order to to so, we need to answer a very important question:
@@ -236,7 +255,7 @@ In order to to so, we need to answer a very important question:
   + no query method besides ~get(hash)~
   + *Needs external paperwork*
 
-In order to know the /current/ commit, we need to look at the paper work.
+In order to know the /current/ commit, we need to look at the paperwork.
 *** Initialize repository
 #+BEGIN_NOTES
 The content of =.git/= an implementation specific.
@@ -328,8 +347,27 @@ git log
 digraph D {
     rankdir=LR;
     bgcolor=transparent;
-    HEAD [shape=record    label=<<b>.git/HEAD</b>| ref: refs/heads/master> ];
-    master [shape=record label=<<b>refs/heads/master</b>| 0x1234...>];
+    HEAD [ shape = none
+          label = <<table border="0" cellspacing="0">
+                    <tr>
+                        <td  border="1"  bgcolor="lightgray">file: <b>.git/HEAD</b></td>
+                    </tr>
+                    <tr>
+                       <td port="content" border="1">ref: <b>refs/heads/master</b></td>
+                    </tr>
+                </table>>
+                ]
+    master [ shape = none
+          label = <<table border="0" cellspacing="0">
+                    <tr>
+                        <td port="name" border="1" bgcolor="lightgray">file: <b>refs/heads/master</b></td>
+                    </tr>
+                    <tr>
+                       <td port="hash" border="1"><b>0x1234</b></td>
+                    </tr>
+                </table>>
+                ]
+
     commit [shape=circle label=<commit<br/><b>0x1234...</b>>];
 
     cas [ shape = none
@@ -346,7 +384,7 @@ digraph D {
                        <td  border="1">'Please read me' ..</td>
                     </tr>
                     <tr>
-                       <td port="port2" border="1">0x1234</td>
+                       <td port="port2" border="1"><b>0x1234</b></td>
                        <td port="port2b" border="1">commit: '1st commit' </td>
                     </tr>
                     <tr>
@@ -355,14 +393,15 @@ digraph D {
                     </tr>
                 </table>>
                 ]
-    HEAD -> master;
-    master -> cas:port2;
+    HEAD:content -> master:name;
+    master:hash -> cas:port2;
     cas:port2b -> commit;
 }
 #+end_src
 
-*** Working on one branch
+** Commit
 
+*** Working on one branch
 {{{git_with_diff(one-branch-2nd-commit)}}}
 #+HTML: <div class="two-rows r-stretch">
 #+HTML: <div  class="bottom-left">
@@ -379,9 +418,7 @@ digraph D {
 #+begin_src bash :exports none :results output
 git commit -m'2nd commit' --allow-empty
 #+end_src
-
-
-*** Multiple Branches
+*** Multiple Branches: Theory
 #+BEGIN_NOTES
 Before the commit =HEAD= points to =devel= and =devel= points to =D=. After the commit =devel= points to =E=.
 #+END_NOTES
@@ -389,7 +426,66 @@ Before the commit =HEAD= points to =devel= and =devel= points to =D=. After the 
 #+HTML: <div class="scale-width r-stretch">
 [[file:img/commits_devel_branch.svg]]
 #+HTML: </div>
+*** Multiple Branches: practical application
+#+begin_src bash :exports results :results silent
+git commit -m"3rd commit - only master" --allow-empty
+#+end_src
+
+{{{git_with_diff(new-branch-create)}}}
+#+HTML: <div class="two-rows r-stretch">
+#+HTML: <div  class="bottom-left">
+#+begin_src bash :exports code :noweb yes
+<<new-branch-create>>
+#+end_src
+
+{{{git_with_diff_result(new-branch-create)}}}
+#+HTML: </div>
+#+HTML: <div id='new-branch-create-result'  scale='1.5' class="top-left">
+#+HTML: </div> <!-- container -->
+
+#+NAME: new-branch-create
+#+begin_src bash :exports none :results output
+git checkout -b devel HEAD^1
+git commit -m'#1 on devel' --allow-empty
+git commit -m'#2 on devel' --allow-empty
+git log --oneline
+#+end_src
 ** Merge
+:PROPERTIES:
+:CUSTOM_ID: MERGE
+:END:
+A /merge commit/ has more than one parent and includes the commits of multiple branches.
+*** Merge: theory
+#+HTML: <div class="scale-width r-stretch">
+[[file:img/commits_devel_branch_merge.svg]]
+#+HTML: </div>
+*** Merge: practical I/II
+{{{git_with_diff(new-branch-merge)}}}
+#+HTML: <div class="two-rows r-stretch">
+#+HTML: <div  class="bottom-left">
+#+begin_src bash :exports code :noweb yes
+<<new-branch-merge>>
+#+end_src
+
+{{{git_with_diff_result(new-branch-merge)}}}
+#+HTML: </div>
+#+HTML: <div id='new-branch-merge-result'  scale='1.4' class="top-left scale-height">
+#+HTML: </div>
+
+#+NAME: new-branch-merge
+#+begin_src bash :exports none :results output
+git checkout master
+
+# GIT_MERGE_AUTOEDIT=no  uses the automatically created  commit message
+GIT_MERGE_AUTOEDIT=no git merge devel
+#+end_src
+*** TODO Merge: practical II/II
+#+begin_src dot :file org-gen/nbmr.svg :cmdline -Tsvg :exports results :noweb: yes
+<<dot-graph-from-git()>>
+#+end_src
+#+begin_src bash :exports both :results code
+git log --oneline --decorate
+#+end_src
 ** Rebase
 ** Remote
 * ~Git~ Use Cases
