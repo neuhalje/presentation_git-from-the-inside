@@ -399,9 +399,13 @@ digraph D {
 }
 #+end_src
 
-** Commit
-
-*** Working on one branch
+* Commit
+:PROPERTIES:
+:header-args: :var repo="/tmp/git-from-the-inside/branches" :dir /tmp/git-from-the-inside/branches
+:repo: /tmp/git-from-the-inside/branches
+:CUSTOM_ID: commit
+:END:
+** Working on one branch
 {{{git_with_diff(one-branch-2nd-commit)}}}
 #+HTML: <div class="two-rows r-stretch">
 #+HTML: <div  class="bottom-left">
@@ -418,7 +422,7 @@ digraph D {
 #+begin_src bash :exports none :results output
 git commit -m'2nd commit' --allow-empty
 #+end_src
-*** Multiple Branches: Theory
+** Multiple Branches: Theory
 #+BEGIN_NOTES
 Before the commit =HEAD= points to =devel= and =devel= points to =D=. After the commit =devel= points to =E=.
 #+END_NOTES
@@ -426,7 +430,7 @@ Before the commit =HEAD= points to =devel= and =devel= points to =D=. After the 
 #+HTML: <div class="scale-width r-stretch">
 [[file:img/commits_devel_branch.svg]]
 #+HTML: </div>
-*** Multiple Branches: practical application
+** Multiple Branches: practical I/II
 #+begin_src bash :exports results :results silent
 git commit -m"3rd commit - only master" --allow-empty
 #+end_src
@@ -450,16 +454,26 @@ git commit -m'#1 on devel' --allow-empty
 git commit -m'#2 on devel' --allow-empty
 git log --oneline
 #+end_src
-** Merge
+** Multiple Branches: practical II/II
+#+begin_src dot :file org-gen/commit-result.svg :cmdline -Tsvg :exports results :noweb yes :dir . :var g=dot-graph-from-git(repo="/tmp/git-from-the-inside/branches")
+$g
+#+end_src
+
+#+begin_src bash :exports both :results code
+git log devel --oneline --decorate
+#+end_src
+* Merge
 :PROPERTIES:
-:CUSTOM_ID: MERGE
+:header-args: :var repo="/tmp/git-from-the-inside/branches" :dir /tmp/git-from-the-inside/branches
+:repo: /tmp/git-from-the-inside/branches
+:CUSTOM_ID: merge
 :END:
 A /merge commit/ has more than one parent and includes the commits of multiple branches.
-*** Merge: theory
+** Merge: theory
 #+HTML: <div class="scale-width r-stretch">
 [[file:img/commits_devel_branch_merge.svg]]
 #+HTML: </div>
-*** Merge: practical I/II
+** Merge: practical I/II
 {{{git_with_diff(new-branch-merge)}}}
 #+HTML: <div class="two-rows r-stretch">
 #+HTML: <div  class="bottom-left">
@@ -479,15 +493,19 @@ git checkout master
 # GIT_MERGE_AUTOEDIT=no  uses the automatically created  commit message
 GIT_MERGE_AUTOEDIT=no git merge devel
 #+end_src
-*** TODO Merge: practical II/II
-#+begin_src dot :file org-gen/nbmr.svg :cmdline -Tsvg :exports results :noweb: yes
-<<dot-graph-from-git()>>
+** Merge: practical II/II
+#+begin_src dot :file org-gen/merge-result.svg :cmdline -Tsvg :exports results :noweb yes :dir . :var g=dot-graph-from-git(repo="/tmp/git-from-the-inside/branches")
+$g
 #+end_src
+
+#+RESULTS:
+[[file:org-gen/merge-result.svg]]
+
 #+begin_src bash :exports both :results code
 git log --oneline --decorate
 #+end_src
-** Rebase
-** Remote
+* Rebase
+* Remote
 * ~Git~ Use Cases
 ** Example ~Git~
 :PROPERTIES:
