@@ -473,7 +473,7 @@ A /merge commit/ has more than one parent and includes the commits of multiple b
 #+HTML: <div class="scale-width r-stretch">
 [[file:img/commits_devel_branch_merge.svg]]
 #+HTML: </div>
-** Merge: practical I/II
+** Merge: how it works
 {{{git_with_diff(new-branch-merge)}}}
 #+HTML: <div class="two-rows r-stretch">
 #+HTML: <div  class="bottom-left">
@@ -493,7 +493,7 @@ git checkout master
 # GIT_MERGE_AUTOEDIT=no  uses the automatically created  commit message
 GIT_MERGE_AUTOEDIT=no git merge devel
 #+end_src
-** Merge: practical II/II
+** Merge: all commits belong to the graph
 #+begin_src dot :file org-gen/merge-result.svg :cmdline -Tsvg :exports results :noweb yes :dir . :var g=dot-graph-from-git(repo="/tmp/git-from-the-inside/branches")
 $g
 #+end_src
@@ -504,6 +504,40 @@ $g
 #+begin_src bash :exports both :results code
 git log --oneline --decorate
 #+end_src
+** Merge: a branch can be merged more than once
+{{{git_with_diff(new-branch-merge2)}}}
+#+HTML: <div class="two-rows r-stretch">
+#+HTML: <div  class="bottom-left">
+#+begin_src bash :exports code :noweb yes
+<<new-branch-merge2>>
+#+end_src
+
+{{{git_with_diff_result(new-branch-merge2)}}}
+#+HTML: </div>
+#+HTML: <div id='new-branch-merge2-result'  scale='1.4' class="top-left scale-height">
+#+HTML: </div>
+
+#+NAME: new-branch-merge2
+#+begin_src bash :exports none :results output
+git checkout devel
+git commit --allow-empty -m"Hotfix on devel"
+git checkout master
+
+GIT_MERGE_AUTOEDIT=no git merge devel
+#+end_src
+** Merge Summary
+#+HTML: <div class="two-columns r-stretch">
+#+HTML: <div  class="top-right">
+#+begin_src dot :file org-gen/merge-result2.svg :cmdline -Tsvg :exports results :noweb yes :dir . :var g=dot-graph-from-git(repo="/tmp/git-from-the-inside/branches")
+$g
+#+end_src
+#+HTML: </div><div  class="top-left">
+- *PRO*
+  + Explicit, merge stays a part of the graph
+- *CON*
+  + Graph gets complex
+  + Not optimal for /work in progress/
+#+HTML: </div>
 * Rebase
 * Remote
 * ~Git~ Use Cases
