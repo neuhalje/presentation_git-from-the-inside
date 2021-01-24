@@ -1,7 +1,7 @@
 #+CATEGORY: presentation
 #+STARTUP: content
 
-#+SPDX-FileCopyrightText: 2020 Jens Neuhalfen <https://neuhalfen.name/>
+#+SPDX-FileCopyrightText: 2021 Jens Neuhalfen <https://neuhalfen.name/>
 #+SPDX-License-Identifier: CC-BY-SA-4.0
 
 #+OPTIONS: reveal_center:t reveal_progress:t reveal_history:t reveal_control:t
@@ -26,10 +26,10 @@
 #+REVEAL_HLEVEL: 1
 #+REVEAL_EXTRA_CSS: ./css/slides.css
 
-#+HTML_HEAD: <link rel="shortcut icon" href="/img/site/favicon.ico">
-#+HTML_HEAD: <link rel="icon" type="image/png" sizes="16x16" href="/img/site/favicon-16x16.png">
-#+HTML_HEAD: <link rel="icon" type="image/png" sizes="32x32" href="/img/site/favicon-32x32.png">
-#+HTML_HEAD: <link rel="icon" type="image/png" sizes="48x48" href="/img/site/favicon-48x48.png">
+#+HTML_HEAD: <link rel="shortcut icon" href="./img/site/favicon.ico">
+#+HTML_HEAD: <link rel="icon" type="image/png" sizes="16x16" href="./img/site/favicon-16x16.png">
+#+HTML_HEAD: <link rel="icon" type="image/png" sizes="32x32" href="./img/site/favicon-32x32.png">
+#+HTML_HEAD: <link rel="icon" type="image/png" sizes="48x48" href="./img/site/favicon-48x48.png">
 
 #+MACRO: color @@latex:{\color{$1}@@ @@html:<span class="$1">@@ $2 @@latex:\@@@@html:</span>@@
 

@@ -10,7 +10,7 @@
 #+SETUPFILE: setupfile-d3graphviz.inc
 #+INCLUDE: git-tooling.inc
 
-#+REVEAL_THEME: /css/themes/simple.css
+#+REVEAL_THEME: ./css/themes/simple.css
 #+REVEAL_PLUGINS: (highlight d3graphviz notes search zoom)
 #+REVEAL_EXPORT_NOTES_TO_PDF: separate-page
 
@@ -20,7 +20,7 @@
 #+REVEAL_TALK_URL: https://neuhalje.github.io/presentation_git-from-the-inside
 #+REVEAL_TALK_QR_CODE: does not exist
 
-#+REVEAL_TITLE_SLIDE: <h1>%t</h1><h2>%s</h2><h3>%A %a</h3><p><a href="%u">View Online</a> &mdash; <a href="%u?print-pdf">Speakers Notes</a> &mdash; <a href="%m">Source Code</a></p> <p><div class="r-stretch license-container"><a href="/#/slide-LICENSE"><img class="inline-icon" src="/img/cc/cc.svg"/><img class="inline-icon" src="/img/cc/by.svg"/><img class="inline-icon" src="/img/cc/sa.svg"/> <b>LICENSE</b></a></div</p><p><ul><li>Press <b>s</b> for speakers view</li><li>Press <b>o</b> for overview</li></ul></p>
+#+REVEAL_TITLE_SLIDE: <h1>%t</h1><h2>%s</h2><h3>%A %a</h3><p><a href="%u">View Online</a> &mdash; <a href="%u?print-pdf">Speakers Notes</a> &mdash; <a href="%m">Source Code</a></p> <p><div class="r-stretch license-container"><a href="./#/slide-LICENSE"><img class="inline-icon" src="./img/cc/cc.svg"/><img class="inline-icon" src="./img/cc/by.svg"/><img class="inline-icon" src="./img/cc/sa.svg"/> <b>LICENSE</b></a></div</p><p><ul><li>Press <b>s</b> for speakers view</li><li>Press <b>o</b> for overview</li></ul></p>
 
 * Why SCM?
 :PROPERTIES:
