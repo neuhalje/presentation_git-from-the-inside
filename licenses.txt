@@ -1,0 +1,299 @@
+├─ @hpcc-js/wasm@0.3.13
+│  ├─ licenses: Apache-2.0
+│  ├─ repository: https://github.com/hpcc-systems/hpcc-js-wasm
+│  ├─ publisher: Gordon Smith
+│  ├─ email: gordonjsmith@gmail.com
+│  ├─ path: /home/jens/Projects/Vortraege/git-from-the-inside/node_modules/@hpcc-js/wasm
+│  └─ licenseFile: /home/jens/Projects/Vortraege/git-from-the-inside/node_modules/@hpcc-js/wasm/LICENSE
+├─ commander@2.20.3
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/tj/commander.js
+│  ├─ publisher: TJ Holowaychuk
+│  ├─ email: tj@vision-media.ca
+│  ├─ path: /home/jens/Projects/Vortraege/git-from-the-inside/node_modules/commander
+│  └─ licenseFile: /home/jens/Projects/Vortraege/git-from-the-inside/node_modules/commander/LICENSE
+├─ d3-array@1.2.4
+│  ├─ licenses: BSD-3-Clause
+│  ├─ repository: https://github.com/d3/d3-array
+│  ├─ publisher: Mike Bostock
+│  ├─ url: http://bost.ocks.org/mike
+│  ├─ path: /home/jens/Projects/Vortraege/git-from-the-inside/node_modules/d3-array
+│  └─ licenseFile: /home/jens/Projects/Vortraege/git-from-the-inside/node_modules/d3-array/LICENSE
+├─ d3-axis@1.0.12
+│  ├─ licenses: BSD-3-Clause
+│  ├─ repository: https://github.com/d3/d3-axis
+│  ├─ publisher: Mike Bostock
+│  ├─ url: http://bost.ocks.org/mike
+│  ├─ path: /home/jens/Projects/Vortraege/git-from-the-inside/node_modules/d3-axis
+│  └─ licenseFile: /home/jens/Projects/Vortraege/git-from-the-inside/node_modules/d3-axis/LICENSE
+├─ d3-brush@1.1.6
+│  ├─ licenses: BSD-3-Clause
+│  ├─ repository: https://github.com/d3/d3-brush
+│  ├─ publisher: Mike Bostock
+│  ├─ url: http://bost.ocks.org/mike
+│  ├─ path: /home/jens/Projects/Vortraege/git-from-the-inside/node_modules/d3-brush
+│  └─ licenseFile: /home/jens/Projects/Vortraege/git-from-the-inside/node_modules/d3-brush/LICENSE
+├─ d3-chord@1.0.6
+│  ├─ licenses: BSD-3-Clause
+│  ├─ repository: https://github.com/d3/d3-chord
+│  ├─ publisher: Mike Bostock
+│  ├─ url: http://bost.ocks.org/mike
+│  ├─ path: /home/jens/Projects/Vortraege/git-from-the-inside/node_modules/d3-chord
+│  └─ licenseFile: /home/jens/Projects/Vortraege/git-from-the-inside/node_modules/d3-chord/LICENSE
+├─ d3-collection@1.0.7
+│  ├─ licenses: BSD-3-Clause
+│  ├─ repository: https://github.com/d3/d3-collection
+│  ├─ publisher: Mike Bostock
+│  ├─ url: http://bost.ocks.org/mike
+│  ├─ path: /home/jens/Projects/Vortraege/git-from-the-inside/node_modules/d3-collection
+│  └─ licenseFile: /home/jens/Projects/Vortraege/git-from-the-inside/node_modules/d3-collection/LICENSE
+├─ d3-color@1.4.1
+│  ├─ licenses: BSD-3-Clause
+│  ├─ repository: https://github.com/d3/d3-color
+│  ├─ publisher: Mike Bostock
+│  ├─ url: http://bost.ocks.org/mike
+│  ├─ path: /home/jens/Projects/Vortraege/git-from-the-inside/node_modules/d3-color
+│  └─ licenseFile: /home/jens/Projects/Vortraege/git-from-the-inside/node_modules/d3-color/LICENSE
+├─ d3-contour@1.3.2
+│  ├─ licenses: BSD-3-Clause
+│  ├─ repository: https://github.com/d3/d3-contour
+│  ├─ publisher: Mike Bostock
+│  ├─ url: http://bost.ocks.org/mike
+│  ├─ path: /home/jens/Projects/Vortraege/git-from-the-inside/node_modules/d3-contour
+│  └─ licenseFile: /home/jens/Projects/Vortraege/git-from-the-inside/node_modules/d3-contour/LICENSE
+├─ d3-dispatch@1.0.6
+│  ├─ licenses: BSD-3-Clause
+│  ├─ repository: https://github.com/d3/d3-dispatch
+│  ├─ publisher: Mike Bostock
+│  ├─ url: http://bost.ocks.org/mike
+│  ├─ path: /home/jens/Projects/Vortraege/git-from-the-inside/node_modules/d3-dispatch
+│  └─ licenseFile: /home/jens/Projects/Vortraege/git-from-the-inside/node_modules/d3-dispatch/LICENSE
+├─ d3-drag@1.2.5
+│  ├─ licenses: BSD-3-Clause
+│  ├─ repository: https://github.com/d3/d3-drag
+│  ├─ publisher: Mike Bostock
+│  ├─ url: http://bost.ocks.org/mike
+│  ├─ path: /home/jens/Projects/Vortraege/git-from-the-inside/node_modules/d3-drag
+│  └─ licenseFile: /home/jens/Projects/Vortraege/git-from-the-inside/node_modules/d3-drag/LICENSE
+├─ d3-dsv@1.2.0
+│  ├─ licenses: BSD-3-Clause
+│  ├─ repository: https://github.com/d3/d3-dsv
+│  ├─ publisher: Mike Bostock
+│  ├─ url: http://bost.ocks.org/mike
+│  ├─ path: /home/jens/Projects/Vortraege/git-from-the-inside/node_modules/d3-dsv
+│  └─ licenseFile: /home/jens/Projects/Vortraege/git-from-the-inside/node_modules/d3-dsv/LICENSE
+├─ d3-ease@1.0.7
+│  ├─ licenses: BSD-3-Clause
+│  ├─ repository: https://github.com/d3/d3-ease
+│  ├─ publisher: Mike Bostock
+│  ├─ url: http://bost.ocks.org/mike
+│  ├─ path: /home/jens/Projects/Vortraege/git-from-the-inside/node_modules/d3-ease
+│  └─ licenseFile: /home/jens/Projects/Vortraege/git-from-the-inside/node_modules/d3-ease/LICENSE
+├─ d3-fetch@1.2.0
+│  ├─ licenses: BSD-3-Clause
+│  ├─ repository: https://github.com/d3/d3-fetch
+│  ├─ publisher: Mike Bostock
+│  ├─ url: http://bost.ocks.org/mike
+│  ├─ path: /home/jens/Projects/Vortraege/git-from-the-inside/node_modules/d3-fetch
+│  └─ licenseFile: /home/jens/Projects/Vortraege/git-from-the-inside/node_modules/d3-fetch/LICENSE
+├─ d3-force@1.2.1
+│  ├─ licenses: BSD-3-Clause
+│  ├─ repository: https://github.com/d3/d3-force
+│  ├─ publisher: Mike Bostock
+│  ├─ url: http://bost.ocks.org/mike
+│  ├─ path: /home/jens/Projects/Vortraege/git-from-the-inside/node_modules/d3-force
+│  └─ licenseFile: /home/jens/Projects/Vortraege/git-from-the-inside/node_modules/d3-force/LICENSE
+├─ d3-format@1.4.5
+│  ├─ licenses: BSD-3-Clause
+│  ├─ repository: https://github.com/d3/d3-format
+│  ├─ publisher: Mike Bostock
+│  ├─ url: http://bost.ocks.org/mike
+│  ├─ path: /home/jens/Projects/Vortraege/git-from-the-inside/node_modules/d3-format
+│  └─ licenseFile: /home/jens/Projects/Vortraege/git-from-the-inside/node_modules/d3-format/LICENSE
+├─ d3-geo@1.12.1
+│  ├─ licenses: BSD-3-Clause
+│  ├─ repository: https://github.com/d3/d3-geo
+│  ├─ publisher: Mike Bostock
+│  ├─ url: https://bost.ocks.org/mike
+│  ├─ path: /home/jens/Projects/Vortraege/git-from-the-inside/node_modules/d3-geo
+│  └─ licenseFile: /home/jens/Projects/Vortraege/git-from-the-inside/node_modules/d3-geo/LICENSE
+├─ d3-graphviz@3.1.0
+│  ├─ licenses: BSD-3-Clause
+│  ├─ repository: https://github.com/magjac/d3-graphviz
+│  ├─ path: /home/jens/Projects/Vortraege/git-from-the-inside/node_modules/d3-graphviz
+│  └─ licenseFile: /home/jens/Projects/Vortraege/git-from-the-inside/node_modules/d3-graphviz/LICENSE
+├─ d3-hierarchy@1.1.9
+│  ├─ licenses: BSD-3-Clause
+│  ├─ repository: https://github.com/d3/d3-hierarchy
+│  ├─ publisher: Mike Bostock
+│  ├─ url: http://bost.ocks.org/mike
+│  ├─ path: /home/jens/Projects/Vortraege/git-from-the-inside/node_modules/d3-hierarchy
+│  └─ licenseFile: /home/jens/Projects/Vortraege/git-from-the-inside/node_modules/d3-hierarchy/LICENSE
+├─ d3-interpolate@1.4.0
+│  ├─ licenses: BSD-3-Clause
+│  ├─ repository: https://github.com/d3/d3-interpolate
+│  ├─ publisher: Mike Bostock
+│  ├─ url: http://bost.ocks.org/mike
+│  ├─ path: /home/jens/Projects/Vortraege/git-from-the-inside/node_modules/d3-interpolate
+│  └─ licenseFile: /home/jens/Projects/Vortraege/git-from-the-inside/node_modules/d3-interpolate/LICENSE
+├─ d3-path@1.0.9
+│  ├─ licenses: BSD-3-Clause
+│  ├─ repository: https://github.com/d3/d3-path
+│  ├─ publisher: Mike Bostock
+│  ├─ url: http://bost.ocks.org/mike
+│  ├─ path: /home/jens/Projects/Vortraege/git-from-the-inside/node_modules/d3-path
+│  └─ licenseFile: /home/jens/Projects/Vortraege/git-from-the-inside/node_modules/d3-path/LICENSE
+├─ d3-polygon@1.0.6
+│  ├─ licenses: BSD-3-Clause
+│  ├─ repository: https://github.com/d3/d3-polygon
+│  ├─ publisher: Mike Bostock
+│  ├─ url: http://bost.ocks.org/mike
+│  ├─ path: /home/jens/Projects/Vortraege/git-from-the-inside/node_modules/d3-polygon
+│  └─ licenseFile: /home/jens/Projects/Vortraege/git-from-the-inside/node_modules/d3-polygon/LICENSE
+├─ d3-quadtree@1.0.7
+│  ├─ licenses: BSD-3-Clause
+│  ├─ repository: https://github.com/d3/d3-quadtree
+│  ├─ publisher: Mike Bostock
+│  ├─ url: http://bost.ocks.org/mike
+│  ├─ path: /home/jens/Projects/Vortraege/git-from-the-inside/node_modules/d3-quadtree
+│  └─ licenseFile: /home/jens/Projects/Vortraege/git-from-the-inside/node_modules/d3-quadtree/LICENSE
+├─ d3-random@1.1.2
+│  ├─ licenses: BSD-3-Clause
+│  ├─ repository: https://github.com/d3/d3-random
+│  ├─ publisher: Mike Bostock
+│  ├─ url: http://bost.ocks.org/mike
+│  ├─ path: /home/jens/Projects/Vortraege/git-from-the-inside/node_modules/d3-random
+│  └─ licenseFile: /home/jens/Projects/Vortraege/git-from-the-inside/node_modules/d3-random/LICENSE
+├─ d3-scale-chromatic@1.5.0
+│  ├─ licenses: BSD-3-Clause
+│  ├─ repository: https://github.com/d3/d3-scale-chromatic
+│  ├─ publisher: Mike Bostock
+│  ├─ url: http://bost.ocks.org/mike
+│  ├─ path: /home/jens/Projects/Vortraege/git-from-the-inside/node_modules/d3-scale-chromatic
+│  └─ licenseFile: /home/jens/Projects/Vortraege/git-from-the-inside/node_modules/d3-scale-chromatic/LICENSE
+├─ d3-scale@2.2.2
+│  ├─ licenses: BSD-3-Clause
+│  ├─ repository: https://github.com/d3/d3-scale
+│  ├─ publisher: Mike Bostock
+│  ├─ url: http://bost.ocks.org/mike
+│  ├─ path: /home/jens/Projects/Vortraege/git-from-the-inside/node_modules/d3-scale
+│  └─ licenseFile: /home/jens/Projects/Vortraege/git-from-the-inside/node_modules/d3-scale/LICENSE
+├─ d3-selection@1.4.2
+│  ├─ licenses: BSD-3-Clause
+│  ├─ repository: https://github.com/d3/d3-selection
+│  ├─ publisher: Mike Bostock
+│  ├─ url: https://bost.ocks.org/mike
+│  ├─ path: /home/jens/Projects/Vortraege/git-from-the-inside/node_modules/d3-selection
+│  └─ licenseFile: /home/jens/Projects/Vortraege/git-from-the-inside/node_modules/d3-selection/LICENSE
+├─ d3-shape@1.3.7
+│  ├─ licenses: BSD-3-Clause
+│  ├─ repository: https://github.com/d3/d3-shape
+│  ├─ publisher: Mike Bostock
+│  ├─ url: http://bost.ocks.org/mike
+│  ├─ path: /home/jens/Projects/Vortraege/git-from-the-inside/node_modules/d3-shape
+│  └─ licenseFile: /home/jens/Projects/Vortraege/git-from-the-inside/node_modules/d3-shape/LICENSE
+├─ d3-time-format@2.3.0
+│  ├─ licenses: BSD-3-Clause
+│  ├─ repository: https://github.com/d3/d3-time-format
+│  ├─ publisher: Mike Bostock
+│  ├─ url: http://bost.ocks.org/mike
+│  ├─ path: /home/jens/Projects/Vortraege/git-from-the-inside/node_modules/d3-time-format
+│  └─ licenseFile: /home/jens/Projects/Vortraege/git-from-the-inside/node_modules/d3-time-format/LICENSE
+├─ d3-time@1.1.0
+│  ├─ licenses: BSD-3-Clause
+│  ├─ repository: https://github.com/d3/d3-time
+│  ├─ publisher: Mike Bostock
+│  ├─ url: http://bost.ocks.org/mike
+│  ├─ path: /home/jens/Projects/Vortraege/git-from-the-inside/node_modules/d3-time
+│  └─ licenseFile: /home/jens/Projects/Vortraege/git-from-the-inside/node_modules/d3-time/LICENSE
+├─ d3-timer@1.0.10
+│  ├─ licenses: BSD-3-Clause
+│  ├─ repository: https://github.com/d3/d3-timer
+│  ├─ publisher: Mike Bostock
+│  ├─ url: http://bost.ocks.org/mike
+│  ├─ path: /home/jens/Projects/Vortraege/git-from-the-inside/node_modules/d3-timer
+│  └─ licenseFile: /home/jens/Projects/Vortraege/git-from-the-inside/node_modules/d3-timer/LICENSE
+├─ d3-transition@1.3.2
+│  ├─ licenses: BSD-3-Clause
+│  ├─ repository: https://github.com/d3/d3-transition
+│  ├─ publisher: Mike Bostock
+│  ├─ url: https://bost.ocks.org/mike
+│  ├─ path: /home/jens/Projects/Vortraege/git-from-the-inside/node_modules/d3-transition
+│  └─ licenseFile: /home/jens/Projects/Vortraege/git-from-the-inside/node_modules/d3-transition/LICENSE
+├─ d3-voronoi@1.1.4
+│  ├─ licenses: BSD-3-Clause
+│  ├─ repository: https://github.com/d3/d3-voronoi
+│  ├─ publisher: Mike Bostock
+│  ├─ url: http://bost.ocks.org/mike
+│  ├─ path: /home/jens/Projects/Vortraege/git-from-the-inside/node_modules/d3-voronoi
+│  └─ licenseFile: /home/jens/Projects/Vortraege/git-from-the-inside/node_modules/d3-voronoi/LICENSE
+├─ d3-zoom@1.7.3
+│  ├─ licenses: BSD-3-Clause
+│  ├─ repository: https://github.com/d3/d3-zoom
+│  ├─ publisher: Mike Bostock
+│  ├─ url: http://bost.ocks.org/mike
+│  ├─ path: /home/jens/Projects/Vortraege/git-from-the-inside/node_modules/d3-graphviz/node_modules/d3-zoom
+│  └─ licenseFile: /home/jens/Projects/Vortraege/git-from-the-inside/node_modules/d3-graphviz/node_modules/d3-zoom/LICENSE
+├─ d3-zoom@1.8.3
+│  ├─ licenses: BSD-3-Clause
+│  ├─ repository: https://github.com/d3/d3-zoom
+│  ├─ publisher: Mike Bostock
+│  ├─ url: http://bost.ocks.org/mike
+│  ├─ path: /home/jens/Projects/Vortraege/git-from-the-inside/node_modules/d3-zoom
+│  └─ licenseFile: /home/jens/Projects/Vortraege/git-from-the-inside/node_modules/d3-zoom/LICENSE
+├─ d3@5.16.0
+│  ├─ licenses: BSD-3-Clause
+│  ├─ repository: https://github.com/d3/d3
+│  ├─ publisher: Mike Bostock
+│  ├─ url: https://bost.ocks.org/mike
+│  ├─ path: /home/jens/Projects/Vortraege/git-from-the-inside/node_modules/d3
+│  └─ licenseFile: /home/jens/Projects/Vortraege/git-from-the-inside/node_modules/d3/LICENSE
+├─ git-from-the-inside@0.0.1
+│  ├─ licenses: CC-BY-SA-4.0
+│  ├─ repository: https://github.com/neuhalje/git-from-the-inside
+│  ├─ publisher: Jens Neuhalfen
+│  ├─ email: jens@neuhalfen.name
+│  ├─ url: https://neuhalfen.name/
+│  ├─ path: .
+│  └─ licenseFile: LICENSE.md
+├─ iconv-lite@0.4.24
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/ashtuchkin/iconv-lite
+│  ├─ publisher: Alexander Shtuchkin
+│  ├─ email: ashtuchkin@gmail.com
+│  ├─ path: /home/jens/Projects/Vortraege/git-from-the-inside/node_modules/iconv-lite
+│  └─ licenseFile: /home/jens/Projects/Vortraege/git-from-the-inside/node_modules/iconv-lite/LICENSE
+├─ mathjax@3.1.2
+│  ├─ licenses: Apache-2.0
+│  ├─ repository: https://github.com/mathjax/MathJax
+│  ├─ path: /home/jens/Projects/Vortraege/git-from-the-inside/node_modules/mathjax
+│  └─ licenseFile: /home/jens/Projects/Vortraege/git-from-the-inside/node_modules/mathjax/LICENSE
+├─ reveal.js@4.1.0
+│  ├─ licenses: MIT
+│  ├─ repository: https://github.com/hakimel/reveal.js
+│  ├─ publisher: Hakim El Hattab
+│  ├─ email: hakim.elhattab@gmail.com
+│  ├─ url: https://hakim.se
+│  ├─ path: /home/jens/Projects/Vortraege/git-from-the-inside/node_modules/reveal.js
+│  └─ licenseFile: /home/jens/Projects/Vortraege/git-from-the-inside/node_modules/reveal.js/LICENSE
+├─ reveald3@1.5.5
+│  ├─ licenses: MIT*
+│  ├─ repository: https://github.com/gcalmettes/reveal.js-d3
+│  ├─ publisher: Guillaume Calmettes
+│  ├─ path: /home/jens/Projects/Vortraege/git-from-the-inside/node_modules/reveald3
+│  └─ licenseFile: /home/jens/Projects/Vortraege/git-from-the-inside/node_modules/reveald3/LICENSE
+├─ rw@1.3.3
+│  ├─ licenses: BSD-3-Clause
+│  ├─ repository: https://github.com/mbostock/rw
+│  ├─ publisher: Mike Bostock
+│  ├─ url: http://bost.ocks.org/mike
+│  ├─ path: /home/jens/Projects/Vortraege/git-from-the-inside/node_modules/rw
+│  └─ licenseFile: /home/jens/Projects/Vortraege/git-from-the-inside/node_modules/rw/LICENSE
+└─ safer-buffer@2.1.2
+   ├─ licenses: MIT
+   ├─ repository: https://github.com/ChALkeR/safer-buffer
+   ├─ publisher: Nikita Skovoroda
+   ├─ email: chalkerx@gmail.com
+   ├─ url: https://github.com/ChALkeR
+   ├─ path: /home/jens/Projects/Vortraege/git-from-the-inside/node_modules/safer-buffer
+   └─ licenseFile: /home/jens/Projects/Vortraege/git-from-the-inside/node_modules/safer-buffer/LICENSE

@@ -1,0 +1,1594 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<title>GIT from the inside</title>
+<meta name="author" content="Jens Neuhalfen"/>
+<style type="text/css">
+.underline { text-decoration: underline; }
+</style>
+<link rel="stylesheet" href="js/reveal.js/dist/reveal.css"/>
+
+<link rel="stylesheet" href="./css/themes/simple.css" id="theme"/>
+
+<link rel="stylesheet" href="./css/slides.css"/>
+<link rel="stylesheet" href="js/reveal.js/plugin/highlight/zenburn.css"/>
+<script type="text/javascript" src="js/tex-chtml.js"></script>
+<link rel="shortcut icon" href="./img/site/favicon.ico">
+<link rel="icon" type="image/png" sizes="16x16" href="./img/site/favicon-16x16.png">
+<link rel="icon" type="image/png" sizes="32x32" href="./img/site/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="48x48" href="./img/site/favicon-48x48.png">
+<script src="js/d3.min.js"></script>
+<script src="js/d3-graphviz.js"></script>
+<script src="js/@hpcc-js/wasm/dist/index.min.js" type="application/javascript"></script>
+</head>
+<body prefix="dc: http://purl.org/dc/elements/1.1/ dcterms: http://purl.org/dc/terms/ dcmitype: http://purl.org/dc/dcmitype/ cc: http://creativecommons.org/ns#" typeof="dcmitype:InteractiveResource">
+<div class="reveal">
+<div class="slides">
+<section id="sec-title-slide">
+<h1>GIT from the inside</h1><h2>or: How GIT sees the world</h2><h3> Jens Neuhalfen</h3><p><a href="https://neuhalje.github.io/presentation_git-from-the-inside">View Online</a> &mdash; <a href="https://neuhalje.github.io/presentation_git-from-the-inside?print-pdf">Speakers Notes</a> &mdash; <a href="https://github.com/neuhalje/presentation_git-from-the-inside">Source Code</a></p> <p><div class="r-stretch license-container"><a href="./#/slide-LICENSE"><img class="inline-icon" src="./img/cc/cc.svg"/><img class="inline-icon" src="./img/cc/by.svg"/><img class="inline-icon" src="./img/cc/sa.svg"/> <b>LICENSE</b></a></div</p><p><ul><li>Press <b>s</b> for speakers view</li><li>Press <b>o</b> for overview</li></ul></p>
+</section>
+<section id="table-of-contents-section">
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#slide-WHY_SCM">Why SCM?</a></li>
+<li><a href="#slide-WHAT_IS_A_HASH">What is a hash?</a></li>
+<li><a href="#slide-FIRST_BRANCH"><code>Git</code> basics</a></li>
+<li><a href="#slide-commit">Commit</a></li>
+<li><a href="#slide-merge">Merge</a></li>
+<li><a href="#slide-rebase">Rebase</a></li>
+<li><a href="#slide-org4440c7d">Remote</a></li>
+<li><a href="#slide-orgfc7de31">Examples</a></li>
+<li><a href="#slide-LICENSE">Licensing</a></li>
+</ul>
+</div>
+</div>
+</section>
+<section>
+<section id="slide-WHY_SCM">
+<h2 id="WHY_SCM">Why SCM?</h2>
+<dl>
+<dt>SCM System</dt><dd>*S*ource *C*code *M*anagement System</dd>
+<dt>Tracks changes</dt><dd>Who, When, What and Why</dd>
+<dt>Time Machine</dt><dd>Go back to any point in the past</dd>
+<dt>Collaborative</dt><dd>Allows multiple people to collaborate on a source set</dd>
+
+</dl>
+</section>
+</section>
+<section>
+<section id="slide-WHAT_IS_A_HASH">
+<h2 id="WHAT_IS_A_HASH">What is a hash?</h2>
+<aside class="notes">
+<p>
+For our purposes the following properties are important:
+</p>
+<dl>
+<dt>fixed length</dt><dd>The length of \(h\) is always the same, e.g. 160 bit for SHA-1.</dd>
+<dt>deterministic</dt><dd>The same data always computes to the same hash: \(data_1 == data_2 \Rightarrow h(data_1) == h(data_2)\)</dd>
+<dt>collision resistant</dt><dd>It is <em> <span class="red">  very unlikely </span></em> that different data hashes to the same value: \(h(data_1) == h(data_2) \Rightarrow data_1 == data_2\)</dd>
+
+</dl>
+
+<p>
+Since arbitrary long values can be hashed the <a href="https://en.wikipedia.org/wiki/Pigeonhole_principle">pigeon hole principle</a> tells us that there must be collisions.
+</p>
+
+</aside>
+
+<p>
+A <em>hash</em> \(h(x)\) is a <strong>fixed length</strong> value derived from some data \(x\).
+</p>
+
+<div>
+\begin{align}
+A == B  &\Rightarrow h(A) == h(B) & \text{always} \\
+h(A) == h(B)  &\Rightarrow A == B & \text{almost always (*)}
+\end{align}
+
+</div>
+
+<p>
+(*) It is <em> <span class="red">  very unlikely </span></em> that different values hashes to the same hash. If this happens it is called a <em>hash collision</em>.
+</p>
+
+<aside class="notes">
+<p>
+Given <code>n</code> random integers drawn from a discrete uniform distribution with range <code>[1,d]</code>, <strong>what is the probability <code>p(n; d)</code> that at least two numbers are the same?</strong>
+</p>
+
+<div>
+\begin{equation}
+p(n; d) \approx 1-\left({\frac {d-1}{d}}\right)^{\frac {n(n-1)}{2}}
+\end{equation}
+
+</div>
+
+<p>
+Source: <a href="https://en.wikipedia.org/wiki/Birthday_problem">https://en.wikipedia.org/wiki/Birthday_problem</a>
+</p>
+
+</aside>
+</section>
+<section id="slide-org62f465b">
+<h3 id="org62f465b">How likely is a hash collision?</h3>
+<aside class="notes">
+<p>
+Since arbitrary long values can be hashed to a fixed length hash the <a href="https://en.wikipedia.org/wiki/Pigeonhole_principle">pigeon hole principle</a> tells us that there <strong>must</strong> be collisions.
+For <code>sha1</code> and <code>git</code> this probability depends on the number of changed files &amp; commits (<code>n</code>).
+</p>
+
+</aside>
+
+<div class="two-rows r-stretch">
+
+<div class="top-left">
+
+<div id="org67883e3" class="figure">
+<p><object type="image/svg+xml" data="org-gen/hash-collision-probability.svg" class="scale-height">
+Sorry, your browser does not support SVG.</object>
+</p>
+</div>
+</div>
+
+
+<div class="bottom-left text">
+<p>
+Collisions depend on the number of changed files &amp; commits.
+</p>
+
+<p>
+<strong><strong>Rule of thumb:</strong></strong>
+ <span class="green">  Don't create more than \(10^{10}\) (ten US-billion) files with \(10^{10}\) commits per repository </span>
+</p>
+</div>
+</div> <!-- container -->
+</section>
+</section>
+<section>
+<section id="slide-FIRST_BRANCH">
+<h2 id="FIRST_BRANCH"><code>Git</code> basics</h2>
+</section>
+<section id="slide-orgc207030">
+<h3 id="orgc207030">Mental model</h3>
+<p>
+Think of git as  <span class="green">  a filesystem with extra dimensions </span>, or, if you like math, a  <span class="green">  directed acyclic graph. </span>
+</p>
+
+
+<div id="orgf687a3f" class="figure">
+<p><object type="image/svg+xml" data="org-gen/dag.svg" class="org-svg">
+Sorry, your browser does not support SVG.</object>
+</p>
+</div>
+
+</section>
+<section id="slide-GIT_FILE_SYSTEM">
+<h3 id="GIT_FILE_SYSTEM">The "git file system"</h3>
+<p>
+The following pages show how <code>git</code> implements the "file system" used for its magic. Files, directories and commits are handled all in the same way!
+</p>
+</section>
+<section id="slide-CONTENT_ADDRESSED_STORAGE">
+<h4 id="CONTENT_ADDRESSED_STORAGE">What is <em>content addressed storage</em>?</h4>
+<aside class="notes">
+<p>
+A <em>content addressable storage</em> is a very simple database with two operations:
+</p>
+<dl>
+<dt>put(data) &#x2013;&gt; hash_data</dt><dd>Write an object into the storage and get the objects hash back as key.</dd>
+<dt>get(hash_data) &#x2013;&gt; data</dt><dd>Pass a hash and get the data. <code>Git</code> uses <a href="https://en.wikipedia.org/wiki/SHA-1">SHA-1</a> as hashing function (<code>sha1(data) =</code> hash_data=).</dd>
+
+</dl>
+
+<p>
+The main advantages of such a storage are:
+</p>
+<ul>
+<li>Storing one <code>data</code> multiple times takes <em>no</em> additional storage space.</li>
+<li>The implementation is extremely simple.</li>
+
+</ul>
+
+<p>
+Disadvantages:
+</p>
+<ul>
+<li><em>Bootstrapping</em> - the hashes themselves say nothing about the data. At least some external storage is needed.</li>
+<li>Deleting objects needs additional work (<em>reference counting</em>).</li>
+
+</ul>
+
+</aside>
+<p>
+ <span class="green">  A <em>content addressed storage</em> is a very simple database </span>
+</p>
+<div class="two-rows two-columns-equal r-stretch">
+<div class="bottom-left two-cols-wide">
+<table>
+
+
+<colgroup>
+<col  class="org-left">
+
+<col  class="org-left">
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-left">PRO</th>
+<th scope="col" class="org-left">CON</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-left">- simple</td>
+<td class="org-left">- no <code>query</code> method besides <em>hash</em></td>
+</tr>
+
+<tr>
+<td class="org-left">- data not duplicated</td>
+<td class="org-left">&#xa0;</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div  class="top-left">
+
+<div id="orge045034" class="figure">
+<p><object type="image/svg+xml" data="./img/tree_objectstore.svg" class="scale-to-cell">
+Sorry, your browser does not support SVG.</object>
+</p>
+</div>
+</div>
+<div  class="top-right">
+<dl>
+<dt>put</dt><dd>\(put(data) \to hash_{data}\)</dd>
+<dt>get</dt><dd>\(get(hash_{data}) \to data\)</dd>
+
+</dl>
+
+<p>
+ <span class="green">  sha1(data) == hash </span>
+</p>
+</div>
+</div>
+</section>
+<section id="slide-orgf15071f">
+<h4 id="orgf15071f">Empty Object Storage</h4>
+<aside class="notes">
+nil
+</aside>
+
+<div class="two-rows two-columns-equal r-stretch">
+<img class="top-left scale-height" src="img/objectstore-0.png"></img>
+<div class="bottom-left text">
+<p>
+This is the empty object store. It is located in the <code>.git/</code> directory
+</p>
+</div>
+</div> <!-- container -->
+</section>
+<section id="slide-orgd2d61fb">
+<h4 id="orgd2d61fb">File Content</h4>
+<aside class="notes">
+nil
+</aside>
+
+<div class="two-rows two-columns-equal r-stretch">
+<img class="top-left scale-height" src="img/objectstore-1.png"></img>
+<img class="top-right scale-height two-rows-high" src="img/tree_complete-1.png"></img>
+<div class="bottom-left text">
+<p>
+We can store the <em>content</em> of <code>README.txt</code> but  <span class="red">  not the <em>file name</em>. </span> <code>Git</code> calls this a <code>blob</code>.
+</p>
+</div>
+</div> <!-- container -->
+</section>
+<section id="slide-org7852cc2">
+<h4 id="org7852cc2">Directories</h4>
+<aside class="notes">
+nil
+</aside>
+
+<div class="two-rows two-columns-equal r-stretch">
+<img class="top-left scale-height" src="img/objectstore-2.png"></img>
+<img class="top-right scale-height two-rows-high" src="img/tree_complete-2.png"></img>
+<div class="bottom-left text">
+<p>
+A directory (<code>tree</code> in <code>git</code>-speak) is a special file that contains <em>file names</em> and links to the content via the <em>hash</em>.
+E.g.  <span class="red">  <code>B 0xafde README.txt</code> </span> is the README.
+</p>
+</div>
+</div> <!-- container -->
+</section>
+<section id="slide-org084bd9d">
+<h4 id="org084bd9d">The First Commit</h4>
+<aside class="notes">
+nil
+</aside>
+
+<div class="two-rows two-columns-equal r-stretch">
+<img class="top-left scale-height" src="img/objectstore-3.png"></img>
+<img class="top-right scale-height two-rows-high" src="img/tree_complete-3.png"></img>
+<div class="bottom-left text">
+<p>
+A commit (circle) points to a <code>tree</code> (the files) and has e.g. a commit message.
+</p>
+</div>
+</div> <!-- container -->
+</section>
+<section id="slide-orgd69f8fa">
+<h4 id="orgd69f8fa">The Second Commit</h4>
+<div class="two-rows two-columns-equal r-stretch">
+<img class="top-left scale-height" src="img/objectstore-4.png"></img>
+<img class="top-right scale-height two-rows-high" src="img/tree_complete-4.png"></img>
+<div class="bottom-left text">
+<ul>
+<li>Most of the time a commit points to a <em>parent</em> commit.</li>
+<li>See how someone edited <code>README.txt</code> ( <span class="red">  <code>B 0xdead README.txt</code> </span>)?</li>
+
+</ul>
+</div>
+</div> <!-- container -->
+</section>
+<section id="slide-org2119ca5">
+<h4 id="org2119ca5">What do changes mean?</h4>
+<aside class="notes">
+<p>
+This is very important to understand!
+</p>
+
+</aside>
+
+<div class="two-rows two-columns-equal r-stretch">
+<img class="top-right scale-height two-rows-high" src="img/tree_complete-4.png"></img>
+<div class="top-left two-rows-high text">
+<p>
+Changing <code>README.txt</code> also changes the <code>tree</code>! The hash changed from  <span class="red">  <code>0x4711</code> </span> to  <span class="red">  <code>0x0815</code> </span>.
+</p>
+
+<p>
+ <span class="green">  <strong>This is very important</strong> </span>: Changing a file will change its hash. This will change the content of the parent tree. This will change the hash of the parent tree. <strong>This will change all the tree hashes up to the top</strong>.
+</p>
+</div>
+</div> <!-- container -->
+</section>
+<section id="slide-org3c06024">
+<h3 id="org3c06024">The first branch</h3>
+<p>
+Starting out from the filesystem, let's have a look at how a branch can be constructed.
+</p>
+
+<p>
+In order to to so, we need to answer a very important question:
+</p>
+
+<p>
+<strong>How does <code>git</code> know which commit is the <em>current</em> commit?</strong>
+</p>
+</section>
+<section id="slide-org5e35059">
+<h4 id="org5e35059">How <code>git</code> finds the parent commit</h4>
+<p>
+<strong>Let's recapitulate</strong>:
+</p>
+<ul>
+<li><code>Git</code> heavily relies on <em>content addressed storage</em></li>
+<li>Content addressed storage is like <em>chaotic storage</em>
+<ul>
+<li>Very efficient</li>
+<li>no query method besides <code>get(hash)</code></li>
+<li><strong>Needs external paperwork</strong></li>
+
+</ul></li>
+
+</ul>
+
+<p>
+In order to know the <em>current</em> commit, we need to look at the paperwork.
+</p>
+</section>
+<section id="slide-orgb294eef">
+<h4 id="orgb294eef">Initialize repository</h4>
+<aside class="notes">
+<p>
+The content of <code>.git/</code> an implementation specific.
+</p>
+
+</aside>
+
+<p>
+<strong>Create a fresh repository:</strong>
+</p>
+
+<div class="org-src-container">
+
+<pre id="first-branch-init-repo"><code class="bash" data-line-numbers>
+mkdir -p "${repo}" &amp;&amp; cd "${repo}"
+git init
+</code></pre>
+</div>
+
+<div class="org-src-container">
+
+<pre><code class="bash" data-line-numbers="1">Initialized empty Git repository in /tmp/git-from-the-inside/branches/.git/
+</code></pre>
+</div>
+
+<p>
+<strong>and commit something:</strong>
+</p>
+
+<div class="org-src-container">
+
+<pre id="first-branch-first-commit"><code class="bash" data-line-numbers>echo "Please read me" &gt;README.txt
+git add README.txt
+git commit -m"1st commit"
+</code></pre>
+</div>
+
+<div class="org-src-container">
+
+<pre><code class="bash" data-line-numbers="1">[master (root-commit) eccc1a6] 1st commit
+ 1 file changed, 1 insertion(+)
+ create mode 100644 README.txt
+</code></pre>
+</div>
+<p>
+<em>The value <code>eccc1a6</code> in the first line of the output is the ID of the new commit.</em>
+</p>
+</section>
+<section id="slide-org32b2136">
+<h4 id="org32b2136">External storage in <code>.git/</code></h4>
+<p>
+<strong>Question:</strong> How does <code>git</code> know which commit is the <em>current</em> commit?
+</p>
+
+<p>
+<strong>Answer:</strong> The <code>.git/</code> directory provides additional context:
+</p>
+
+<div class="org-src-container">
+
+<pre id="first-branch-dot-git-tree"><code class="bash" data-line-numbers>tree -L 1 -hF  "${repo}/.git"
+</code></pre>
+</div>
+
+<div class="org-src-container">
+
+<pre><code class="bash" data-line-numbers="3,4,12">/tmp/git-from-the-inside/branches/.git
+|-- [  11]  COMMIT_EDITMSG
+|-- [  23]  HEAD
+|-- [4.0K]  branches/
+|-- [ 143]  config
+|-- [  73]  description
+|-- [4.0K]  hooks/
+|-- [ 145]  index
+|-- [4.0K]  info/
+|-- [4.0K]  logs/
+|-- [4.0K]  objects/
+`-- [4.0K]  refs/
+
+6 directories, 5 files
+</code></pre>
+</div>
+
+<ul>
+<li><code>.git/HEAD</code> - Tells <code>git</code> what the current commit is</li>
+<li><code>.git/refs/..</code> and <code>.git/branches/..</code>  - later&#x2026;</li>
+
+</ul>
+</section>
+<section id="slide-HEAD">
+<h4 id="HEAD"><code>./git/HEAD</code></h4>
+<p>
+Let's see what <code>.git/HEAD</code> contains.
+</p>
+<div class="org-src-container">
+
+<pre id="first-branch-dot-git-HEAD--show-HEAD"><code class="bash" data-line-numbers>cat .git/HEAD
+</code></pre>
+</div>
+
+<div class="org-src-container">
+
+<pre><code class="bash" data-line-numbers>ref: refs/heads/master
+</code></pre>
+</div>
+
+<p>
+What does <code>git</code> make of <code>ref: refs/heads/master</code>?
+</p>
+<div class="org-src-container">
+
+<pre id="first-branch-dot-git-HEAD--rev-parse"><code class="bash" data-line-numbers>git rev-parse  refs/heads/master
+</code></pre>
+</div>
+
+<div class="org-src-container">
+
+<pre><code class="bash" >eccc1a680782796279a062710f2e750a40847b18
+</code></pre>
+</div>
+
+<p>
+What is the last commit?
+</p>
+<div class="org-src-container">
+
+<pre id="first-branch-dot-git-HEAD--git-log"><code class="bash" data-line-numbers>git log
+</code></pre>
+</div>
+
+<div class="org-src-container">
+
+<pre><code class="bash" data-line-numbers="1">commit eccc1a680782796279a062710f2e750a40847b18
+Author: Alice &lt;alice@neuhalfen.name&gt;
+Date:   Sun Jan 24 22:44:23 2021 +0000
+
+    1st commit
+</code></pre>
+</div>
+
+</section>
+<section id="slide-org536318e">
+<h4 id="org536318e"><code>./git/HEAD</code> part II</h4>
+<p>
+<strong>Question:</strong> How does <code>git</code> know which commit is the <em>current</em> commit?
+</p>
+
+<p>
+<strong>Answer:</strong> <code>HEAD</code> points to the current branch. The branch resolves to the current commit.
+</p>
+
+<div id="org7e7fb2d" class="figure">
+<p><object type="image/svg+xml" data="org-gen/dot-git-head.svg" class="org-svg">
+Sorry, your browser does not support SVG.</object>
+</p>
+</div>
+
+</section>
+</section>
+<section>
+<section id="slide-commit">
+<h2 id="commit">Commit</h2>
+</section>
+<section id="slide-orgcc6cde3">
+<h3 id="orgcc6cde3">Working on one branch</h3>
+<callback  style='display:none' targetElementSelector='#one-branch-2nd-commit-result' arg='one-branch-2nd-commit-animation'></callback>
+<animation style='display:none' id='one-branch-2nd-commit-animation'>
+<step>
+digraph git {
+// repo: /tmp/git-from-the-inside/branches
+// cwd: /tmp/git-from-the-inside/branches
+graph [bgcolor=transparent]
+  "eccc1a680782796279a062710f2e750a40847b18" [label="eccc1a6"]; "eccc1a680782796279a062710f2e750a40847b18-msg" [label="1st commit" margin="0" shape="none" ]; "eccc1a680782796279a062710f2e750a40847b18" -> "eccc1a680782796279a062710f2e750a40847b18-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "eccc1a680782796279a062710f2e750a40847b18" "eccc1a680782796279a062710f2e750a40847b18-msg"}
+
+  "eccc1a680782796279a062710f2e750a40847b18" -> {  };
+
+"master" [label="master" shape="cds" style="filled" fillcolor="darkgoldenrod1" ]; "master" -> "eccc1a680782796279a062710f2e750a40847b18"  [arrowhead="none"];{rank=same "master" "eccc1a680782796279a062710f2e750a40847b18"};
+}
+</step>
+<step>
+digraph git {
+// repo: /tmp/git-from-the-inside/branches
+// cwd: /tmp/git-from-the-inside/branches
+graph [bgcolor=transparent]
+  "ebab154c3dbcea27d0bb39a0130a9d1ead5d13d8" [label="ebab154"]; "ebab154c3dbcea27d0bb39a0130a9d1ead5d13d8-msg" [label="2nd commit" margin="0" shape="none" ]; "ebab154c3dbcea27d0bb39a0130a9d1ead5d13d8" -> "ebab154c3dbcea27d0bb39a0130a9d1ead5d13d8-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "ebab154c3dbcea27d0bb39a0130a9d1ead5d13d8" "ebab154c3dbcea27d0bb39a0130a9d1ead5d13d8-msg"}
+  "eccc1a680782796279a062710f2e750a40847b18" [label="eccc1a6"]; "eccc1a680782796279a062710f2e750a40847b18-msg" [label="1st commit" margin="0" shape="none" ]; "eccc1a680782796279a062710f2e750a40847b18" -> "eccc1a680782796279a062710f2e750a40847b18-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "eccc1a680782796279a062710f2e750a40847b18" "eccc1a680782796279a062710f2e750a40847b18-msg"}
+
+  "ebab154c3dbcea27d0bb39a0130a9d1ead5d13d8" -> { "eccc1a680782796279a062710f2e750a40847b18" };
+  "eccc1a680782796279a062710f2e750a40847b18" -> {  };
+
+"master" [label="master" shape="cds" style="filled" fillcolor="darkgoldenrod1" ]; "master" -> "ebab154c3dbcea27d0bb39a0130a9d1ead5d13d8"  [arrowhead="none"];{rank=same "master" "ebab154c3dbcea27d0bb39a0130a9d1ead5d13d8"};
+}
+</step>
+</animation>
+
+<div class="two-rows r-stretch">
+<div  class="bottom-left">
+<div class="org-src-container">
+
+<pre><code class="bash" >git commit -m'2nd commit' --allow-empty
+</code></pre>
+</div>
+
+<div class="org-src-container">
+
+<pre><code class="bash" >[master ebab154] 2nd commit
+</code></pre>
+</div>
+
+</div>
+<div id='one-branch-2nd-commit-result'  scale='3' class="top-left">
+</div> <!-- container -->
+
+</section>
+<section id="slide-org4a235bc">
+<h3 id="org4a235bc">Multiple Branches: Theory</h3>
+<aside class="notes">
+<p>
+Before the commit <code>HEAD</code> points to <code>devel</code> and <code>devel</code> points to <code>D</code>. After the commit <code>devel</code> points to <code>E</code>.
+</p>
+
+</aside>
+
+<div class="scale-width r-stretch">
+
+<div id="org933c2a9" class="figure">
+<p><object type="image/svg+xml" data="img/commits_devel_branch.svg" class="org-svg">
+Sorry, your browser does not support SVG.</object>
+</p>
+</div>
+</div>
+</section>
+<section id="slide-orgac35d10">
+<h3 id="orgac35d10">Multiple Branches: practical I/II</h3>
+<callback  style='display:none' targetElementSelector='#new-branch-create-result' arg='new-branch-create-animation'></callback>
+<animation style='display:none' id='new-branch-create-animation'>
+<step>
+digraph git {
+// repo: /tmp/git-from-the-inside/branches
+// cwd: /tmp/git-from-the-inside/branches
+graph [bgcolor=transparent]
+  "76e33f01abc10bcb725b7f8bfa161dae51cd5925" [label="76e33f0"]; "76e33f01abc10bcb725b7f8bfa161dae51cd5925-msg" [label="3rd commit - only master" margin="0" shape="none" ]; "76e33f01abc10bcb725b7f8bfa161dae51cd5925" -> "76e33f01abc10bcb725b7f8bfa161dae51cd5925-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "76e33f01abc10bcb725b7f8bfa161dae51cd5925" "76e33f01abc10bcb725b7f8bfa161dae51cd5925-msg"}
+  "ebab154c3dbcea27d0bb39a0130a9d1ead5d13d8" [label="ebab154"]; "ebab154c3dbcea27d0bb39a0130a9d1ead5d13d8-msg" [label="2nd commit" margin="0" shape="none" ]; "ebab154c3dbcea27d0bb39a0130a9d1ead5d13d8" -> "ebab154c3dbcea27d0bb39a0130a9d1ead5d13d8-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "ebab154c3dbcea27d0bb39a0130a9d1ead5d13d8" "ebab154c3dbcea27d0bb39a0130a9d1ead5d13d8-msg"}
+  "eccc1a680782796279a062710f2e750a40847b18" [label="eccc1a6"]; "eccc1a680782796279a062710f2e750a40847b18-msg" [label="1st commit" margin="0" shape="none" ]; "eccc1a680782796279a062710f2e750a40847b18" -> "eccc1a680782796279a062710f2e750a40847b18-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "eccc1a680782796279a062710f2e750a40847b18" "eccc1a680782796279a062710f2e750a40847b18-msg"}
+
+  "76e33f01abc10bcb725b7f8bfa161dae51cd5925" -> { "ebab154c3dbcea27d0bb39a0130a9d1ead5d13d8" };
+  "ebab154c3dbcea27d0bb39a0130a9d1ead5d13d8" -> { "eccc1a680782796279a062710f2e750a40847b18" };
+  "eccc1a680782796279a062710f2e750a40847b18" -> {  };
+
+"master" [label="master" shape="cds" style="filled" fillcolor="darkgoldenrod1" ]; "master" -> "76e33f01abc10bcb725b7f8bfa161dae51cd5925"  [arrowhead="none"];{rank=same "master" "76e33f01abc10bcb725b7f8bfa161dae51cd5925"};
+}
+</step>
+<step>
+digraph git {
+// repo: /tmp/git-from-the-inside/branches
+// cwd: /tmp/git-from-the-inside/branches
+graph [bgcolor=transparent]
+  "24fa4e6c6ad417144b0a1bd837b61cb9bfc85b0a" [label="24fa4e6"]; "24fa4e6c6ad417144b0a1bd837b61cb9bfc85b0a-msg" [label="#1 on devel" margin="0" shape="none" ]; "24fa4e6c6ad417144b0a1bd837b61cb9bfc85b0a" -> "24fa4e6c6ad417144b0a1bd837b61cb9bfc85b0a-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "24fa4e6c6ad417144b0a1bd837b61cb9bfc85b0a" "24fa4e6c6ad417144b0a1bd837b61cb9bfc85b0a-msg"}
+  "76e33f01abc10bcb725b7f8bfa161dae51cd5925" [label="76e33f0"]; "76e33f01abc10bcb725b7f8bfa161dae51cd5925-msg" [label="3rd commit - only master" margin="0" shape="none" ]; "76e33f01abc10bcb725b7f8bfa161dae51cd5925" -> "76e33f01abc10bcb725b7f8bfa161dae51cd5925-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "76e33f01abc10bcb725b7f8bfa161dae51cd5925" "76e33f01abc10bcb725b7f8bfa161dae51cd5925-msg"}
+  "bf466f12a6ed75d3137d8bd56076203daeb3b16a" [label="bf466f1"]; "bf466f12a6ed75d3137d8bd56076203daeb3b16a-msg" [label="#2 on devel" margin="0" shape="none" ]; "bf466f12a6ed75d3137d8bd56076203daeb3b16a" -> "bf466f12a6ed75d3137d8bd56076203daeb3b16a-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "bf466f12a6ed75d3137d8bd56076203daeb3b16a" "bf466f12a6ed75d3137d8bd56076203daeb3b16a-msg"}
+  "ebab154c3dbcea27d0bb39a0130a9d1ead5d13d8" [label="ebab154"]; "ebab154c3dbcea27d0bb39a0130a9d1ead5d13d8-msg" [label="2nd commit" margin="0" shape="none" ]; "ebab154c3dbcea27d0bb39a0130a9d1ead5d13d8" -> "ebab154c3dbcea27d0bb39a0130a9d1ead5d13d8-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "ebab154c3dbcea27d0bb39a0130a9d1ead5d13d8" "ebab154c3dbcea27d0bb39a0130a9d1ead5d13d8-msg"}
+  "eccc1a680782796279a062710f2e750a40847b18" [label="eccc1a6"]; "eccc1a680782796279a062710f2e750a40847b18-msg" [label="1st commit" margin="0" shape="none" ]; "eccc1a680782796279a062710f2e750a40847b18" -> "eccc1a680782796279a062710f2e750a40847b18-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "eccc1a680782796279a062710f2e750a40847b18" "eccc1a680782796279a062710f2e750a40847b18-msg"}
+
+  "24fa4e6c6ad417144b0a1bd837b61cb9bfc85b0a" -> { "ebab154c3dbcea27d0bb39a0130a9d1ead5d13d8" };
+  "76e33f01abc10bcb725b7f8bfa161dae51cd5925" -> { "ebab154c3dbcea27d0bb39a0130a9d1ead5d13d8" };
+  "bf466f12a6ed75d3137d8bd56076203daeb3b16a" -> { "24fa4e6c6ad417144b0a1bd837b61cb9bfc85b0a" };
+  "ebab154c3dbcea27d0bb39a0130a9d1ead5d13d8" -> { "eccc1a680782796279a062710f2e750a40847b18" };
+  "eccc1a680782796279a062710f2e750a40847b18" -> {  };
+
+"devel" [label="devel" shape="cds" style="filled" fillcolor="darkgoldenrod1" ]; "devel" -> "bf466f12a6ed75d3137d8bd56076203daeb3b16a"  [arrowhead="none"];{rank=same "devel" "bf466f12a6ed75d3137d8bd56076203daeb3b16a"};
+"master" [label="master" shape="cds" style="filled" fillcolor="darkgoldenrod1" ]; "master" -> "76e33f01abc10bcb725b7f8bfa161dae51cd5925"  [arrowhead="none"];{rank=same "master" "76e33f01abc10bcb725b7f8bfa161dae51cd5925"};
+}
+</step>
+</animation>
+
+<div class="two-rows r-stretch">
+<div  class="bottom-left">
+<div class="org-src-container">
+
+<pre><code class="bash" >git checkout -b devel HEAD^1
+git commit -m'#1 on devel' --allow-empty
+git commit -m'#2 on devel' --allow-empty
+git log --oneline
+</code></pre>
+</div>
+
+<div class="org-src-container">
+
+<pre><code class="bash" >[devel 24fa4e6] #1 on devel
+[devel bf466f1] #2 on devel
+bf466f1 #2 on devel
+24fa4e6 #1 on devel
+ebab154 2nd commit
+eccc1a6 1st commit
+</code></pre>
+</div>
+
+</div>
+<div id='new-branch-create-result'  scale='1.5' class="top-left">
+</div> <!-- container -->
+
+</section>
+<section id="slide-orge29d6fb">
+<h3 id="orge29d6fb">Multiple Branches: practical II/II</h3>
+
+<div id="org8308afc" class="figure">
+<p><object type="image/svg+xml" data="org-gen/commit-result.svg" class="org-svg">
+Sorry, your browser does not support SVG.</object>
+</p>
+</div>
+
+<div class="org-src-container">
+
+<pre><code class="bash" >git log devel --oneline --decorate
+</code></pre>
+</div>
+
+<div class="org-src-container">
+
+<pre><code class="bash" >bf466f1 (HEAD -&gt; devel) #2 on devel
+24fa4e6 #1 on devel
+ebab154 2nd commit
+eccc1a6 1st commit
+</code></pre>
+</div>
+
+</section>
+</section>
+<section>
+<section id="slide-merge">
+<h2 id="merge">Merge</h2>
+<p>
+A <em>merge commit</em> has more than one parent and includes the commits of multiple branches.
+</p>
+</section>
+<section id="slide-org0965cc6">
+<h3 id="org0965cc6">Merge: theory</h3>
+<div class="scale-width r-stretch">
+
+<div id="orgf7363cb" class="figure">
+<p><object type="image/svg+xml" data="img/commits_devel_branch_merge.svg" class="org-svg">
+Sorry, your browser does not support SVG.</object>
+</p>
+</div>
+</div>
+</section>
+<section id="slide-orgf28a267">
+<h3 id="orgf28a267">Merge: how it works</h3>
+<callback  style='display:none' targetElementSelector='#new-branch-merge-result' arg='new-branch-merge-animation'></callback>
+<animation style='display:none' id='new-branch-merge-animation'>
+<step>
+digraph git {
+// repo: /tmp/git-from-the-inside/branches
+// cwd: /tmp/git-from-the-inside/branches
+graph [bgcolor=transparent]
+  "24fa4e6c6ad417144b0a1bd837b61cb9bfc85b0a" [label="24fa4e6"]; "24fa4e6c6ad417144b0a1bd837b61cb9bfc85b0a-msg" [label="#1 on devel" margin="0" shape="none" ]; "24fa4e6c6ad417144b0a1bd837b61cb9bfc85b0a" -> "24fa4e6c6ad417144b0a1bd837b61cb9bfc85b0a-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "24fa4e6c6ad417144b0a1bd837b61cb9bfc85b0a" "24fa4e6c6ad417144b0a1bd837b61cb9bfc85b0a-msg"}
+  "76e33f01abc10bcb725b7f8bfa161dae51cd5925" [label="76e33f0"]; "76e33f01abc10bcb725b7f8bfa161dae51cd5925-msg" [label="3rd commit - only master" margin="0" shape="none" ]; "76e33f01abc10bcb725b7f8bfa161dae51cd5925" -> "76e33f01abc10bcb725b7f8bfa161dae51cd5925-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "76e33f01abc10bcb725b7f8bfa161dae51cd5925" "76e33f01abc10bcb725b7f8bfa161dae51cd5925-msg"}
+  "bf466f12a6ed75d3137d8bd56076203daeb3b16a" [label="bf466f1"]; "bf466f12a6ed75d3137d8bd56076203daeb3b16a-msg" [label="#2 on devel" margin="0" shape="none" ]; "bf466f12a6ed75d3137d8bd56076203daeb3b16a" -> "bf466f12a6ed75d3137d8bd56076203daeb3b16a-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "bf466f12a6ed75d3137d8bd56076203daeb3b16a" "bf466f12a6ed75d3137d8bd56076203daeb3b16a-msg"}
+  "ebab154c3dbcea27d0bb39a0130a9d1ead5d13d8" [label="ebab154"]; "ebab154c3dbcea27d0bb39a0130a9d1ead5d13d8-msg" [label="2nd commit" margin="0" shape="none" ]; "ebab154c3dbcea27d0bb39a0130a9d1ead5d13d8" -> "ebab154c3dbcea27d0bb39a0130a9d1ead5d13d8-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "ebab154c3dbcea27d0bb39a0130a9d1ead5d13d8" "ebab154c3dbcea27d0bb39a0130a9d1ead5d13d8-msg"}
+  "eccc1a680782796279a062710f2e750a40847b18" [label="eccc1a6"]; "eccc1a680782796279a062710f2e750a40847b18-msg" [label="1st commit" margin="0" shape="none" ]; "eccc1a680782796279a062710f2e750a40847b18" -> "eccc1a680782796279a062710f2e750a40847b18-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "eccc1a680782796279a062710f2e750a40847b18" "eccc1a680782796279a062710f2e750a40847b18-msg"}
+
+  "24fa4e6c6ad417144b0a1bd837b61cb9bfc85b0a" -> { "ebab154c3dbcea27d0bb39a0130a9d1ead5d13d8" };
+  "76e33f01abc10bcb725b7f8bfa161dae51cd5925" -> { "ebab154c3dbcea27d0bb39a0130a9d1ead5d13d8" };
+  "bf466f12a6ed75d3137d8bd56076203daeb3b16a" -> { "24fa4e6c6ad417144b0a1bd837b61cb9bfc85b0a" };
+  "ebab154c3dbcea27d0bb39a0130a9d1ead5d13d8" -> { "eccc1a680782796279a062710f2e750a40847b18" };
+  "eccc1a680782796279a062710f2e750a40847b18" -> {  };
+
+"devel" [label="devel" shape="cds" style="filled" fillcolor="darkgoldenrod1" ]; "devel" -> "bf466f12a6ed75d3137d8bd56076203daeb3b16a"  [arrowhead="none"];{rank=same "devel" "bf466f12a6ed75d3137d8bd56076203daeb3b16a"};
+"master" [label="master" shape="cds" style="filled" fillcolor="darkgoldenrod1" ]; "master" -> "76e33f01abc10bcb725b7f8bfa161dae51cd5925"  [arrowhead="none"];{rank=same "master" "76e33f01abc10bcb725b7f8bfa161dae51cd5925"};
+}
+</step>
+<step>
+digraph git {
+// repo: /tmp/git-from-the-inside/branches
+// cwd: /tmp/git-from-the-inside/branches
+graph [bgcolor=transparent]
+  "24fa4e6c6ad417144b0a1bd837b61cb9bfc85b0a" [label="24fa4e6"]; "24fa4e6c6ad417144b0a1bd837b61cb9bfc85b0a-msg" [label="#1 on devel" margin="0" shape="none" ]; "24fa4e6c6ad417144b0a1bd837b61cb9bfc85b0a" -> "24fa4e6c6ad417144b0a1bd837b61cb9bfc85b0a-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "24fa4e6c6ad417144b0a1bd837b61cb9bfc85b0a" "24fa4e6c6ad417144b0a1bd837b61cb9bfc85b0a-msg"}
+  "76e33f01abc10bcb725b7f8bfa161dae51cd5925" [label="76e33f0"]; "76e33f01abc10bcb725b7f8bfa161dae51cd5925-msg" [label="3rd commit - only master" margin="0" shape="none" ]; "76e33f01abc10bcb725b7f8bfa161dae51cd5925" -> "76e33f01abc10bcb725b7f8bfa161dae51cd5925-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "76e33f01abc10bcb725b7f8bfa161dae51cd5925" "76e33f01abc10bcb725b7f8bfa161dae51cd5925-msg"}
+  "bf466f12a6ed75d3137d8bd56076203daeb3b16a" [label="bf466f1"]; "bf466f12a6ed75d3137d8bd56076203daeb3b16a-msg" [label="#2 on devel" margin="0" shape="none" ]; "bf466f12a6ed75d3137d8bd56076203daeb3b16a" -> "bf466f12a6ed75d3137d8bd56076203daeb3b16a-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "bf466f12a6ed75d3137d8bd56076203daeb3b16a" "bf466f12a6ed75d3137d8bd56076203daeb3b16a-msg"}
+  "eb565761458d4c7c7627ada0b7f42a908cbd5616" [label="eb56576"]; "eb565761458d4c7c7627ada0b7f42a908cbd5616-msg" [label="Merge branch 'devel'" margin="0" shape="none" ]; "eb565761458d4c7c7627ada0b7f42a908cbd5616" -> "eb565761458d4c7c7627ada0b7f42a908cbd5616-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "eb565761458d4c7c7627ada0b7f42a908cbd5616" "eb565761458d4c7c7627ada0b7f42a908cbd5616-msg"}
+  "ebab154c3dbcea27d0bb39a0130a9d1ead5d13d8" [label="ebab154"]; "ebab154c3dbcea27d0bb39a0130a9d1ead5d13d8-msg" [label="2nd commit" margin="0" shape="none" ]; "ebab154c3dbcea27d0bb39a0130a9d1ead5d13d8" -> "ebab154c3dbcea27d0bb39a0130a9d1ead5d13d8-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "ebab154c3dbcea27d0bb39a0130a9d1ead5d13d8" "ebab154c3dbcea27d0bb39a0130a9d1ead5d13d8-msg"}
+  "eccc1a680782796279a062710f2e750a40847b18" [label="eccc1a6"]; "eccc1a680782796279a062710f2e750a40847b18-msg" [label="1st commit" margin="0" shape="none" ]; "eccc1a680782796279a062710f2e750a40847b18" -> "eccc1a680782796279a062710f2e750a40847b18-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "eccc1a680782796279a062710f2e750a40847b18" "eccc1a680782796279a062710f2e750a40847b18-msg"}
+
+  "24fa4e6c6ad417144b0a1bd837b61cb9bfc85b0a" -> { "ebab154c3dbcea27d0bb39a0130a9d1ead5d13d8" };
+  "76e33f01abc10bcb725b7f8bfa161dae51cd5925" -> { "ebab154c3dbcea27d0bb39a0130a9d1ead5d13d8" };
+  "bf466f12a6ed75d3137d8bd56076203daeb3b16a" -> { "24fa4e6c6ad417144b0a1bd837b61cb9bfc85b0a" };
+  "eb565761458d4c7c7627ada0b7f42a908cbd5616" -> { "76e33f01abc10bcb725b7f8bfa161dae51cd5925" "bf466f12a6ed75d3137d8bd56076203daeb3b16a" };
+  "ebab154c3dbcea27d0bb39a0130a9d1ead5d13d8" -> { "eccc1a680782796279a062710f2e750a40847b18" };
+  "eccc1a680782796279a062710f2e750a40847b18" -> {  };
+
+"devel" [label="devel" shape="cds" style="filled" fillcolor="darkgoldenrod1" ]; "devel" -> "bf466f12a6ed75d3137d8bd56076203daeb3b16a"  [arrowhead="none"];{rank=same "devel" "bf466f12a6ed75d3137d8bd56076203daeb3b16a"};
+"master" [label="master" shape="cds" style="filled" fillcolor="darkgoldenrod1" ]; "master" -> "eb565761458d4c7c7627ada0b7f42a908cbd5616"  [arrowhead="none"];{rank=same "master" "eb565761458d4c7c7627ada0b7f42a908cbd5616"};
+}
+</step>
+</animation>
+
+<div class="two-rows r-stretch">
+<div  class="bottom-left">
+<div class="org-src-container">
+
+<pre><code class="bash" >git checkout master
+
+# GIT_MERGE_AUTOEDIT=no  uses the automatically created  commit message
+GIT_MERGE_AUTOEDIT=no git merge devel
+</code></pre>
+</div>
+
+<div class="org-src-container">
+
+<pre><code class="bash" >Already up to date!
+Merge made by the 'recursive' strategy.
+</code></pre>
+</div>
+
+</div>
+<div id='new-branch-merge-result'  scale='1.4' class="top-left scale-height">
+</div>
+
+</section>
+<section id="slide-orgd6cb3ec">
+<h3 id="orgd6cb3ec">Merge: all commits belong to the graph</h3>
+
+<div id="org42c8426" class="figure">
+<p><object type="image/svg+xml" data="org-gen/merge-result.svg" class="org-svg">
+Sorry, your browser does not support SVG.</object>
+</p>
+</div>
+
+<div class="org-src-container">
+
+<pre><code class="bash" >git log --oneline --decorate
+</code></pre>
+</div>
+
+<div class="org-src-container">
+
+<pre><code class="bash" >eb56576 (HEAD -&gt; master) Merge branch 'devel'
+76e33f0 3rd commit - only master
+bf466f1 (devel) #2 on devel
+ebab154 2nd commit
+24fa4e6 #1 on devel
+eccc1a6 1st commit
+</code></pre>
+</div>
+
+</section>
+<section id="slide-orgae7362d">
+<h3 id="orgae7362d">Merge: a branch can be merged more than once</h3>
+<callback  style='display:none' targetElementSelector='#new-branch-merge2-result' arg='new-branch-merge2-animation'></callback>
+<animation style='display:none' id='new-branch-merge2-animation'>
+<step>
+digraph git {
+// repo: /tmp/git-from-the-inside/branches
+// cwd: /tmp/git-from-the-inside/branches
+graph [bgcolor=transparent]
+  "24fa4e6c6ad417144b0a1bd837b61cb9bfc85b0a" [label="24fa4e6"]; "24fa4e6c6ad417144b0a1bd837b61cb9bfc85b0a-msg" [label="#1 on devel" margin="0" shape="none" ]; "24fa4e6c6ad417144b0a1bd837b61cb9bfc85b0a" -> "24fa4e6c6ad417144b0a1bd837b61cb9bfc85b0a-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "24fa4e6c6ad417144b0a1bd837b61cb9bfc85b0a" "24fa4e6c6ad417144b0a1bd837b61cb9bfc85b0a-msg"}
+  "76e33f01abc10bcb725b7f8bfa161dae51cd5925" [label="76e33f0"]; "76e33f01abc10bcb725b7f8bfa161dae51cd5925-msg" [label="3rd commit - only master" margin="0" shape="none" ]; "76e33f01abc10bcb725b7f8bfa161dae51cd5925" -> "76e33f01abc10bcb725b7f8bfa161dae51cd5925-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "76e33f01abc10bcb725b7f8bfa161dae51cd5925" "76e33f01abc10bcb725b7f8bfa161dae51cd5925-msg"}
+  "bf466f12a6ed75d3137d8bd56076203daeb3b16a" [label="bf466f1"]; "bf466f12a6ed75d3137d8bd56076203daeb3b16a-msg" [label="#2 on devel" margin="0" shape="none" ]; "bf466f12a6ed75d3137d8bd56076203daeb3b16a" -> "bf466f12a6ed75d3137d8bd56076203daeb3b16a-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "bf466f12a6ed75d3137d8bd56076203daeb3b16a" "bf466f12a6ed75d3137d8bd56076203daeb3b16a-msg"}
+  "eb565761458d4c7c7627ada0b7f42a908cbd5616" [label="eb56576"]; "eb565761458d4c7c7627ada0b7f42a908cbd5616-msg" [label="Merge branch 'devel'" margin="0" shape="none" ]; "eb565761458d4c7c7627ada0b7f42a908cbd5616" -> "eb565761458d4c7c7627ada0b7f42a908cbd5616-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "eb565761458d4c7c7627ada0b7f42a908cbd5616" "eb565761458d4c7c7627ada0b7f42a908cbd5616-msg"}
+  "ebab154c3dbcea27d0bb39a0130a9d1ead5d13d8" [label="ebab154"]; "ebab154c3dbcea27d0bb39a0130a9d1ead5d13d8-msg" [label="2nd commit" margin="0" shape="none" ]; "ebab154c3dbcea27d0bb39a0130a9d1ead5d13d8" -> "ebab154c3dbcea27d0bb39a0130a9d1ead5d13d8-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "ebab154c3dbcea27d0bb39a0130a9d1ead5d13d8" "ebab154c3dbcea27d0bb39a0130a9d1ead5d13d8-msg"}
+  "eccc1a680782796279a062710f2e750a40847b18" [label="eccc1a6"]; "eccc1a680782796279a062710f2e750a40847b18-msg" [label="1st commit" margin="0" shape="none" ]; "eccc1a680782796279a062710f2e750a40847b18" -> "eccc1a680782796279a062710f2e750a40847b18-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "eccc1a680782796279a062710f2e750a40847b18" "eccc1a680782796279a062710f2e750a40847b18-msg"}
+
+  "24fa4e6c6ad417144b0a1bd837b61cb9bfc85b0a" -> { "ebab154c3dbcea27d0bb39a0130a9d1ead5d13d8" };
+  "76e33f01abc10bcb725b7f8bfa161dae51cd5925" -> { "ebab154c3dbcea27d0bb39a0130a9d1ead5d13d8" };
+  "bf466f12a6ed75d3137d8bd56076203daeb3b16a" -> { "24fa4e6c6ad417144b0a1bd837b61cb9bfc85b0a" };
+  "eb565761458d4c7c7627ada0b7f42a908cbd5616" -> { "76e33f01abc10bcb725b7f8bfa161dae51cd5925" "bf466f12a6ed75d3137d8bd56076203daeb3b16a" };
+  "ebab154c3dbcea27d0bb39a0130a9d1ead5d13d8" -> { "eccc1a680782796279a062710f2e750a40847b18" };
+  "eccc1a680782796279a062710f2e750a40847b18" -> {  };
+
+"devel" [label="devel" shape="cds" style="filled" fillcolor="darkgoldenrod1" ]; "devel" -> "bf466f12a6ed75d3137d8bd56076203daeb3b16a"  [arrowhead="none"];{rank=same "devel" "bf466f12a6ed75d3137d8bd56076203daeb3b16a"};
+"master" [label="master" shape="cds" style="filled" fillcolor="darkgoldenrod1" ]; "master" -> "eb565761458d4c7c7627ada0b7f42a908cbd5616"  [arrowhead="none"];{rank=same "master" "eb565761458d4c7c7627ada0b7f42a908cbd5616"};
+}
+</step>
+<step>
+digraph git {
+// repo: /tmp/git-from-the-inside/branches
+// cwd: /tmp/git-from-the-inside/branches
+graph [bgcolor=transparent]
+  "24fa4e6c6ad417144b0a1bd837b61cb9bfc85b0a" [label="24fa4e6"]; "24fa4e6c6ad417144b0a1bd837b61cb9bfc85b0a-msg" [label="#1 on devel" margin="0" shape="none" ]; "24fa4e6c6ad417144b0a1bd837b61cb9bfc85b0a" -> "24fa4e6c6ad417144b0a1bd837b61cb9bfc85b0a-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "24fa4e6c6ad417144b0a1bd837b61cb9bfc85b0a" "24fa4e6c6ad417144b0a1bd837b61cb9bfc85b0a-msg"}
+  "5cb8955af70f7ed7b3ec156628c05073944374c9" [label="5cb8955"]; "5cb8955af70f7ed7b3ec156628c05073944374c9-msg" [label="Merge branch 'devel'" margin="0" shape="none" ]; "5cb8955af70f7ed7b3ec156628c05073944374c9" -> "5cb8955af70f7ed7b3ec156628c05073944374c9-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "5cb8955af70f7ed7b3ec156628c05073944374c9" "5cb8955af70f7ed7b3ec156628c05073944374c9-msg"}
+  "76e33f01abc10bcb725b7f8bfa161dae51cd5925" [label="76e33f0"]; "76e33f01abc10bcb725b7f8bfa161dae51cd5925-msg" [label="3rd commit - only master" margin="0" shape="none" ]; "76e33f01abc10bcb725b7f8bfa161dae51cd5925" -> "76e33f01abc10bcb725b7f8bfa161dae51cd5925-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "76e33f01abc10bcb725b7f8bfa161dae51cd5925" "76e33f01abc10bcb725b7f8bfa161dae51cd5925-msg"}
+  "bf466f12a6ed75d3137d8bd56076203daeb3b16a" [label="bf466f1"]; "bf466f12a6ed75d3137d8bd56076203daeb3b16a-msg" [label="#2 on devel" margin="0" shape="none" ]; "bf466f12a6ed75d3137d8bd56076203daeb3b16a" -> "bf466f12a6ed75d3137d8bd56076203daeb3b16a-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "bf466f12a6ed75d3137d8bd56076203daeb3b16a" "bf466f12a6ed75d3137d8bd56076203daeb3b16a-msg"}
+  "eb565761458d4c7c7627ada0b7f42a908cbd5616" [label="eb56576"]; "eb565761458d4c7c7627ada0b7f42a908cbd5616-msg" [label="Merge branch 'devel'" margin="0" shape="none" ]; "eb565761458d4c7c7627ada0b7f42a908cbd5616" -> "eb565761458d4c7c7627ada0b7f42a908cbd5616-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "eb565761458d4c7c7627ada0b7f42a908cbd5616" "eb565761458d4c7c7627ada0b7f42a908cbd5616-msg"}
+  "ebab154c3dbcea27d0bb39a0130a9d1ead5d13d8" [label="ebab154"]; "ebab154c3dbcea27d0bb39a0130a9d1ead5d13d8-msg" [label="2nd commit" margin="0" shape="none" ]; "ebab154c3dbcea27d0bb39a0130a9d1ead5d13d8" -> "ebab154c3dbcea27d0bb39a0130a9d1ead5d13d8-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "ebab154c3dbcea27d0bb39a0130a9d1ead5d13d8" "ebab154c3dbcea27d0bb39a0130a9d1ead5d13d8-msg"}
+  "eccc1a680782796279a062710f2e750a40847b18" [label="eccc1a6"]; "eccc1a680782796279a062710f2e750a40847b18-msg" [label="1st commit" margin="0" shape="none" ]; "eccc1a680782796279a062710f2e750a40847b18" -> "eccc1a680782796279a062710f2e750a40847b18-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "eccc1a680782796279a062710f2e750a40847b18" "eccc1a680782796279a062710f2e750a40847b18-msg"}
+  "f0b0358bc188d1c6e730dadeaf31e89cc3107298" [label="f0b0358"]; "f0b0358bc188d1c6e730dadeaf31e89cc3107298-msg" [label="Hotfix on devel" margin="0" shape="none" ]; "f0b0358bc188d1c6e730dadeaf31e89cc3107298" -> "f0b0358bc188d1c6e730dadeaf31e89cc3107298-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "f0b0358bc188d1c6e730dadeaf31e89cc3107298" "f0b0358bc188d1c6e730dadeaf31e89cc3107298-msg"}
+
+  "24fa4e6c6ad417144b0a1bd837b61cb9bfc85b0a" -> { "ebab154c3dbcea27d0bb39a0130a9d1ead5d13d8" };
+  "5cb8955af70f7ed7b3ec156628c05073944374c9" -> { "eb565761458d4c7c7627ada0b7f42a908cbd5616" "f0b0358bc188d1c6e730dadeaf31e89cc3107298" };
+  "76e33f01abc10bcb725b7f8bfa161dae51cd5925" -> { "ebab154c3dbcea27d0bb39a0130a9d1ead5d13d8" };
+  "bf466f12a6ed75d3137d8bd56076203daeb3b16a" -> { "24fa4e6c6ad417144b0a1bd837b61cb9bfc85b0a" };
+  "eb565761458d4c7c7627ada0b7f42a908cbd5616" -> { "76e33f01abc10bcb725b7f8bfa161dae51cd5925" "bf466f12a6ed75d3137d8bd56076203daeb3b16a" };
+  "ebab154c3dbcea27d0bb39a0130a9d1ead5d13d8" -> { "eccc1a680782796279a062710f2e750a40847b18" };
+  "eccc1a680782796279a062710f2e750a40847b18" -> {  };
+  "f0b0358bc188d1c6e730dadeaf31e89cc3107298" -> { "bf466f12a6ed75d3137d8bd56076203daeb3b16a" };
+
+"devel" [label="devel" shape="cds" style="filled" fillcolor="darkgoldenrod1" ]; "devel" -> "f0b0358bc188d1c6e730dadeaf31e89cc3107298"  [arrowhead="none"];{rank=same "devel" "f0b0358bc188d1c6e730dadeaf31e89cc3107298"};
+"master" [label="master" shape="cds" style="filled" fillcolor="darkgoldenrod1" ]; "master" -> "5cb8955af70f7ed7b3ec156628c05073944374c9"  [arrowhead="none"];{rank=same "master" "5cb8955af70f7ed7b3ec156628c05073944374c9"};
+}
+</step>
+</animation>
+
+<div class="two-rows r-stretch">
+<div  class="bottom-left">
+<div class="org-src-container">
+
+<pre><code class="bash" >git checkout devel
+git commit --allow-empty -m"Hotfix on devel"
+git checkout master
+
+GIT_MERGE_AUTOEDIT=no git merge devel
+</code></pre>
+</div>
+
+<div class="org-src-container">
+
+<pre><code class="bash" >[devel f0b0358] Hotfix on devel
+Already up to date!
+Merge made by the 'recursive' strategy.
+</code></pre>
+</div>
+
+</div>
+<div id='new-branch-merge2-result'  scale='1.4' class="top-left scale-height">
+</div>
+
+</section>
+<section id="slide-orge4177da">
+<h3 id="orge4177da">Merge Summary</h3>
+<div class="two-columns r-stretch">
+<div  class="top-right">
+
+<div id="orge40e130" class="figure">
+<p><object type="image/svg+xml" data="org-gen/merge-result2.svg" class="org-svg">
+Sorry, your browser does not support SVG.</object>
+</p>
+</div>
+
+</div><div  class="top-left">
+<ul>
+<li><strong>PRO</strong>
+<ul>
+<li>Explicit, merge stays a part of the graph</li>
+
+</ul></li>
+<li><strong>CON</strong>
+<ul>
+<li>Graph gets complex</li>
+<li>Not optimal for <em>work in progress</em></li>
+
+</ul></li>
+
+</ul>
+</div>
+</section>
+</section>
+<section>
+<section id="slide-rebase">
+<h2 id="rebase">Rebase</h2>
+<p>
+<em>Rebasing</em> "transplants" commits and can be a better way to merge.
+</p>
+
+</section>
+<section id="slide-org28d047a">
+<h3 id="org28d047a">Rebase: theory</h3>
+<div class="scale-width r-stretch">
+
+<div id="orgac90338" class="figure">
+<p><object type="image/svg+xml" data="img/commits_devel_branch_rebase.svg" class="org-svg">
+Sorry, your browser does not support SVG.</object>
+</p>
+</div>
+</div>
+</section>
+<section id="slide-org67bc34a">
+<h3 id="org67bc34a">Rebase: how it works</h3>
+<callback  style='display:none' targetElementSelector='#new-branch-rebase-result' arg='new-branch-rebase-animation'></callback>
+<animation style='display:none' id='new-branch-rebase-animation'>
+<step>
+digraph git {
+// repo: /tmp/git-from-the-inside/rebase
+// cwd: /tmp/git-from-the-inside/rebase
+graph [bgcolor=transparent]
+  "87256ea5df4f43733e5bd22d2598faec728de644" [label="87256ea"]; "87256ea5df4f43733e5bd22d2598faec728de644-msg" [label="master: 2nd commit" margin="0" shape="none" ]; "87256ea5df4f43733e5bd22d2598faec728de644" -> "87256ea5df4f43733e5bd22d2598faec728de644-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "87256ea5df4f43733e5bd22d2598faec728de644" "87256ea5df4f43733e5bd22d2598faec728de644-msg"}
+  "987bfb18756adcf84a891257c833130feca7c57a" [label="987bfb1"]; "987bfb18756adcf84a891257c833130feca7c57a-msg" [label="master: 3rd commit" margin="0" shape="none" ]; "987bfb18756adcf84a891257c833130feca7c57a" -> "987bfb18756adcf84a891257c833130feca7c57a-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "987bfb18756adcf84a891257c833130feca7c57a" "987bfb18756adcf84a891257c833130feca7c57a-msg"}
+  "a504c08a3ffb0cbb92bf271af793afc30e54693c" [label="a504c08"]; "a504c08a3ffb0cbb92bf271af793afc30e54693c-msg" [label="master: 1st commit" margin="0" shape="none" ]; "a504c08a3ffb0cbb92bf271af793afc30e54693c" -> "a504c08a3ffb0cbb92bf271af793afc30e54693c-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "a504c08a3ffb0cbb92bf271af793afc30e54693c" "a504c08a3ffb0cbb92bf271af793afc30e54693c-msg"}
+  "b25268ade05f803bde3bcaba26f577891ae4f37d" [label="b25268a"]; "b25268ade05f803bde3bcaba26f577891ae4f37d-msg" [label="devel: 1st commit" margin="0" shape="none" ]; "b25268ade05f803bde3bcaba26f577891ae4f37d" -> "b25268ade05f803bde3bcaba26f577891ae4f37d-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "b25268ade05f803bde3bcaba26f577891ae4f37d" "b25268ade05f803bde3bcaba26f577891ae4f37d-msg"}
+  "cf533e38c4dadb09015528e48f3545dea4dbdc15" [label="cf533e3"]; "cf533e38c4dadb09015528e48f3545dea4dbdc15-msg" [label="devel: 2nd commit" margin="0" shape="none" ]; "cf533e38c4dadb09015528e48f3545dea4dbdc15" -> "cf533e38c4dadb09015528e48f3545dea4dbdc15-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "cf533e38c4dadb09015528e48f3545dea4dbdc15" "cf533e38c4dadb09015528e48f3545dea4dbdc15-msg"}
+
+  "87256ea5df4f43733e5bd22d2598faec728de644" -> { "a504c08a3ffb0cbb92bf271af793afc30e54693c" };
+  "987bfb18756adcf84a891257c833130feca7c57a" -> { "87256ea5df4f43733e5bd22d2598faec728de644" };
+  "a504c08a3ffb0cbb92bf271af793afc30e54693c" -> {  };
+  "b25268ade05f803bde3bcaba26f577891ae4f37d" -> { "87256ea5df4f43733e5bd22d2598faec728de644" };
+  "cf533e38c4dadb09015528e48f3545dea4dbdc15" -> { "b25268ade05f803bde3bcaba26f577891ae4f37d" };
+
+"devel" [label="devel" shape="cds" style="filled" fillcolor="darkgoldenrod1" ]; "devel" -> "cf533e38c4dadb09015528e48f3545dea4dbdc15"  [arrowhead="none"];{rank=same "devel" "cf533e38c4dadb09015528e48f3545dea4dbdc15"};
+"master" [label="master" shape="cds" style="filled" fillcolor="darkgoldenrod1" ]; "master" -> "987bfb18756adcf84a891257c833130feca7c57a"  [arrowhead="none"];{rank=same "master" "987bfb18756adcf84a891257c833130feca7c57a"};
+}
+</step>
+<step>
+digraph git {
+// repo: /tmp/git-from-the-inside/rebase
+// cwd: /tmp/git-from-the-inside/rebase
+graph [bgcolor=transparent]
+  "08c2891a356c552ff3f685170ebae752aa62daea" [label="08c2891"]; "08c2891a356c552ff3f685170ebae752aa62daea-msg" [label="devel: 2nd commit" margin="0" shape="none" ]; "08c2891a356c552ff3f685170ebae752aa62daea" -> "08c2891a356c552ff3f685170ebae752aa62daea-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "08c2891a356c552ff3f685170ebae752aa62daea" "08c2891a356c552ff3f685170ebae752aa62daea-msg"}
+  "744aeb5a6769877c6621ce401f5c5ff51ae9a46d" [label="744aeb5"]; "744aeb5a6769877c6621ce401f5c5ff51ae9a46d-msg" [label="devel: 1st commit" margin="0" shape="none" ]; "744aeb5a6769877c6621ce401f5c5ff51ae9a46d" -> "744aeb5a6769877c6621ce401f5c5ff51ae9a46d-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "744aeb5a6769877c6621ce401f5c5ff51ae9a46d" "744aeb5a6769877c6621ce401f5c5ff51ae9a46d-msg"}
+  "87256ea5df4f43733e5bd22d2598faec728de644" [label="87256ea"]; "87256ea5df4f43733e5bd22d2598faec728de644-msg" [label="master: 2nd commit" margin="0" shape="none" ]; "87256ea5df4f43733e5bd22d2598faec728de644" -> "87256ea5df4f43733e5bd22d2598faec728de644-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "87256ea5df4f43733e5bd22d2598faec728de644" "87256ea5df4f43733e5bd22d2598faec728de644-msg"}
+  "987bfb18756adcf84a891257c833130feca7c57a" [label="987bfb1"]; "987bfb18756adcf84a891257c833130feca7c57a-msg" [label="master: 3rd commit" margin="0" shape="none" ]; "987bfb18756adcf84a891257c833130feca7c57a" -> "987bfb18756adcf84a891257c833130feca7c57a-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "987bfb18756adcf84a891257c833130feca7c57a" "987bfb18756adcf84a891257c833130feca7c57a-msg"}
+  "a504c08a3ffb0cbb92bf271af793afc30e54693c" [label="a504c08"]; "a504c08a3ffb0cbb92bf271af793afc30e54693c-msg" [label="master: 1st commit" margin="0" shape="none" ]; "a504c08a3ffb0cbb92bf271af793afc30e54693c" -> "a504c08a3ffb0cbb92bf271af793afc30e54693c-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "a504c08a3ffb0cbb92bf271af793afc30e54693c" "a504c08a3ffb0cbb92bf271af793afc30e54693c-msg"}
+  "b25268ade05f803bde3bcaba26f577891ae4f37d" [label="b25268a"]; "b25268ade05f803bde3bcaba26f577891ae4f37d-msg" [label="devel: 1st commit" margin="0" shape="none" ]; "b25268ade05f803bde3bcaba26f577891ae4f37d" -> "b25268ade05f803bde3bcaba26f577891ae4f37d-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "b25268ade05f803bde3bcaba26f577891ae4f37d" "b25268ade05f803bde3bcaba26f577891ae4f37d-msg"}
+  "cf533e38c4dadb09015528e48f3545dea4dbdc15" [label="cf533e3"]; "cf533e38c4dadb09015528e48f3545dea4dbdc15-msg" [label="devel: 2nd commit" margin="0" shape="none" ]; "cf533e38c4dadb09015528e48f3545dea4dbdc15" -> "cf533e38c4dadb09015528e48f3545dea4dbdc15-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "cf533e38c4dadb09015528e48f3545dea4dbdc15" "cf533e38c4dadb09015528e48f3545dea4dbdc15-msg"}
+
+  "08c2891a356c552ff3f685170ebae752aa62daea" -> { "744aeb5a6769877c6621ce401f5c5ff51ae9a46d" };
+  "744aeb5a6769877c6621ce401f5c5ff51ae9a46d" -> { "987bfb18756adcf84a891257c833130feca7c57a" };
+  "87256ea5df4f43733e5bd22d2598faec728de644" -> { "a504c08a3ffb0cbb92bf271af793afc30e54693c" };
+  "987bfb18756adcf84a891257c833130feca7c57a" -> { "87256ea5df4f43733e5bd22d2598faec728de644" };
+  "a504c08a3ffb0cbb92bf271af793afc30e54693c" -> {  };
+
+"devel" [label="devel" shape="cds" style="filled" fillcolor="darkgoldenrod1" ]; "devel" -> "08c2891a356c552ff3f685170ebae752aa62daea"  [arrowhead="none"];{rank=same "devel" "08c2891a356c552ff3f685170ebae752aa62daea"};
+"master" [label="master" shape="cds" style="filled" fillcolor="darkgoldenrod1" ]; "master" -> "987bfb18756adcf84a891257c833130feca7c57a"  [arrowhead="none"];{rank=same "master" "987bfb18756adcf84a891257c833130feca7c57a"};
+}
+</step>
+</animation>
+
+<div class="two-rows r-stretch">
+<div  class="bottom-left">
+<div class="org-src-container">
+
+<pre><code class="bash" >git checkout devel
+
+git rebase master
+</code></pre>
+</div>
+
+<div class="org-src-container">
+
+<pre><code class="bash" >First, rewinding head to replay your work on top of it...
+Applying: devel: 1st commit
+Applying: devel: 2nd commit
+</code></pre>
+</div>
+
+</div>
+<div id='new-branch-rebase-result'  scale='1.4' class="top-left scale-height">
+</div>
+
+</section>
+<section id="slide-orge24d950">
+<h3 id="orge24d950">Rebase: <em>All</em> rebased commits are changed</h3>
+
+<div id="orgb62b8a4" class="figure">
+<p><object type="image/svg+xml" data="org-gen/rebase-result.svg" class="org-svg">
+Sorry, your browser does not support SVG.</object>
+</p>
+</div>
+
+<div class="org-src-container">
+
+<pre><code class="bash" >git log devel --oneline --decorate
+</code></pre>
+</div>
+
+<div class="org-src-container">
+
+<pre><code class="bash" >08c2891 (HEAD -&gt; devel) devel: 2nd commit
+744aeb5 devel: 1st commit
+987bfb1 (master) master: 3rd commit
+87256ea master: 2nd commit
+a504c08 master: 1st commit
+</code></pre>
+</div>
+
+</section>
+<section id="slide-org02827ab">
+<h3 id="org02827ab">Rebase: Merging gets easy</h3>
+<callback  style='display:none' targetElementSelector='#new-branch-rebase-merge-result' arg='new-branch-rebase-merge-animation'></callback>
+<animation style='display:none' id='new-branch-rebase-merge-animation'>
+<step>
+digraph git {
+// repo: /tmp/git-from-the-inside/rebase
+// cwd: /tmp/git-from-the-inside/rebase
+graph [bgcolor=transparent]
+  "08c2891a356c552ff3f685170ebae752aa62daea" [label="08c2891"]; "08c2891a356c552ff3f685170ebae752aa62daea-msg" [label="devel: 2nd commit" margin="0" shape="none" ]; "08c2891a356c552ff3f685170ebae752aa62daea" -> "08c2891a356c552ff3f685170ebae752aa62daea-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "08c2891a356c552ff3f685170ebae752aa62daea" "08c2891a356c552ff3f685170ebae752aa62daea-msg"}
+  "744aeb5a6769877c6621ce401f5c5ff51ae9a46d" [label="744aeb5"]; "744aeb5a6769877c6621ce401f5c5ff51ae9a46d-msg" [label="devel: 1st commit" margin="0" shape="none" ]; "744aeb5a6769877c6621ce401f5c5ff51ae9a46d" -> "744aeb5a6769877c6621ce401f5c5ff51ae9a46d-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "744aeb5a6769877c6621ce401f5c5ff51ae9a46d" "744aeb5a6769877c6621ce401f5c5ff51ae9a46d-msg"}
+  "87256ea5df4f43733e5bd22d2598faec728de644" [label="87256ea"]; "87256ea5df4f43733e5bd22d2598faec728de644-msg" [label="master: 2nd commit" margin="0" shape="none" ]; "87256ea5df4f43733e5bd22d2598faec728de644" -> "87256ea5df4f43733e5bd22d2598faec728de644-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "87256ea5df4f43733e5bd22d2598faec728de644" "87256ea5df4f43733e5bd22d2598faec728de644-msg"}
+  "987bfb18756adcf84a891257c833130feca7c57a" [label="987bfb1"]; "987bfb18756adcf84a891257c833130feca7c57a-msg" [label="master: 3rd commit" margin="0" shape="none" ]; "987bfb18756adcf84a891257c833130feca7c57a" -> "987bfb18756adcf84a891257c833130feca7c57a-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "987bfb18756adcf84a891257c833130feca7c57a" "987bfb18756adcf84a891257c833130feca7c57a-msg"}
+  "a504c08a3ffb0cbb92bf271af793afc30e54693c" [label="a504c08"]; "a504c08a3ffb0cbb92bf271af793afc30e54693c-msg" [label="master: 1st commit" margin="0" shape="none" ]; "a504c08a3ffb0cbb92bf271af793afc30e54693c" -> "a504c08a3ffb0cbb92bf271af793afc30e54693c-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "a504c08a3ffb0cbb92bf271af793afc30e54693c" "a504c08a3ffb0cbb92bf271af793afc30e54693c-msg"}
+  "b25268ade05f803bde3bcaba26f577891ae4f37d" [label="b25268a"]; "b25268ade05f803bde3bcaba26f577891ae4f37d-msg" [label="devel: 1st commit" margin="0" shape="none" ]; "b25268ade05f803bde3bcaba26f577891ae4f37d" -> "b25268ade05f803bde3bcaba26f577891ae4f37d-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "b25268ade05f803bde3bcaba26f577891ae4f37d" "b25268ade05f803bde3bcaba26f577891ae4f37d-msg"}
+  "cf533e38c4dadb09015528e48f3545dea4dbdc15" [label="cf533e3"]; "cf533e38c4dadb09015528e48f3545dea4dbdc15-msg" [label="devel: 2nd commit" margin="0" shape="none" ]; "cf533e38c4dadb09015528e48f3545dea4dbdc15" -> "cf533e38c4dadb09015528e48f3545dea4dbdc15-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "cf533e38c4dadb09015528e48f3545dea4dbdc15" "cf533e38c4dadb09015528e48f3545dea4dbdc15-msg"}
+
+  "08c2891a356c552ff3f685170ebae752aa62daea" -> { "744aeb5a6769877c6621ce401f5c5ff51ae9a46d" };
+  "744aeb5a6769877c6621ce401f5c5ff51ae9a46d" -> { "987bfb18756adcf84a891257c833130feca7c57a" };
+  "87256ea5df4f43733e5bd22d2598faec728de644" -> { "a504c08a3ffb0cbb92bf271af793afc30e54693c" };
+  "987bfb18756adcf84a891257c833130feca7c57a" -> { "87256ea5df4f43733e5bd22d2598faec728de644" };
+  "a504c08a3ffb0cbb92bf271af793afc30e54693c" -> {  };
+
+"devel" [label="devel" shape="cds" style="filled" fillcolor="darkgoldenrod1" ]; "devel" -> "08c2891a356c552ff3f685170ebae752aa62daea"  [arrowhead="none"];{rank=same "devel" "08c2891a356c552ff3f685170ebae752aa62daea"};
+"master" [label="master" shape="cds" style="filled" fillcolor="darkgoldenrod1" ]; "master" -> "987bfb18756adcf84a891257c833130feca7c57a"  [arrowhead="none"];{rank=same "master" "987bfb18756adcf84a891257c833130feca7c57a"};
+}
+</step>
+<step>
+digraph git {
+// repo: /tmp/git-from-the-inside/rebase
+// cwd: /tmp/git-from-the-inside/rebase
+graph [bgcolor=transparent]
+  "08c2891a356c552ff3f685170ebae752aa62daea" [label="08c2891"]; "08c2891a356c552ff3f685170ebae752aa62daea-msg" [label="devel: 2nd commit" margin="0" shape="none" ]; "08c2891a356c552ff3f685170ebae752aa62daea" -> "08c2891a356c552ff3f685170ebae752aa62daea-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "08c2891a356c552ff3f685170ebae752aa62daea" "08c2891a356c552ff3f685170ebae752aa62daea-msg"}
+  "744aeb5a6769877c6621ce401f5c5ff51ae9a46d" [label="744aeb5"]; "744aeb5a6769877c6621ce401f5c5ff51ae9a46d-msg" [label="devel: 1st commit" margin="0" shape="none" ]; "744aeb5a6769877c6621ce401f5c5ff51ae9a46d" -> "744aeb5a6769877c6621ce401f5c5ff51ae9a46d-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "744aeb5a6769877c6621ce401f5c5ff51ae9a46d" "744aeb5a6769877c6621ce401f5c5ff51ae9a46d-msg"}
+  "87256ea5df4f43733e5bd22d2598faec728de644" [label="87256ea"]; "87256ea5df4f43733e5bd22d2598faec728de644-msg" [label="master: 2nd commit" margin="0" shape="none" ]; "87256ea5df4f43733e5bd22d2598faec728de644" -> "87256ea5df4f43733e5bd22d2598faec728de644-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "87256ea5df4f43733e5bd22d2598faec728de644" "87256ea5df4f43733e5bd22d2598faec728de644-msg"}
+  "987bfb18756adcf84a891257c833130feca7c57a" [label="987bfb1"]; "987bfb18756adcf84a891257c833130feca7c57a-msg" [label="master: 3rd commit" margin="0" shape="none" ]; "987bfb18756adcf84a891257c833130feca7c57a" -> "987bfb18756adcf84a891257c833130feca7c57a-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "987bfb18756adcf84a891257c833130feca7c57a" "987bfb18756adcf84a891257c833130feca7c57a-msg"}
+  "a504c08a3ffb0cbb92bf271af793afc30e54693c" [label="a504c08"]; "a504c08a3ffb0cbb92bf271af793afc30e54693c-msg" [label="master: 1st commit" margin="0" shape="none" ]; "a504c08a3ffb0cbb92bf271af793afc30e54693c" -> "a504c08a3ffb0cbb92bf271af793afc30e54693c-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "a504c08a3ffb0cbb92bf271af793afc30e54693c" "a504c08a3ffb0cbb92bf271af793afc30e54693c-msg"}
+  "b25268ade05f803bde3bcaba26f577891ae4f37d" [label="b25268a"]; "b25268ade05f803bde3bcaba26f577891ae4f37d-msg" [label="devel: 1st commit" margin="0" shape="none" ]; "b25268ade05f803bde3bcaba26f577891ae4f37d" -> "b25268ade05f803bde3bcaba26f577891ae4f37d-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "b25268ade05f803bde3bcaba26f577891ae4f37d" "b25268ade05f803bde3bcaba26f577891ae4f37d-msg"}
+  "cf533e38c4dadb09015528e48f3545dea4dbdc15" [label="cf533e3"]; "cf533e38c4dadb09015528e48f3545dea4dbdc15-msg" [label="devel: 2nd commit" margin="0" shape="none" ]; "cf533e38c4dadb09015528e48f3545dea4dbdc15" -> "cf533e38c4dadb09015528e48f3545dea4dbdc15-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "cf533e38c4dadb09015528e48f3545dea4dbdc15" "cf533e38c4dadb09015528e48f3545dea4dbdc15-msg"}
+
+  "08c2891a356c552ff3f685170ebae752aa62daea" -> { "744aeb5a6769877c6621ce401f5c5ff51ae9a46d" };
+  "744aeb5a6769877c6621ce401f5c5ff51ae9a46d" -> { "987bfb18756adcf84a891257c833130feca7c57a" };
+  "87256ea5df4f43733e5bd22d2598faec728de644" -> { "a504c08a3ffb0cbb92bf271af793afc30e54693c" };
+  "987bfb18756adcf84a891257c833130feca7c57a" -> { "87256ea5df4f43733e5bd22d2598faec728de644" };
+  "a504c08a3ffb0cbb92bf271af793afc30e54693c" -> {  };
+
+"devel" [label="devel" shape="cds" style="filled" fillcolor="darkgoldenrod1" ]; "devel" -> "08c2891a356c552ff3f685170ebae752aa62daea"  [arrowhead="none"];{rank=same "devel" "08c2891a356c552ff3f685170ebae752aa62daea"};
+"master" [label="master" shape="cds" style="filled" fillcolor="darkgoldenrod1" ]; "master" -> "08c2891a356c552ff3f685170ebae752aa62daea"  [arrowhead="none"];{rank=same "master" "08c2891a356c552ff3f685170ebae752aa62daea"};
+}
+</step>
+</animation>
+
+<div class="two-rows r-stretch">
+<div  class="bottom-left">
+<div class="org-src-container">
+
+<pre><code class="bash" >git checkout master
+
+GIT_MERGE_AUTOEDIT=no git merge devel
+</code></pre>
+</div>
+
+<div class="org-src-container">
+
+<pre><code class="bash" >Updating 987bfb1..08c2891
+Fast-forward
+ change_devel | 2 ++
+ 1 file changed, 2 insertions(+)
+ create mode 100644 change_devel
+</code></pre>
+</div>
+
+</div>
+<div id='new-branch-rebase-merge-result'  scale='1.2' class="top-left scale-height">
+</div>
+
+</section>
+<section id="slide-orgad9ab0a">
+<h3 id="orgad9ab0a">Rebase Summary</h3>
+<div class="two-columns r-stretch">
+<div  class="top-right">
+
+<div id="org8970227" class="figure">
+<p><object type="image/svg+xml" data="org-gen/rebase-result2.svg" class="org-svg">
+Sorry, your browser does not support SVG.</object>
+</p>
+</div>
+
+</div><div  class="top-left">
+<ul>
+<li><strong>PRO</strong>
+<ul>
+<li>Simplified graph</li>
+<li>Suitable for <em>work in progress</em></li>
+
+</ul></li>
+<li><strong>CON</strong>
+<ul>
+<li>Merge no longer explicit</li>
+<li><em>CAVE <code>push -f</code></em></li>
+
+</ul></li>
+
+</ul>
+</div>
+</section>
+</section>
+<section>
+<section id="slide-org4440c7d">
+<h2 id="org4440c7d">Remote</h2>
+</section>
+</section>
+<section>
+<section id="slide-orgfc7de31">
+<h2 id="orgfc7de31">Examples</h2>
+<p>
+The following examples can be skipped via a <code>:noexport</code> tag on this headline
+</p>
+</section>
+<section id="slide-org9b18e24" data-timing="300">
+<h3 id="org9b18e24">Notes and timing</h3>
+<aside class="notes">
+<p>
+These notes are shown in the speakers view.
+</p>
+
+</aside>
+<ul>
+<li>Press <code>S</code> to see notes (see <a href="https://revealjs.com/speaker-view/">the reveal.js documentation</a>).</li>
+<li>Set <code>#+REVEAL_EXTRA_OPTIONS: totalTime:2700</code> to set the total time for the slides to 45min</li>
+<li>Set <code>:reveal_extra_attr: data-timing="120"</code> to set a timer for this slide (shown in the speakers notes) to 2min</li>
+<li>Reveal automatically calculates the duration of the slides without <code>data-timing</code></li>
+
+</ul>
+
+<table>
+
+
+<colgroup>
+<col  class="org-right">
+
+<col  class="org-right">
+</colgroup>
+<thead>
+<tr>
+<th scope="col" class="org-right">Duration in minutes</th>
+<th scope="col" class="org-right">Value for <code>data-timing</code> / <code>totalTime</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="org-right">1</td>
+<td class="org-right">60</td>
+</tr>
+
+<tr>
+<td class="org-right">5</td>
+<td class="org-right">300</td>
+</tr>
+
+<tr>
+<td class="org-right">10</td>
+<td class="org-right">600</td>
+</tr>
+
+<tr>
+<td class="org-right">30</td>
+<td class="org-right">1800</td>
+</tr>
+
+<tr>
+<td class="org-right">45</td>
+<td class="org-right">2700</td>
+</tr>
+
+<tr>
+<td class="org-right">60</td>
+<td class="org-right">3600</td>
+</tr>
+
+<tr>
+<td class="org-right">90</td>
+<td class="org-right">5400</td>
+</tr>
+</tbody>
+</table>
+
+</section>
+<section id="slide-example_css">
+<h3 id="example_css">CSS</h3>
+<p>
+Some CSS classes have been defined
+</p>
+</section>
+<section id="slide-org7648b20">
+<h4 id="org7648b20">Two Coloumns</h4>
+<p>
+<code>.two-columns</code>
+</p>
+<div class="two-columns r-stretch" style="background:black">
+<div style="background:red">Left</div>
+<div style="background:blue">Right</div>
+</div>
+
+</section>
+<section id="slide-orgff618d6">
+<h4 id="orgff618d6">Two Coloumns, two rows</h4>
+<p>
+<code>.two-columns .two-rows</code>
+</p>
+<div class="two-columns two-rows r-stretch" style="background:black">
+<div style="background:red">Top Left</div>
+<div style="background:blue">Top Right</div>
+<div style="background:green">Bottom Left</div>
+<div style="background:yellow">Bottom Right</div>
+</div>
+</section>
+<section id="slide-orgef6b43a">
+<h4 id="orgef6b43a">Two Coloumns, two rows - row 1 spans two cols</h4>
+<p>
+<code>.two-columns .two-rows</code>
+</p>
+<div class="two-columns two-rows r-stretch" style="background:black">
+<div style="background:red" class="top-left two-cols-wide">Top Left and right</div>
+<div style="background:green" class="bottom-left">Bottom Left</div>
+<div style="background:yellow" class="bottom-right">Bottom Right</div>
+</div>
+</section>
+<section id="slide-org882cdb3">
+<h4 id="org882cdb3">Two Coloumns, two rows + notes</h4>
+<p>
+<code>.two-columns .two-rows-notes</code>
+</p>
+<div class="two-columns two-rows-notes r-stretch" style="background:black">
+<div style="background:red">Top Left</div>
+<div style="background:blue">Top Right</div>
+<div style="background:green">Bottom Left</div>
+<div style="background:yellow">Bottom Right</div>
+<div style="background:orange" class="note">NOTE</div>
+</div>
+</section>
+<section id="slide-org10db39f">
+<h4 id="org10db39f">Two Coloumns, two rows + notes (long notes)</h4>
+<p>
+<code>.two-columns .two-rows-notes</code>
+</p>
+<div class="two-columns two-rows-notes r-stretch" style="background:black">
+<div style="background:red">Top Left</div>
+<div style="background:blue">Top Right</div>
+<div style="background:green">Bottom Left</div>
+<div style="background:yellow">Bottom Right</div>
+
+<div style="background:orange" class="note">
+<p>
+The notes
+</p>
+
+<ul>
+<li>can span multiple</li>
+<li>lines and will resize</li>
+<li>automatically</li>
+
+</ul>
+</div>
+</div> <!-- container-->
+</section>
+<section id="slide-org9a7bf74">
+<h4 id="org9a7bf74">Two Coloumns, two rows + notes (placed via CSS class)</h4>
+<p>
+<code>.two-columns .two-rows-notes</code> but placed via CSS class
+</p>
+<div class="two-columns two-rows-notes r-stretch" style="background:black">
+
+<div style="background:orange" class="note">
+<p>
+The notes
+</p>
+<ul>
+<li>can span multiple</li>
+<li>lines and will resize</li>
+<li>automatically</li>
+
+</ul>
+</div> <!-- notes -->
+
+<div style="background:blue" class="top-right">
+<p>
+Top Right
+</p>
+</div> <!-- top right -->
+
+<div style="background:yellow" class="bottom-right">
+<p>
+Bottom Right
+</p>
+</div> <!-- bottom right -->
+
+<div style="background:green" class="bottom-left">
+<p>
+Bottom Left
+</p>
+</div> <!-- bottom left -->
+
+<div style="background:red" class="top-left">
+<p>
+Top Left
+</p>
+</div> <!-- top left -->
+
+</div> <!-- container -->
+</section>
+<section id="slide-org540ac57">
+<h3 id="org540ac57">Included Images</h3>
+
+</section>
+<section id="slide-example_image">
+<h3 id="example_image">Generated Images</h3>
+<p>
+Images should be generated into <code>org-gen/</code> (see <code>doc/BUILD.org</code>):
+</p>
+
+
+<div id="orgad8e006" class="figure">
+<p><img src="org-gen/example-image-plantuml.png" alt="example-image-plantuml.png">
+</p>
+</div>
+
+</section>
+<section id="slide-org5f51029">
+<h3 id="org5f51029">Add Elements to Lists</h3>
+<ul>
+<li data-fragment-index="6" class="fragment grow">I will grow. (6)</li>
+<li data-fragment-index="5" class="fragment shrink">I will shrink. (5)</li>
+<li data-fragment-index="4" class="fragment roll-in">I rolled in. (4)</li>
+<li data-fragment-index="3" class="fragment fade-out">I will fade out. (3)</li>
+<li>I don't fragment. (2)</li>
+<li data-fragment-index="1" class="fragment appear">I appear (1)</li>
+
+</ul>
+</section>
+<section id="slide-orgec42c5e">
+<h3 id="orgec42c5e">Combined</h3>
+<div class="container two-columns two-rows r-stretch">
+<div class="top-right">
+
+<div id="orgcf0274d" class="figure">
+<p><img src="org-gen/example-image2-plantuml.png" alt="example-image2-plantuml.png">
+</p>
+</div>
+
+</div><div class="bottom-left two-cols-wide">
+<p>
+This is how the source code looks like:
+</p>
+<div class="org-src-container">
+
+<pre><code class="plantuml" >@startuml
+title Example #2
+
+' https://plantuml.com/class-diagram
+$Class01 "1" *-- "many" Class02 : contains
+Class03 o-- Class04 : aggregation
+Class05 --&gt; "1" Class060
+Class06 -&gt; Class060 : pointing right
+@enduml
+</code></pre>
+</div>
+</div><div class="top-left">
+<p>
+See the graph on the right side?
+</p>
+</div> <!-- top left -->
+</div> <!-- container -->
+<p>
+<em>The source spans two columns to give us enough space.</em>
+</p>
+</section>
+<section id="slide-org9dc284b">
+<h3 id="org9dc284b">Example Git</h3>
+<aside class="notes">
+<p>
+Test note
+bla note
+</p>
+
+</aside>
+
+<callback  style='display:none' targetElementSelector='#number1src-result' arg='number1src-animation'></callback>
+<animation style='display:none' id='number1src-animation'>
+<step>
+digraph git {
+// repo: /tmp/git-from-the-inside/number-of-the-beast2
+// cwd: /tmp/git-from-the-inside/number-of-the-beast2
+graph [bgcolor=transparent]
+  "d86b87017851c1420e32dc716885a8c2bea330a6" [label="d86b870"]; "d86b87017851c1420e32dc716885a8c2bea330a6-msg" [label="1st commit" margin="0" shape="none" ]; "d86b87017851c1420e32dc716885a8c2bea330a6" -> "d86b87017851c1420e32dc716885a8c2bea330a6-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "d86b87017851c1420e32dc716885a8c2bea330a6" "d86b87017851c1420e32dc716885a8c2bea330a6-msg"}
+
+  "d86b87017851c1420e32dc716885a8c2bea330a6" -> {  };
+
+"master" [label="master" shape="cds" style="filled" fillcolor="darkgoldenrod1" ]; "master" -> "d86b87017851c1420e32dc716885a8c2bea330a6"  [arrowhead="none"];{rank=same "master" "d86b87017851c1420e32dc716885a8c2bea330a6"};
+}
+</step>
+<step>
+digraph git {
+// repo: /tmp/git-from-the-inside/number-of-the-beast2
+// cwd: /tmp/git-from-the-inside/number-of-the-beast2
+graph [bgcolor=transparent]
+  "6f0d3b40d09d5361c099851b2b16a706b63e3cd3" [label="6f0d3b4"]; "6f0d3b40d09d5361c099851b2b16a706b63e3cd3-msg" [label="2nd commit" margin="0" shape="none" ]; "6f0d3b40d09d5361c099851b2b16a706b63e3cd3" -> "6f0d3b40d09d5361c099851b2b16a706b63e3cd3-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "6f0d3b40d09d5361c099851b2b16a706b63e3cd3" "6f0d3b40d09d5361c099851b2b16a706b63e3cd3-msg"}
+  "d86b87017851c1420e32dc716885a8c2bea330a6" [label="d86b870"]; "d86b87017851c1420e32dc716885a8c2bea330a6-msg" [label="1st commit" margin="0" shape="none" ]; "d86b87017851c1420e32dc716885a8c2bea330a6" -> "d86b87017851c1420e32dc716885a8c2bea330a6-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "d86b87017851c1420e32dc716885a8c2bea330a6" "d86b87017851c1420e32dc716885a8c2bea330a6-msg"}
+
+  "6f0d3b40d09d5361c099851b2b16a706b63e3cd3" -> { "d86b87017851c1420e32dc716885a8c2bea330a6" };
+  "d86b87017851c1420e32dc716885a8c2bea330a6" -> {  };
+
+"master" [label="master" shape="cds" style="filled" fillcolor="darkgoldenrod1" ]; "master" -> "6f0d3b40d09d5361c099851b2b16a706b63e3cd3"  [arrowhead="none"];{rank=same "master" "6f0d3b40d09d5361c099851b2b16a706b63e3cd3"};
+}
+</step>
+</animation>
+
+<div id='number1src-result' class='r-stretch' scale='2'></div>
+
+<div class="org-src-container">
+
+<pre><code class="bash" >echo "$(date +%s%N) 2nd in $repo" &gt;&gt; /tmp/log
+cd "${repo}" || exit 1
+git commit -m'2nd commit' --allow-empty
+</code></pre>
+</div>
+
+<div class="org-src-container">
+
+<pre><code class="bash" >[master 6f0d3b4] 2nd commit
+</code></pre>
+</div>
+
+</section>
+<section id="slide-org859ba43">
+<h3 id="org859ba43">Math with MathJax</h3>
+<p>
+Math sould be fenced by <code>$</code>:
+</p>
+<pre class="example" id="orga880cfc">
+${n! \over k!(n-k)!} = {n \choose k}$
+</pre>
+
+<p>
+\({n! \over k!(n-k)!} = {n \choose k}\)
+</p>
+
+</section>
+</section>
+<section>
+<section id="slide-LICENSE">
+<h2 id="LICENSE">Licensing</h2>
+<div class="license-container">
+<a href="https://neuhalfen.name/">
+    <img class="inline-icon" src="/img/wikimedia/Copyright.svg"/><span> by Jens Neuhalfen</span>
+</a>
+</div>
+
+<div class="license-container">
+  <a href="http://creativecommons.org/licenses/by-sa/4.0/">
+    <img class="inline-icon" src="/img/cc/cc.svg"/>
+    <img class="inline-icon" src="/img/cc/by.svg"/>
+    <img class="inline-icon" src="/img/cc/sa.svg"/>
+    <p>This work is licensed under a <i>Creative Commons Attribution-ShareAlike 4.0 International</i> license.</p>
+  </a>
+</div>
+
+  <div class="license-container">
+    <img class="inline-icon" src="/img/github/GitHub-Mark-120px-plus.png"> <a href="https://github.com/neuhalje/presentation_git-from-the-inside">github.com/neuhalje/presentation_git-from-the-inside</a>
+  <div class="license-container">
+</a>
+
+<ul>
+<li><a href="licenses.txt">licenses collected from node_modules</a></li>
+
+</ul>
+</section>
+</section>
+</div>
+</div>
+<script src="js/reveal.js/dist/reveal.js"></script>
+<script src="js/reveal.js/plugin/highlight/highlight.js"></script>
+<script src="js/reveal.js/"></script>
+<script src="js/reveal.js/plugin/notes/notes.js"></script>
+<script src="js/reveal.js/plugin/search/search.js"></script>
+<script src="js/reveal.js/plugin/zoom/zoom.js"></script>
+<script>
+// Full list of configuration options available here:
+// https://github.com/hakimel/reveal.js#configuration
+Reveal.initialize({
+
+controls: true,
+progress: true,
+history: true,
+center: true,
+slideNumber: 'c',
+rollingLinks: true,
+keyboard: true,
+mouseWheel: false,
+fragmentInURL: false,
+hashOneBasedIndex: false,
+pdfSeparateFragments: true,
+
+overview: true,
+width: 1200,
+height: 900,
+margin: 0.00,
+minScale: 0.50,
+maxScale: 2.50,
+
+transition: 'fade',
+transitionSpeed: 'default',
+showNotes: window.location.search.match( /print-pdf/gi ) ? 'separate-page' : false,
+totalTime:2700,
+
+// Plugins with reveal.js 4.x
+plugins: [ RevealHighlight, , RevealNotes, RevealSearch, RevealZoom ],
+
+// Optional libraries used to extend reveal.js
+dependencies: [
+{src: 'js/plugin/d3graphviz/plugin.js', async: true}]
+
+});
+</script>
+</body>
+</html>
