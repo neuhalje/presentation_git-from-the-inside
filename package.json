@@ -134,14 +134,14 @@
     "gulp-zip": "^5.0.2",
     "highlight.js": "^10.6.0",
     "license-checker": "^25.0.1",
-    "marked": "^1.2.9",
+    "marked": ">=2.0.0",
     "merge-stream": "^2.0.0",
     "node-qunit-puppeteer": "^2.0.3",
     "qunit": "^2.14.0",
     "rollup": "^2.39.0",
     "rollup-plugin-terser": "^5.3.1",
     "vinyl": "^2.2.1",
-    "yargs": "^15.4.1"
+    "yargs": "^16.2.0"
   },
   "browserslist": "> 0.5%, IE 11, not dead",
   "eslintConfig": {
