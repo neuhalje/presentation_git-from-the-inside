@@ -876,21 +876,21 @@ ${n! \over k!(n-k)!} = {n \choose k}$
 #+begin_export html
 <div class="license-container">
 <a href="https://neuhalfen.name/">
-    <img class="inline-icon" src="/img/wikimedia/Copyright.svg"/><span> by Jens Neuhalfen</span>
+    <img class="inline-icon" src="./img/wikimedia/Copyright.svg"/><span> by Jens Neuhalfen</span>
 </a>
 </div>
 
 <div class="license-container">
   <a href="http://creativecommons.org/licenses/by-sa/4.0/">
-    <img class="inline-icon" src="/img/cc/cc.svg"/>
-    <img class="inline-icon" src="/img/cc/by.svg"/>
-    <img class="inline-icon" src="/img/cc/sa.svg"/>
+    <img class="inline-icon" src="./img/cc/cc.svg"/>
+    <img class="inline-icon" src="./img/cc/by.svg"/>
+    <img class="inline-icon" src="./img/cc/sa.svg"/>
     <p>This work is licensed under a <i>Creative Commons Attribution-ShareAlike 4.0 International</i> license.</p>
   </a>
 </div>
 
   <div class="license-container">
-    <img class="inline-icon" src="/img/github/GitHub-Mark-120px-plus.png"> <a href="https://github.com/neuhalje/presentation_git-from-the-inside">github.com/neuhalje/presentation_git-from-the-inside</a>
+    <img class="inline-icon" src="./img/github/GitHub-Mark-120px-plus.png"> <a href="https://github.com/neuhalje/presentation_git-from-the-inside">github.com/neuhalje/presentation_git-from-the-inside</a>
   <div class="license-container">
 </a>
 #+end_export
