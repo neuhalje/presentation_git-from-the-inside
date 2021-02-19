@@ -449,10 +449,10 @@ git commit -m"3rd commit - only master" --allow-empty
 
 #+NAME: new-branch-create
 #+begin_src bash :exports none :results output
-git checkout -b devel HEAD^1
-git commit -m'#1 on devel' --allow-empty
-git commit -m'#2 on devel' --allow-empty
-git log --oneline
+git checkout -b devel HEAD^1 # Start "devel" from "2nd commit"
+git commit -m'Commit 1 on devel' --allow-empty >/dev/null # Ignore output
+git commit -m'Commit 2 on devel' --allow-empty >/dev/null
+git log --oneline  # since we have "devel" checked out, this shows the "devel" branch
 #+end_src
 ** Multiple Branches: practical II/II
 #+begin_src dot :file org-gen/commit-result.svg :cmdline -Tsvg :exports results :noweb yes :dir . :var g=dot-graph-from-git(repo="/tmp/git-from-the-inside/branches")
@@ -460,7 +460,9 @@ $g
 #+end_src
 
 #+begin_src bash :exports both :results code
-git log devel --oneline --decorate
+#  --topo-order: Sort by graph layout, not date.
+#  --decorate: Print out the ref names of any commits that are shown.
+git log devel --oneline --decorate --topo-order
 #+end_src
 * Merge
 :PROPERTIES:
@@ -502,7 +504,7 @@ $g
 [[file:org-gen/merge-result.svg]]
 
 #+begin_src bash :exports both :results code
-git log --oneline --decorate
+git log --oneline --decorate --topo-order
 #+end_src
 ** Merge: a branch can be merged more than once
 {{{git_with_diff(new-branch-merge2)}}}
