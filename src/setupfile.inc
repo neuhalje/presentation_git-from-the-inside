@@ -10,6 +10,7 @@
 #+OPTIONS: toc:1 num:nil
 #+OPTIONS: timestamp:nil
 #+OPTIONS: ^:nil
+#+OPTIONS: tags:nil
 
 
 #+REVEAL_VERSION: 4
