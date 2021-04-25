@@ -11,7 +11,7 @@
 #+INCLUDE: git-tooling.inc
 
 #+REVEAL_THEME: ./css/themes/simple.css
-#+REVEAL_PLUGINS: (highlight d3graphviz notes search zoom)
+#+REVEAL_PLUGINS: (highlight notes search zoom)
 #+REVEAL_EXPORT_NOTES_TO_PDF: separate-page
 
 #+REVEAL_EXTRA_OPTIONS: totalTime:2700
