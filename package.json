@@ -1,5 +1,6 @@
 {
   "name": "git-from-the-inside",
+  "private": true,
   "version": "0.0.1",
   "description": "Git from the inside: slides",
   "homepage": "https://github.com/neuhalje/git-from-the-inside",
@@ -64,7 +65,7 @@
     "vars": {
       "distZip": "git-from-the-inside.zip",
       "licenses": "licenses.txt",
-      "build_org_docker": "xuxxux/org-re-reveal-builder:0.2",
+      "build_org_docker": "xuxxux/org-re-reveal-builder:0.3",
       "build_org_docker_local": "build-org",
       "build_org_docker_build_command": "/emacs/convert-to-html.sh /tmp/build",
       "serve": {
@@ -76,7 +77,7 @@
       "publishThese": [
         "**/*",
         "!**/*.tmp",
-        "!**/*.org",
+        "!**/*.org.*",
         "!**/#*",
         "!**/*.tmp",
         "!**/*.inc"
@@ -94,7 +95,7 @@
     "cssName": "style.css",
     "distZip": "git-from-the-inside.zip",
     "licenses": "licenses.txt",
-    "build_org_docker": "xuxxux/org-re-reveal-builder:0.1",
+    "build_org_docker": "xuxxux/org-re-reveal-builder:0.2",
     "build_org_docker_local": "build-org"
   },
   "keywords": [
