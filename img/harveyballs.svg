@@ -1,0 +1,54 @@
+  <svg display="none">
+    <defs>
+      <title>Komponenten für den Harvey Ball</title>
+      <symbol id="harveyball" viewBox="0 0 100 100">
+        <desc>Empty circle</desc>
+        <circle cx="50" cy="50" r="40" />
+      </symbol>
+      <symbol id="harvey-part-1of4" viewBox="0 0 100 100">
+        <desc>First quadrant</desc>
+        <path d="M 50 50 L 50 10 A 40 40 0 0 1 90 50 L 50 50" />
+      </symbol>
+      <symbol id="harvey-part-2of4" viewBox="0 0 100 100">
+        <desc>Second quadrant</desc>
+        <path d="M 50 50 L 50 10 A 40 40 0 0 1 50 90 L 50 50" />
+      </symbol>
+      <symbol id="harvey-part-3of4" viewBox="0 0 100 100">
+        <desc>Third quadrant</desc>
+        <path d="M 50 50 L 50 10 A 40 40 0 1 1 10 50 L 50 50" />
+      </symbol>
+      <symbol id="harvey-part-4of4" viewBox="0 0 100 100">
+        <desc>Fourth quadrant</desc>
+        <path d="M 50 50 L 50 10 A 40 40 0 0 0 10 50 L 50 50" />
+      </symbol>
+      <!-- composed -->
+      <symbol id="harveyball-0" viewBox="0 0 100 100">
+       <g><use href="#harveyball" class="harvey" /></g>
+      </symbol>
+      <symbol id="harveyball-25" viewBox="0 0 100 100">
+       <g>
+        <use href="#harveyball" class="harvey" />
+        <use href="#harvey-part-1of4" class="harvey-fill" />
+       </g>
+      </symbol>
+      <symbol id="harveyball-50" viewBox="0 0 100 100">
+       <g>
+        <use href="#harveyball" class="harvey" />
+        <use href="#harvey-part-2of4" class="harvey-fill" />
+       </g>
+      </symbol>
+      <symbol id="harveyball-75" viewBox="0 0 100 100">
+       <g>
+        <use href="#harveyball" class="harvey" />
+        <use href="#harvey-part-3of4" class="harvey-fill" />
+       </g>
+      </symbol>
+      <symbol id="harveyball-100" viewBox="0 0 100 100">
+       <g>
+        <use href="#harveyball" class="harvey" />
+        <use href="#harvey-part-3of4" class="harvey-fill" />
+        <use href="#harvey-part-4of4" class="harvey-fill" />
+       </g>
+      </symbol>
+    </defs>
+  </svg>

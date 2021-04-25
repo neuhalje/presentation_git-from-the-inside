@@ -1,0 +1,995 @@
+:PROPERTIES:
+:on:       <2021-01-10 Sun 23:57>
+:END:
+#+TITLE: GIT from the inside
+#+Subtitle: or: How GIT sees the world
+#+AUTHOR: Jens Neuhalfen
+#+EMAIL: jens@neuhalfen.name
+#+DATE: 2020-12-31
+#+SETUPFILE: setupfile.inc
+#+SETUPFILE: setupfile-d3graphviz.inc
+#+INCLUDE: git-tooling.inc
+
+#+REVEAL_THEME: ./css/themes/simple.css
+#+REVEAL_PLUGINS: (highlight notes search zoom)
+#+REVEAL_EXPORT_NOTES_TO_PDF: separate-page
+
+#+REVEAL_EXTRA_OPTIONS: totalTime:2700
+
+#+REVEAL_MISCINFO: https://github.com/neuhalje/presentation_git-from-the-inside
+#+REVEAL_TALK_URL: https://neuhalje.github.io/presentation_git-from-the-inside
+#+REVEAL_TALK_QR_CODE: does not exist
+
+#+REVEAL_TITLE_SLIDE: <h1>%t</h1><h2>%s</h2><h3>%A %a</h3><p><a href="%u">@gh-pages</a> &mdash; <a href="%u?print-pdf">@print</a> &mdash; <a href="%m">source</a></p> <p><div class="r-stretch license-container"><a href="./#/slide-LICENSE"><img class="inline-icon" src="./img/cc/cc.svg"/><img class="inline-icon" src="./img/cc/by.svg"/><img class="inline-icon" src="./img/cc/sa.svg"/> <b>LICENSE</b></a></div</p><p><ul><li>Press <b>s</b> for speakers view</li><li>Press <b>o</b> for overview</li></ul></p>
+
+* Why SCM?
+:PROPERTIES:
+:CUSTOM_ID: WHY_SCM
+:END:
+- SCM System :: *S*ource *C*code *M*anagement System
+- Tracks changes :: Who, When, What and Why
+- Time Machine :: Go back to any point in the past
+- Collaborative :: Allows multiple people to collaborate on a source set
+* What is a hash?
+:PROPERTIES:
+:CUSTOM_ID: WHAT_IS_A_HASH
+:END:
+#+BEGIN_NOTES
+For our purposes the following properties are important:
+- fixed length :: The length of $h$ is always the same, e.g. 160 bit for SHA-1.
+- deterministic :: The same data always computes to the same hash: $data_1 == data_2 \Rightarrow h(data_1) == h(data_2)$
+- collision resistant :: It is /{{{red(very unlikely)}}}/ that different data hashes to the same value: $h(data_1) == h(data_2) \Rightarrow data_1 == data_2$
+
+Since arbitrary long values can be hashed the [[https://en.wikipedia.org/wiki/Pigeonhole_principle][pigeon hole principle]] tells us that there must be collisions.
+#+END_NOTES
+
+A /hash/ $h(x)$ is a *fixed length* value derived from some data $x$.
+
+\begin{align}
+A == B  &\Rightarrow h(A) == h(B) & \text{always} \\
+h(A) == h(B)  &\Rightarrow A == B & \text{almost always (*)}
+\end{align}
+
+(*) It is /{{{red(very unlikely)}}}/ that different values hashes to the same hash. If this happens it is called a /hash collision/.
+
+#+BEGIN_NOTES
+Given =n= random integers drawn from a discrete uniform distribution with range =[1,d]=, *what is the probability =p(n; d)= that at least two numbers are the same?*
+
+\begin{equation}
+p(n; d) \approx 1-\left({\frac {d-1}{d}}\right)^{\frac {n(n-1)}{2}}
+\end{equation}
+
+Source: [[https://en.wikipedia.org/wiki/Birthday_problem]]
+#+END_NOTES
+** How likely is a hash collision?
+#+BEGIN_NOTES
+Since arbitrary long values can be hashed to a fixed length hash the [[https://en.wikipedia.org/wiki/Pigeonhole_principle][pigeon hole principle]] tells us that there *must* be collisions.
+For =sha1= and ~git~ this probability depends on the number of changed files & commits (=n=).
+#+END_NOTES
+
+#+NAME: probability-of-collisions
+#+begin_src gnuplot :exports results :file org-gen/hash-collision-probability.svg
+reset
+
+set terminal svg enhanced
+set xlabel 'Number of commits/files/..'
+set ylabel 'Probability of a collision'
+# set arrow from 0,0.5073 to 23,0.5073 nohead
+# set label 'jackpot at 22,-0.025 font ",16"
+set grid ytics
+
+set title "Putting it all together"
+d = 2**160
+lottery = 1.0 / 139838160.0
+break = 144577865770750394368
+set arrow from break,0 to break,lottery nohead
+
+# set yrange [0:1]
+f(x) =  1 - exp( -1 * x * (x - 1) / (2*d)   )
+
+plot [1:2.5*10**20] f(x) title "probability of collision" with lines lw 3, lottery title "lottery win (1 : 139.838.160)" lw 3 dashtype 8
+#+end_src
+
+
+#+HTML: <div class="two-rows r-stretch">
+
+#+HTML: <div class="top-left">
+#+attr_html: :class scale-height
+#+RESULTS: probability-of-collisions
+[[file:org-gen/hash-collision-probability.svg]]
+#+HTML: </div>
+
+
+#+HTML: <div class="bottom-left text">
+Collisions depend on the number of changed files & commits.
+
+**Rule of thumb:**
+{{{green(Don't create more than $10^{10}$ (ten US-billion) files with $10^{10}$ commits per repository)}}}
+#+HTML: </div>
+#+HTML: </div> <!-- container -->
+* ~Git~ basics
+:PROPERTIES:
+:header-args: :var repo="/tmp/git-from-the-inside/branches" :dir /tmp/git-from-the-inside/branches
+:repo: /tmp/git-from-the-inside/branches
+:CUSTOM_ID: FIRST_BRANCH
+:END:
+** Mental model
+Think of git as {{{green(a filesystem with extra dimensions)}}}, or, if you like math, a {{{green(directed acyclic graph.)}}}
+
+#+name: dag
+#+begin_src dot :file org-gen/dag.svg :cmdline -Tsvg :exports results :dir .
+digraph G {
+     directed -> acyclic  [label="directed: edges have a direction"];
+    acyclic -> "graph";
+    acyclic -> "error" [style = dashed; arrowhead = none; color = red; fontcolor = red; label="error: edges need a direction"]
+    "graph" -> "directed" [style = dashed; color = red;fontcolor = red; label="error: no cycles"]
+    directed -> "graph";
+}
+#+end_src
+
+#+RESULTS: dag
+[[file:org-gen/dag.svg]]
+
+** The "git file system"
+:PROPERTIES:
+:CUSTOM_ID: GIT_FILE_SYSTEM
+:END:
+The following pages show how ~git~ implements the "file system" used for its magic. Files, directories and commits are handled all in the same way!
+*** What is /content addressed storage/?
+:PROPERTIES:
+:CUSTOM_ID: CONTENT_ADDRESSED_STORAGE
+:END:
+#+BEGIN_NOTES
+A /content addressable storage/ is a very simple database with two operations:
+- put(data) --> hash_data :: Write an object into the storage and get the objects hash back as key.
+- get(hash_data) --> data :: Pass a hash and get the data. ~Git~ uses [[https://en.wikipedia.org/wiki/SHA-1][SHA-1]] as hashing function (=sha1(data) == hash_data=).
+
+The main advantages of such a storage are:
+- Storing one =data= multiple times takes /no/ additional storage space.
+- The implementation is extremely simple.
+
+Disadvantages:
+- /Bootstrapping/ - the hashes themselves say nothing about the data. At least some external storage is needed.
+- Deleting objects needs additional work (/reference counting/).
+#+END_NOTES
+{{{green(A /content addressed storage/ is a very simple database)}}}
+#+HTML: <div class="two-rows two-columns-equal r-stretch">
+#+HTML: <div class="bottom-left two-cols-wide">
+| PRO                   | CON                                |
+|-----------------------+------------------------------------|
+| - simple              | - no =query= method besides /hash/ |
+| - data not duplicated |                                    |
+#+HTML: </div>
+#+HTML: <div  class="top-left">
+#+NAME: tree_objectstore.svg
+#+attr_html: :class scale-to-cell
+[[./img/tree_objectstore.svg]]
+#+HTML: </div>
+#+HTML: <div  class="top-right">
+- put :: $put(data) \to hash_{data}$
+- get :: $get(hash_{data}) \to data$
+
+{{{green(sha1(data) == hash)}}}
+#+HTML: </div>
+#+HTML: </div>
+*** Empty Object Storage
+#+BEGIN_NOTES
+#+END_NOTES
+
+#+HTML: <div class="two-rows two-columns-equal r-stretch">
+#+html:  <img class="top-left scale-height" src="img/objectstore-0.png"></img>
+#+HTML: <div class="bottom-left text">
+This is the empty object store. It is located in the =.git/= directory
+#+HTML: </div>
+#+HTML: </div> <!-- container -->
+*** File Content
+#+BEGIN_NOTES
+#+END_NOTES
+
+#+HTML: <div class="two-rows two-columns-equal r-stretch">
+#+html:  <img class="top-left scale-height" src="img/objectstore-1.png"></img>
+#+html:  <img class="top-right scale-height two-rows-high" src="img/tree_complete-1.png"></img>
+#+HTML: <div class="bottom-left text">
+We can store the /content/ of =README.txt= but {{{red(not the /file name/.)}}} ~Git~ calls this a =blob=.
+#+HTML: </div>
+#+HTML: </div> <!-- container -->
+*** Directories
+#+BEGIN_NOTES
+#+END_NOTES
+
+#+HTML: <div class="two-rows two-columns-equal r-stretch">
+#+html:  <img class="top-left scale-height" src="img/objectstore-2.png"></img>
+#+html:  <img class="top-right scale-height two-rows-high" src="img/tree_complete-2.png"></img>
+#+HTML: <div class="bottom-left text">
+A directory (=tree= in ~git~-speak) is a special file that contains /file names/ and links to the content via the /hash/.
+E.g. {{{red(=B 0xafde README.txt=)}}} is the README.
+#+HTML: </div>
+#+HTML: </div> <!-- container -->
+*** The First Commit
+#+BEGIN_NOTES
+#+END_NOTES
+
+#+HTML: <div class="two-rows two-columns-equal r-stretch">
+#+html:  <img class="top-left scale-height" src="img/objectstore-3.png"></img>
+#+html:  <img class="top-right scale-height two-rows-high" src="img/tree_complete-3.png"></img>
+#+HTML: <div class="bottom-left text">
+A commit (circle) points to a =tree= (the files) and has e.g. a commit message.
+#+HTML: </div>
+#+HTML: </div> <!-- container -->
+*** The Second Commit
+#+HTML: <div class="two-rows two-columns-equal r-stretch">
+#+html:  <img class="top-left scale-height" src="img/objectstore-4.png"></img>
+#+html:  <img class="top-right scale-height two-rows-high" src="img/tree_complete-4.png"></img>
+#+HTML: <div class="bottom-left text">
+- Most of the time a commit points to a /parent/ commit.
+- See how someone edited =README.txt= ({{{red(=B 0xdead README.txt=)}}})?
+#+HTML: </div>
+#+HTML: </div> <!-- container -->
+*** What do changes mean?
+#+BEGIN_NOTES
+This is very important to understand!
+#+END_NOTES
+
+#+HTML: <div class="two-rows two-columns-equal r-stretch">
+#+html:  <img class="top-right scale-height two-rows-high" src="img/tree_complete-4.png"></img>
+#+HTML: <div class="top-left two-rows-high text">
+Changing =README.txt= also changes the =tree=! The hash changed from {{{red(=0x4711=)}}} to {{{red(=0x0815=)}}}.
+
+{{{green(*This is very important*)}}}: Changing a file will change its hash. This will change the content of the parent tree. This will change the hash of the parent tree. *This will change all the tree hashes up to the top*.
+#+HTML: </div>
+#+HTML: </div> <!-- container -->
+** The first branch
+Starting out from the filesystem, let's have a look at how a branch can be constructed.
+
+In order to to so, we need to answer a very important question:
+
+*How does ~git~ know which commit is the /current/ commit?*
+*** How ~git~ finds the parent commit
+:PROPERTIES:
+:ID:       cbf6a54d-0e1f-4622-8424-2d9a1c8abbb6
+:END:
+*Let's recapitulate*:
+- ~Git~ heavily relies on /content addressed storage/
+- Content addressed storage is like /chaotic storage/
+  + Very efficient
+  + no query method besides ~get(hash)~
+  + *Needs external paperwork*
+
+In order to know the /current/ commit, we need to look at the paperwork.
+*** Initialize repository
+#+BEGIN_NOTES
+The content of =.git/= an implementation specific.
+#+END_NOTES
+
+*Create a fresh repository:*
+
+#+NAME: first-branch-init-repo
+#+ATTR_REVEAL: :code_attribs data-line-numbers
+#+begin_src bash :exports both :results code :noweb strip-export :dir /tmp
+<<force-temp-repo>>
+mkdir -p "${repo}" && cd "${repo}"
+git init
+#+end_src
+
+#+ATTR_REVEAL: :code_attribs data-line-numbers="1"
+#+RESULTS: first-branch-init-repo
+
+#+begin_src bash :exports results :results silent
+git config --get user.name || git config --add user.name "Alice"
+git config --get user.email || git config --add user.email "alice@neuhalfen.name"
+#+end_src
+
+*and commit something:*
+
+#+NAME: first-branch-first-commit
+#+ATTR_REVEAL: :code_attribs data-line-numbers
+#+begin_src bash :exports both :results code
+echo "Please read me" >README.txt
+git add README.txt
+git commit -m"1st commit"
+#+end_src
+
+#+ATTR_REVEAL: :code_attribs data-line-numbers="1"
+#+RESULTS: first-branch-first-commit
+/The value call_git(cmd="rev-parse --short HEAD") in the first line of the output is the ID of the new commit./
+*** External storage in =.git/=
+*Question:* How does ~git~ know which commit is the /current/ commit?
+
+*Answer:* The =.git/= directory provides additional context:
+
+#+NAME: first-branch-dot-git-tree
+#+ATTR_REVEAL: :code_attribs data-line-numbers
+#+begin_src bash :exports both :results code
+tree -L 1 -hF  "${repo}/.git"
+#+end_src
+
+#+ATTR_REVEAL: :code_attribs data-line-numbers="3,4,12"
+#+RESULTS: first-branch-dot-git-tree
+
+- =.git/HEAD= - Tells ~git~ what the current commit is
+- =.git/refs/..= and =.git/branches/..=  - later...
+*** =./git/HEAD=
+:PROPERTIES:
+:CUSTOM_ID: HEAD
+:END:
+Let's see what =.git/HEAD= contains.
+#+NAME: first-branch-dot-git-HEAD--show-HEAD
+#+ATTR_REVEAL: :code_attribs data-line-numbers
+#+begin_src bash :exports both :results code
+cat .git/HEAD
+#+end_src
+
+#+ATTR_REVEAL: :code_attribs data-line-numbers
+#+RESULTS: first-branch-dot-git-HEAD--show-HEAD
+
+What does ~git~ make of call_shell(cmd="cat .git/HEAD")?
+#+NAME: first-branch-dot-git-HEAD--rev-parse
+#+ATTR_REVEAL: :code_attribs data-line-numbers
+#+begin_src bash :exports both :results code
+git rev-parse  refs/heads/master
+#+end_src
+
+What is the last commit?
+#+NAME: first-branch-dot-git-HEAD--git-log
+#+ATTR_REVEAL: :code_attribs data-line-numbers
+#+begin_src bash :exports both :results code
+git log
+#+end_src
+
+#+ATTR_REVEAL: :code_attribs data-line-numbers="1"
+#+RESULTS: first-branch-dot-git-HEAD--git-log
+
+*** =./git/HEAD= part II
+*Question:* How does ~git~ know which commit is the /current/ commit?
+
+*Answer:* =HEAD= points to the current branch. The branch resolves to the current commit.
+#+begin_src dot :file "org-gen/dot-git-head.svg" :cmdline -Tsvg :dir . :exports results
+digraph D {
+    rankdir=LR;
+    bgcolor=transparent;
+    HEAD [ shape = none
+          label = <<table border="0" cellspacing="0">
+                    <tr>
+                        <td  border="1"  bgcolor="lightgray">file: <b>.git/HEAD</b></td>
+                    </tr>
+                    <tr>
+                       <td port="content" border="1">ref: <b>refs/heads/master</b></td>
+                    </tr>
+                </table>>
+                ]
+    master [ shape = none
+          label = <<table border="0" cellspacing="0">
+                    <tr>
+                        <td port="name" border="1" bgcolor="lightgray">file: <b>refs/heads/master</b></td>
+                    </tr>
+                    <tr>
+                       <td port="hash" border="1"><b>0x1234</b></td>
+                    </tr>
+                </table>>
+                ]
+
+    commit [shape=circle label=<commit<br/><b>0x1234...</b>>];
+
+    cas [ shape = none
+          label = <<table border="0" cellspacing="0">
+                    <tr>
+                        <td  border="1" colspan="2" bgcolor="lightgray"><b>content addressed storage</b></td>
+                    </tr>
+                    <tr>
+                        <td  border="1" bgcolor="lightgray"><i>hash</i></td>
+                        <td  border="1" bgcolor="lightgray"><i>Content</i></td>
+                    </tr>
+                    <tr>
+                       <td port="port1" border="1">0x4711</td>
+                       <td  border="1">'Please read me' ..</td>
+                    </tr>
+                    <tr>
+                       <td port="port2" border="1"><b>0x1234</b></td>
+                       <td port="port2b" border="1">commit: '1st commit' </td>
+                    </tr>
+                    <tr>
+                       <td port="port3" border="1">0xabcd</td>
+                       <td  border="1">tree: '0x4711 T README.txt...' </td>
+                    </tr>
+                </table>>
+                ]
+    HEAD:content -> master:name;
+    master:hash -> cas:port2;
+    cas:port2b -> commit;
+}
+#+end_src
+
+* Commit
+:PROPERTIES:
+:header-args: :var repo="/tmp/git-from-the-inside/branches" :dir /tmp/git-from-the-inside/branches
+:repo: /tmp/git-from-the-inside/branches
+:CUSTOM_ID: commit
+:END:
+** Working on one branch
+{{{git_with_diff(one-branch-2nd-commit)}}}
+#+HTML: <div class="two-rows r-stretch">
+#+HTML: <div  class="bottom-left">
+#+begin_src bash :exports code :noweb yes
+<<one-branch-2nd-commit>>
+#+end_src
+
+{{{git_with_diff_result(one-branch-2nd-commit)}}}
+#+HTML: </div>
+#+HTML: <div id='one-branch-2nd-commit-result'  scale='3' class="top-left">
+#+HTML: </div> <!-- container -->
+
+#+NAME: one-branch-2nd-commit
+#+begin_src bash :exports none :results output
+git commit -m'2nd commit' --allow-empty
+#+end_src
+** Multiple Branches: Theory
+#+BEGIN_NOTES
+Before the commit =HEAD= points to =devel= and =devel= points to =D=. After the commit =devel= points to =E=.
+#+END_NOTES
+
+#+HTML: <div class="scale-width r-stretch">
+[[file:img/commits_devel_branch.svg]]
+#+HTML: </div>
+** Multiple Branches: practical I/II
+#+begin_src bash :exports results :results silent
+git commit -m"3rd commit - only master" --allow-empty
+#+end_src
+
+{{{git_with_diff(new-branch-create)}}}
+#+HTML: <div class="two-rows r-stretch">
+#+HTML: <div  class="bottom-left">
+#+begin_src bash :exports code :noweb yes
+<<new-branch-create>>
+#+end_src
+
+{{{git_with_diff_result(new-branch-create)}}}
+#+HTML: </div>
+#+HTML: <div id='new-branch-create-result'  scale='1.5' class="top-left">
+#+HTML: </div> <!-- container -->
+
+#+NAME: new-branch-create
+#+begin_src bash :exports none :results output
+git checkout -b devel HEAD^1 # Start "devel" from "2nd commit"
+git commit -m'Commit 1 on devel' --allow-empty >/dev/null # Ignore output
+git commit -m'Commit 2 on devel' --allow-empty >/dev/null
+git log --oneline  # since we have "devel" checked out, this shows the "devel" branch
+#+end_src
+** Multiple Branches: practical II/II
+#+begin_src dot :file org-gen/commit-result.svg :cmdline -Tsvg :exports results :noweb yes :dir . :var g=dot-graph-from-git(repo="/tmp/git-from-the-inside/branches")
+$g
+#+end_src
+
+#+begin_src bash :exports both :results code
+#  --topo-order: Sort by graph layout, not date.
+#  --decorate: Print out the ref names of any commits that are shown.
+git log devel --oneline --decorate --topo-order
+#+end_src
+* Merge
+:PROPERTIES:
+:header-args: :var repo="/tmp/git-from-the-inside/branches" :dir /tmp/git-from-the-inside/branches
+:repo: /tmp/git-from-the-inside/branches
+:CUSTOM_ID: merge
+:END:
+A /merge commit/ has more than one parent and includes the commits of multiple branches.
+** Merge: theory
+#+HTML: <div class="scale-width r-stretch">
+[[file:img/commits_devel_branch_merge.svg]]
+#+HTML: </div>
+** Merge: how it works
+{{{git_with_diff(new-branch-merge)}}}
+#+HTML: <div class="two-rows r-stretch">
+#+HTML: <div  class="bottom-left">
+#+begin_src bash :exports code :noweb yes
+<<new-branch-merge>>
+#+end_src
+
+{{{git_with_diff_result(new-branch-merge)}}}
+#+HTML: </div>
+#+HTML: <div id='new-branch-merge-result'  scale='1.4' class="top-left scale-height">
+#+HTML: </div>
+
+#+NAME: new-branch-merge
+#+begin_src bash :exports none :results output
+git checkout master
+
+# GIT_MERGE_AUTOEDIT=no  uses the automatically created  commit message
+GIT_MERGE_AUTOEDIT=no git merge devel
+#+end_src
+** Merge: all commits belong to the graph
+#+begin_src dot :file org-gen/merge-result.svg :cmdline -Tsvg :exports results :noweb yes :dir . :var g=dot-graph-from-git(repo="/tmp/git-from-the-inside/branches")
+$g
+#+end_src
+
+#+RESULTS:
+[[file:org-gen/merge-result.svg]]
+
+#+begin_src bash :exports both :results code
+git log --oneline --decorate --topo-order
+#+end_src
+** Merge: a branch can be merged more than once
+{{{git_with_diff(new-branch-merge2)}}}
+#+HTML: <div class="two-rows r-stretch">
+#+HTML: <div  class="bottom-left">
+#+begin_src bash :exports code :noweb yes
+<<new-branch-merge2>>
+#+end_src
+
+{{{git_with_diff_result(new-branch-merge2)}}}
+#+HTML: </div>
+#+HTML: <div id='new-branch-merge2-result'  scale='1.4' class="top-left scale-height">
+#+HTML: </div>
+
+#+NAME: new-branch-merge2
+#+begin_src bash :exports none :results output
+git checkout devel
+git commit --allow-empty -m"Hotfix on devel"
+git checkout master
+
+GIT_MERGE_AUTOEDIT=no git merge devel
+#+end_src
+** Merge Summary
+#+HTML: <div class="two-columns r-stretch">
+#+HTML: <div  class="top-right">
+#+begin_src dot :file org-gen/merge-result2.svg :cmdline -Tsvg :exports results :noweb yes :dir . :var g=dot-graph-from-git(repo="/tmp/git-from-the-inside/branches")
+$g
+#+end_src
+#+HTML: </div><div  class="top-left">
+- *PRO*
+  + Explicit, merge stays a part of the graph
+- *CON*
+  + Graph gets complex
+  + Not optimal for /work in progress/
+#+HTML: </div>
+* Rebase
+:PROPERTIES:
+:header-args: :var repo="/tmp/git-from-the-inside/rebase" :dir /tmp/git-from-the-inside/rebase
+:repo: /tmp/git-from-the-inside/rebase
+:CUSTOM_ID: rebase
+:END:
+/Rebasing/ "transplants" commits and can be a better way to merge.
+
+#+begin_src bash :exports results :results silent :dir .
+mkdir -p "${repo}" && cd "${repo}"
+
+git init .
+git config --get user.name || git config --add user.name "Alice"
+git config --get user.email || git config --add user.email "alice@neuhalfen.name"
+
+git commit --allow-empty -m"master: 1st commit"
+git commit --allow-empty -m"master: 2nd commit"
+
+git checkout -b devel
+echo "x" >> change_devel
+git add  change_devel && git commit -m"devel: 1st commit"
+echo "x" >> change_devel
+git add  change_devel && git commit -m"devel: 2nd commit"
+
+git checkout master
+echo "x" >> change_master
+git add  change_master && git commit  -m"master: 3rd commit"
+#+end_src
+
+** Rebase: theory
+#+HTML: <div class="scale-width r-stretch">
+[[file:img/commits_devel_branch_rebase.svg]]
+#+HTML: </div>
+** Rebase: how it works
+{{{git_with_diff(new-branch-rebase)}}}
+#+HTML: <div class="two-rows r-stretch">
+#+HTML: <div  class="bottom-left">
+#+begin_src bash :exports code :noweb yes
+<<new-branch-rebase>>
+#+end_src
+
+{{{git_with_diff_result(new-branch-rebase)}}}
+#+HTML: </div>
+#+HTML: <div id='new-branch-rebase-result'  scale='1.4' class="top-left scale-height">
+#+HTML: </div>
+
+#+NAME: new-branch-rebase
+#+begin_src bash :exports none :results output
+git checkout devel
+
+git rebase master
+#+end_src
+** Rebase: /All/ rebased commits are changed
+#+begin_src dot :file org-gen/rebase-result.svg :cmdline -Tsvg :exports results :noweb yes :dir . :var g=dot-graph-from-git(repo="/tmp/git-from-the-inside/rebase")
+$g
+#+end_src
+
+#+begin_src bash :exports both :results code
+git log devel --oneline --decorate
+#+end_src
+** Rebase: Merging gets easy
+{{{git_with_diff(new-branch-rebase-merge)}}}
+#+HTML: <div class="two-rows r-stretch">
+#+HTML: <div  class="bottom-left">
+#+begin_src bash :exports code :noweb yes
+<<new-branch-rebase-merge>>
+#+end_src
+
+{{{git_with_diff_result(new-branch-rebase-merge)}}}
+#+HTML: </div>
+#+HTML: <div id='new-branch-rebase-merge-result'  scale='1.2' class="top-left scale-height">
+#+HTML: </div>
+
+#+NAME: new-branch-rebase-merge
+#+begin_src bash :exports none :results output
+git checkout master
+
+GIT_MERGE_AUTOEDIT=no git merge devel
+#+end_src
+** Rebase Summary
+#+HTML: <div class="two-columns r-stretch">
+#+HTML: <div  class="top-right">
+#+begin_src dot :file org-gen/rebase-result2.svg :cmdline -Tsvg :exports results :noweb yes :dir . :var g=dot-graph-from-git(repo="/tmp/git-from-the-inside/rebase")
+$g
+#+end_src
+#+HTML: </div><div  class="top-left">
+- *PRO*
+  + Simplified graph
+  + Suitable for /work in progress/
+- *CON*
+  + Merge no longer explicit
+  + /CAVE =push -f=/
+#+HTML: </div>
+* Remote
+:PROPERTIES:
+:CUSTOM_ID: remotes
+:END:
+- A =remote= repository is just a normal repository
+- Both repositories (remote and local) work with the same DAG
+- The remote repository can have any name
+  + Most often it is called =origin=
+  + The branches pulled from =origin= are named =origin/...=. E.g. =origin/master=
+  + Your branches /follow/ remote branches. E.g. =master= follows =origin/master=
+- You can have as many remotes as you like!
+** Remote: how it works
+#+HTML: <div class="scale-width r-stretch">
+[[file:img/commits_remote.svg]]
+#+HTML: </div>
+** Remote: /non fast forward/
+#+HTML: <div class="scale-width r-stretch">
+[[file:img/commits_remote_nonff.svg]]
+#+HTML: </div>
+** Remote: /push -f/ - a tragedy in V acts
+Why is ~git push -f~ considered a bad idea? And when would you need it?
+
+- ~git rebase~ can change history
+- So does e.g. ~git reset HEAD^~
+- If you change /published/ history you'd need ~git push -f~
+- *But what happens when Bob bases his work on yours?*
+** ~git push -f~ Act I: /Bob added a feature!/
+#+HTML: <div class="scale-height r-stretch">
+[[file:img/commits_push_rebased_act_i.svg]]
+#+HTML: </div>
+** ~git push -f~ Act II: /But my history is ugly!/
+#+HTML: <div class="scale-height r-stretch">
+[[file:img/commits_push_rebased_act_ii.svg]]
+#+HTML: </div>
+** ~git push -f~ Act III: /It's just a little bit of history rewriting/
+#+HTML: <div class="scale-height r-stretch">
+[[file:img/commits_push_rebased_act_iii.svg]]
+#+HTML: </div>
+** ~git push -f~ Act IV: Drama foreshadowing
+#+HTML: <div class="scale-height r-stretch">
+[[file:img/commits_push_rebased_act_iv.svg]]
+#+HTML: </div>
+** ~git push -f~ Act V: Explanations are needed
+#+HTML: <div class="scale-height r-stretch">
+[[file:img/commits_push_rebased_act_v.svg]]
+#+HTML: </div>
+* Wrapping it up
+:PROPERTIES:
+:CUSTOM_ID: wrapping-it-up
+:END:
+[[file:org-gen/dag.svg]]
+- Git relies on a *directed acyclic graph* (DAG)
+  - {{{green(Adding things)}}} to the graph is easy
+  - {{{red(Removing things)}}} from the graph (~push -f~) /can/ get messy
+- Git relies on a *content addressable storage*
+  + All hex numbers (~0abef12...~) are hashes used to build the DAG
+** Merge vs. Rebase
+#+HTML: <div class="scale-width r-stretch">
+[[file:img/merge_vs_rebase.svg]]
+#+HTML: </div>
+
+* Git and BitCoin
+:PROPERTIES:
+:CUSTOM_ID: bitcoin
+:END:
+- *Git* and *BitCoin* are based on a *DAG* linked via *content addressing*
+- In *BitCoin* the longest "branch wins"
+- Generating "commits" in *BitCoin* ("blocks")
+  + Gives you money
+  + Is artificialy made very difficult
+#+begin_src python
+fiddle = 0
+while True:
+    my_block = build_block(last_block_hash, fiddle, my_transactions)
+
+    my_block_hash = hash(my_block)
+    if my_block_hash.startswith("0"* 19):
+        break
+    else:
+        fiddle = fiddle + 1        # Bad luck - No new block
+print("Yay, I found a new Block!")
+#+end_src
+
+To find a hash that starts wih 19 zeroes in hexadecimal you need a *lot* of luck. Or ~ $10^{11}$ guesses.
+** BitCoin: Git
+  + Data is written in *commits*
+  + The *author* writes the commit
+  + Commits are linked via their hash
+  + no magic money
+** BitCoin: BitCoin
+  + Transactions are written in *blocks*
+    - One *block* can hold 10.000 transactions
+  + The *miner* writes the block
+    - With some extra work - the 40 (hex-) digit long hash of the new block needs to start with 19 zeros (04/2021)
+    - The first transaction of each block is to /magically give the miner some BTC/
+  + Each block links to the previous block via its hash
+    - Only the longest chain is "the truth"
+* Examples                                                                                                              :noexport:
+The following examples can be skipped via a =:noexport= tag on this headline
+** Notes and timing
+:PROPERTIES:
+:reveal_extra_attr: data-timing="300"
+:END:
+#+BEGIN_NOTES
+These notes are shown in the speakers view.
+#+END_NOTES
+- Press =S= to see notes (see [[https://revealjs.com/speaker-view/][the reveal.js documentation]]).
+- Set ~#+REVEAL_EXTRA_OPTIONS: totalTime:2700~ to set the total time for the slides to 45min
+- Set ~:reveal_extra_attr: data-timing="120"~ to set a timer for this slide (shown in the speakers notes) to 2min
+- Reveal automatically calculates the duration of the slides without ~data-timing~
+
+| Duration in minutes | Value for =data-timing= / =totalTime= |
+|---------------------+---------------------------------------|
+|                   1 |                                    60 |
+|                   5 |                                   300 |
+|                  10 |                                   600 |
+|                  30 |                                  1800 |
+|                  45 |                                  2700 |
+|                  60 |                                  3600 |
+|                  90 |                                  5400 |
+#+TBLFM: $2=$1*60
+
+** CSS
+:PROPERTIES:
+:CUSTOM_ID: example_css
+:END:
+Some CSS classes have been defined
+*** Two Coloumns
+=.two-columns=
+#+begin_export html
+<div class="two-columns r-stretch" style="background:black">
+<div style="background:red">Left</div>
+<div style="background:blue">Right</div>
+</div>
+#+end_export
+
+*** Two Coloumns, two rows
+=.two-columns .two-rows=
+#+begin_export html
+<div class="two-columns two-rows r-stretch" style="background:black">
+<div style="background:red">Top Left</div>
+<div style="background:blue">Top Right</div>
+<div style="background:green">Bottom Left</div>
+<div style="background:yellow">Bottom Right</div>
+</div>
+#+end_export
+*** Two Coloumns, two rows - row 1 spans two cols
+=.two-columns .two-rows=
+#+begin_export html
+<div class="two-columns two-rows r-stretch" style="background:black">
+<div style="background:red" class="top-left two-cols-wide">Top Left and right</div>
+<div style="background:green" class="bottom-left">Bottom Left</div>
+<div style="background:yellow" class="bottom-right">Bottom Right</div>
+</div>
+#+end_export
+*** Two Coloumns, two rows + notes
+=.two-columns .two-rows-notes=
+#+begin_export html
+<div class="two-columns two-rows-notes r-stretch" style="background:black">
+<div style="background:red">Top Left</div>
+<div style="background:blue">Top Right</div>
+<div style="background:green">Bottom Left</div>
+<div style="background:yellow">Bottom Right</div>
+<div style="background:orange" class="note">NOTE</div>
+</div>
+#+end_export
+*** Two Coloumns, two rows + notes (long notes)
+=.two-columns .two-rows-notes=
+#+begin_export html
+<div class="two-columns two-rows-notes r-stretch" style="background:black">
+<div style="background:red">Top Left</div>
+<div style="background:blue">Top Right</div>
+<div style="background:green">Bottom Left</div>
+<div style="background:yellow">Bottom Right</div>
+#+end_export
+
+#+HTML: <div style="background:orange" class="note">
+The notes
+
+- can span multiple
+- lines and will resize
+- automatically
+#+HTML: </div>
+#+HTML: </div> <!-- container-->
+*** Two Coloumns, two rows + notes (placed via CSS class)
+=.two-columns .two-rows-notes= but placed via CSS class
+#+HTML: <div class="two-columns two-rows-notes r-stretch" style="background:black">
+
+#+HTML: <div style="background:orange" class="note">
+The notes
+- can span multiple
+- lines and will resize
+- automatically
+#+HTML: </div> <!-- notes -->
+
+#+HTML: <div style="background:blue" class="top-right">
+Top Right
+#+HTML: </div> <!-- top right -->
+
+#+HTML: <div style="background:yellow" class="bottom-right">
+Bottom Right
+#+HTML: </div> <!-- bottom right -->
+
+#+HTML: <div style="background:green" class="bottom-left">
+Bottom Left
+#+HTML: </div> <!-- bottom left -->
+
+#+HTML: <div style="background:red" class="top-left">
+Top Left
+#+HTML: </div> <!-- top left -->
+
+#+HTML: </div> <!-- container -->
+** Included Images
+
+** Generated Images
+:PROPERTIES:
+:CUSTOM_ID: example_image
+:END:
+
+Images should be generated into =org-gen/= (see =doc/BUILD.org=):
+
+#+NAME: example-image-plantuml
+#+begin_src plantuml :file "org-gen/example-image-plantuml.png"
+@startuml
+title Example
+
+' https://plantuml.com/class-diagram
+$Class01 "1" *-- "many" Class02 : contains
+Class03 o-- Class04 : aggregation
+Class05 --> "1" Class060
+Class06 -> Class060 : pointing right
+@enduml
+#+end_src
+** Halt on Error                                                               :noexport:
+Failure case: This page /should/ halt the generator.
+#+begin_src python
+raise Exception("please stop")
+#+end_src
+
+#+begin_src python
+this is a syntax error
+#+end_src
+
+#+begin_src bash
+echo Hello there
+echo Hello there to stderr >&2
+exit 1
+#+end_src
+** Add Elements to Lists
+#+ATTR_REVEAL: :frag (grow shrink roll-in fade-out none appear) :frag_idx (6 5 4 3 2 1)
+- I will grow. (6)
+- I will shrink. (5)
+- I rolled in. (4)
+- I will fade out. (3)
+- I don't fragment. (2)
+- I appear (1)
+** Combined
+#+HTML: <div class="container two-columns two-rows r-stretch">
+#+HTML: <div class="top-right">
+#+NAME: includeme
+#+begin_src plantuml :file "org-gen/example-image2-plantuml.png"
+@startuml
+title Example #2
+
+' https://plantuml.com/class-diagram
+$Class01 "1" *-- "many" Class02 : contains
+Class03 o-- Class04 : aggregation
+Class05 --> "1" Class060
+Class06 -> Class060 : pointing right
+@enduml
+#+end_src
+#+HTML: </div><div class="bottom-left two-cols-wide">
+This is how the source code looks like:
+#+begin_src plantuml :exports code :noweb yes
+<<includeme>>
+#+end_src
+#+HTML: </div><div class="top-left">
+See the graph on the right side?
+#+HTML: </div> <!-- top left -->
+#+HTML: </div> <!-- container -->
+/The source spans two columns to give us enough space./
+** Example Git
+:PROPERTIES:
+:header-args: :var repo="/tmp/git-from-the-inside/number-of-the-beast2"
+:repo: /tmp/git-from-the-inside/number-of-the-beast2
+:END:
+#+BEGIN_NOTES
+Test note
+bla note
+#+END_NOTES
+
+#+begin_src bash :exports results :results silent
+git config --get user.name || git config --global --add user.name "Alice"
+git config --get user.email || git config --global --add user.email "alice@neuhalfen.name"
+git config -l
+#+end_src
+
+# setup
+#+CALL: init_repo()
+
+# source/output is hidden
+#+begin_src bash :exports results :results silent
+echo "$(date +%s%N) 1st in $repo" >> /tmp/log
+cd "${repo}" || exit 1
+git commit -m'1st commit' --allow-empty
+#+end_src
+
+{{{git_with_diff(number1src)}}}
+
+# source is hidden, code is executed via macro
+#+NAME: number1src
+#+begin_src bash :exports none :results output
+echo "$(date +%s%N) 2nd in $repo" >> /tmp/log
+cd "${repo}" || exit 1
+git commit -m'2nd commit' --allow-empty
+#+end_src
+
+#+HTML: <div id='number1src-result' class='r-stretch' scale='2'></div>
+
+#+begin_src bash :exports code :noweb yes
+<<number1src>>
+#+end_src
+
+{{{git_with_diff_result(number1src)}}}
+** Math with MathJax
+Math sould be fenced by =$=:
+#+begin_example
+${n! \over k!(n-k)!} = {n \choose k}$
+#+end_example
+
+${n! \over k!(n-k)!} = {n \choose k}$
+
+* Licensing
+   :PROPERTIES:
+   :CUSTOM_ID: LICENSE
+   :ID:       e3e9e398-eb48-4a16-821d-e0df3f688ea4
+   :END:
+#+begin_export html
+<div class="license-container">
+<a href="https://neuhalfen.name/">
+    <img class="inline-icon" src="./img/wikimedia/Copyright.svg"/><span> by Jens Neuhalfen</span>
+</a>
+</div>
+
+<div class="license-container">
+  <a href="http://creativecommons.org/licenses/by-sa/4.0/">
+    <img class="inline-icon" src="./img/cc/cc.svg"/>
+    <img class="inline-icon" src="./img/cc/by.svg"/>
+    <img class="inline-icon" src="./img/cc/sa.svg"/>
+    <p>This work is licensed under a <i>Creative Commons Attribution-ShareAlike 4.0 International</i> license.</p>
+  </a>
+</div>
+
+  <div class="license-container">
+    <img class="inline-icon" src="./img/github/GitHub-Mark-120px-plus.png"> <a href="https://github.com/neuhalje/presentation_git-from-the-inside">github.com/neuhalje/presentation_git-from-the-inside</a>
+  <div class="license-container">
+</a>
+#+end_export
+
+- [[file:licenses.txt][licenses collected from node_modules]]

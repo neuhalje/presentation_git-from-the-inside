@@ -1,8 +1,30 @@
 (function (global, factory) {
   typeof exports === 'object' && typeof module !== 'undefined' ? factory(exports, require('d3-selection'), require('d3-dispatch'), require('d3-transition'), require('d3-timer'), require('d3-interpolate'), require('d3-zoom'), require('@hpcc-js/wasm'), require('d3-format'), require('d3-path')) :
   typeof define === 'function' && define.amd ? define(['exports', 'd3-selection', 'd3-dispatch', 'd3-transition', 'd3-timer', 'd3-interpolate', 'd3-zoom', '@hpcc-js/wasm', 'd3-format', 'd3-path'], factory) :
-  (global = global || self, factory(global['d3-graphviz'] = {}, global.d3, global.d3, global.d3, global.d3, global.d3, global.d3, global['@hpcc-js/wasm'], global.d3, global.d3));
+  (global = typeof globalThis !== 'undefined' ? globalThis : global || self, factory(global['d3-graphviz'] = {}, global.d3, global.d3, global.d3, global.d3, global.d3, global.d3, global['@hpcc-js/wasm'], global.d3, global.d3));
 }(this, (function (exports, d3, d3Dispatch, d3Transition, d3Timer, d3Interpolate, d3Zoom, wasm, d3Format, d3Path) { 'use strict';
+
+  function _interopNamespace(e) {
+    if (e && e.__esModule) return e;
+    var n = Object.create(null);
+    if (e) {
+      Object.keys(e).forEach(function (k) {
+        if (k !== 'default') {
+          var d = Object.getOwnPropertyDescriptor(e, k);
+          Object.defineProperty(n, k, d.get ? d : {
+            enumerable: true,
+            get: function () {
+              return e[k];
+            }
+          });
+        }
+      });
+    }
+    n['default'] = e;
+    return Object.freeze(n);
+  }
+
+  var d3__namespace = /*#__PURE__*/_interopNamespace(d3);
 
   function _defineProperty(obj, key, value) {
     if (key in obj) {
@@ -20,23 +42,36 @@
   }
 
   function _toConsumableArray(arr) {
-    return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread();
+    return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread();
   }
 
   function _arrayWithoutHoles(arr) {
-    if (Array.isArray(arr)) {
-      for (var i = 0, arr2 = new Array(arr.length); i < arr.length; i++) arr2[i] = arr[i];
-
-      return arr2;
-    }
+    if (Array.isArray(arr)) return _arrayLikeToArray(arr);
   }
 
   function _iterableToArray(iter) {
-    if (Symbol.iterator in Object(iter) || Object.prototype.toString.call(iter) === "[object Arguments]") return Array.from(iter);
+    if (typeof Symbol !== "undefined" && Symbol.iterator in Object(iter)) return Array.from(iter);
+  }
+
+  function _unsupportedIterableToArray(o, minLen) {
+    if (!o) return;
+    if (typeof o === "string") return _arrayLikeToArray(o, minLen);
+    var n = Object.prototype.toString.call(o).slice(8, -1);
+    if (n === "Object" && o.constructor) n = o.constructor.name;
+    if (n === "Map" || n === "Set") return Array.from(o);
+    if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen);
+  }
+
+  function _arrayLikeToArray(arr, len) {
+    if (len == null || len > arr.length) len = arr.length;
+
+    for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i];
+
+    return arr2;
   }
 
   function _nonIterableSpread() {
-    throw new TypeError("Invalid attempt to spread non-iterable instance");
+    throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
   }
 
   function extractElementData(element) {
@@ -151,9 +186,9 @@
   function extractAllElementsData(element) {
     var datum = extractElementData(element);
     datum.children = [];
-    var children = d3.selectAll(element.node().childNodes);
+    var children = d3__namespace.selectAll(element.node().childNodes);
     children.each(function () {
-      var childData = extractAllElementsData(d3.select(this));
+      var childData = extractAllElementsData(d3__namespace.select(this));
       childData.parent = datum;
       datum.children.push(childData);
     });
@@ -170,7 +205,7 @@
   }
   function createElementWithAttributes(data) {
     var elementNode = createElement(data);
-    var element = d3.select(elementNode);
+    var element = d3__namespace.select(elementNode);
     var attributes = data.attributes;
 
     for (var _i = 0, _Object$keys = Object.keys(attributes); _i < _Object$keys.length; _i++) {
@@ -182,7 +217,7 @@
     return elementNode;
   }
   function replaceElement(element, data) {
-    var parent = d3.select(element.node().parentNode);
+    var parent = d3__namespace.select(element.node().parentNode);
     var newElementNode = createElementWithAttributes(data);
     var newElement = parent.insert(function () {
       return newElementNode;
@@ -200,9 +235,9 @@
   }
   function insertAllElementsData(element, datum) {
     insertElementData(element, datum);
-    var children = d3.selectAll(element.node().childNodes);
+    var children = d3__namespace.selectAll(element.node().childNodes);
     children.each(function (d, i) {
-      insertAllElementsData(d3.select(this), datum.children[i]);
+      insertAllElementsData(d3__namespace.select(this), datum.children[i]);
     });
   }
 
@@ -236,8 +271,8 @@
 
   function attributeElement(data) {
     var index = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
-    var element = d3.select(this);
-    var tag = data.tag;
+    var element = d3__namespace.select(this);
+    data.tag;
     var attributes = data.attributes;
     var currentAttributes = element.node().attributes;
 
@@ -282,18 +317,22 @@
 
     if (this._options.zoom && !this._zoomBehavior) {
       createZoomBehavior.call(this);
+    } else if (!this._options.zoom && this._zoomBehavior) {
+      this._zoomSelection.on(".zoom", null);
+
+      this._zoomBehavior = null;
     }
 
     return this;
   }
   function createZoomBehavior() {
     function zoomed() {
-      var g = d3.select(svg.node().querySelector("g"));
-      g.attr('transform', d3.event.transform);
+      var g = d3__namespace.select(svg.node().querySelector("g"));
+      g.attr('transform', d3__namespace.event.transform);
     }
 
     var root = this._selection;
-    var svg = d3.select(root.node().querySelector("svg"));
+    var svg = d3__namespace.select(root.node().querySelector("svg"));
 
     if (svg.size() == 0) {
       return this;
@@ -302,7 +341,7 @@
     this._zoomSelection = svg;
     var zoomBehavior = d3Zoom.zoom().scaleExtent(this._options.zoomScaleExtent).translateExtent(this._options.zoomTranslateExtent).interpolate(d3Interpolate.interpolate).on("zoom", zoomed);
     this._zoomBehavior = zoomBehavior;
-    var g = d3.select(svg.node().querySelector("g"));
+    var g = d3__namespace.select(svg.node().querySelector("g"));
     svg.call(zoomBehavior);
 
     if (!this._active) {
@@ -489,7 +528,7 @@
         var childElementsEnter = childrenEnter.filter(function (d) {
           return d.tag[0] == '#' ? null : this;
         }).each(function (d) {
-          var childEnter = d3.select(this);
+          var childEnter = d3__namespace.select(this);
 
           for (var _i = 0, _Object$keys = Object.keys(d.attributes); _i < _Object$keys.length; _i++) {
             var attributeName = _Object$keys[_i];
@@ -524,7 +563,7 @@
     }
 
     function attributeElement(data) {
-      var element = d3.select(this);
+      var element = d3__namespace.select(this);
 
       if (data.tag == "svg") {
         var options = graphvizInstance._options;
@@ -644,7 +683,7 @@
         elementTransition.filter(function (d) {
           return d.tag[0] == '#' ? null : this;
         }).on("end", function (d) {
-          d3.select(this).attr('style', d && d.attributes && d.attributes.style || null);
+          d3__namespace.select(this).attr('style', d && d.attributes && d.attributes.style || null);
         });
       }
 
@@ -656,16 +695,16 @@
         attributes["stroke-dashoffset"] = 0;
         attributes['transform'] = 'translate(0,0)';
         elementTransition.attr("stroke-dashoffset", attributes["stroke-dashoffset"]).attr('transform', attributes['transform']).on("start", function () {
-          d3.select(this).style('opacity', null);
+          d3__namespace.select(this).style('opacity', null);
         }).on("end", function () {
-          d3.select(this).attr('stroke-dashoffset', null).attr('stroke-dasharray', null).attr('transform', null);
+          d3__namespace.select(this).attr('stroke-dashoffset', null).attr('stroke-dasharray', null).attr('transform', null);
         });
       }
 
       var moveThisPolygon = growEnteringEdges && tag == 'polygon' && isEdgeElement(data) && data.offset && data.parent.children[3].tag == 'path';
 
       if (moveThisPolygon) {
-        var edgePath = d3.select(element.node().parentNode.querySelector("path"));
+        var edgePath = d3__namespace.select(element.node().parentNode.querySelector("path"));
         var p0 = edgePath.node().getPointAtLength(0);
         var p1 = edgePath.node().getPointAtLength(data.totalLength);
         var p2 = edgePath.node().getPointAtLength(data.totalLength - 1);
@@ -683,9 +722,9 @@
             return 'translate(' + x + ',' + y + ') rotate(' + angle + ' ' + p1.x + ' ' + p1.y + ')';
           };
         }).on("start", function () {
-          d3.select(this).style('opacity', null);
+          d3__namespace.select(this).style('opacity', null);
         }).on("end", function () {
-          d3.select(this).attr('transform', null);
+          d3__namespace.select(this).attr('transform', null);
         });
       }
 
@@ -738,7 +777,7 @@
 
       if (convertShape) {
         elementTransition.on("end", function (d, i, nodes) {
-          pathElement = d3.select(this);
+          pathElement = d3__namespace.select(this);
           var newElement = replaceElement(pathElement, d);
           newElement.data([d], function () {
             return d.key;
@@ -999,7 +1038,7 @@
   }
 
   function layout(src, engine, vizOptions, callback) {
-    var worker = this._worker;
+    this._worker;
 
     if (this._worker) {
       postMessage.call(this, {
@@ -1026,7 +1065,7 @@
   }
   function dot (src, callback) {
     var graphvizInstance = this;
-    var worker = this._worker;
+    this._worker;
     var engine = this._options.engine;
     var images = this._images;
 
@@ -1300,7 +1339,7 @@
 
     this._dispatch.call("layoutEnd", this);
 
-    var newDoc = d3.select(document.createDocumentFragment()).append('div');
+    var newDoc = d3__namespace.select(document.createDocumentFragment()).append('div');
     var parser = new window.DOMParser();
     var doc = parser.parseFromString(svgDoc, "image/svg+xml");
     newDoc.append(function () {
@@ -1583,7 +1622,7 @@
     attributes = Object.assign({}, attributes);
 
     if (attributes.style && attributes.style.includes('invis')) {
-      var newEdge = d3.select(null);
+      var newEdge = d3__namespace.select(null);
     } else {
       var root = this._selection;
       var svg = root.selectWithoutDataPropagation("svg");
@@ -1743,7 +1782,7 @@
       return this;
     }
 
-    var attributes = this._drawnEdge.attributes;
+    this._drawnEdge.attributes;
     var title = edge.selectWithoutDataPropagation("title");
     title.text(name);
     var root = this._selection;
@@ -1762,7 +1801,7 @@
     if (this._drawnEdge) {
       return this._drawnEdge.g;
     } else {
-      return d3.select(null);
+      return d3__namespace.select(null);
     }
   }
 
@@ -1781,7 +1820,7 @@
     var svgDoc = this.layoutSync(dotSrc, 'svg', 'dot');
     var parser = new window.DOMParser();
     var doc = parser.parseFromString(svgDoc, "image/svg+xml");
-    var newDoc = d3.select(document.createDocumentFragment()).append(function () {
+    var newDoc = d3__namespace.select(document.createDocumentFragment()).append(function () {
       return doc.documentElement;
     });
     var edge = newDoc.select('.edge');
@@ -1794,7 +1833,7 @@
     attributes = Object.assign({}, attributes);
 
     if (attributes.style && attributes.style.includes('invis')) {
-      var newNode = d3.select(null);
+      var newNode = d3__namespace.select(null);
     } else {
       var root = this._selection;
       var svg = root.selectWithoutDataPropagation("svg");
@@ -1887,7 +1926,7 @@
     }
 
     svgElements.each(function (data, index) {
-      var svgElement = d3.select(this);
+      var svgElement = d3__namespace.select(this);
 
       if (svgElement.attr("cx")) {
         svgElement.attr("cx", roundTo2Decimals(x)).attr("cy", roundTo2Decimals(y));
@@ -1960,10 +1999,10 @@
     if (attributes.URL || attributes.tooltip) {
       var ga = node.selectWithoutDataPropagation("g");
       var a = ga.selectWithoutDataPropagation("a");
-      var svgElement = a.selectWithoutDataPropagation('ellipse,polygon,path,polyline');
+      a.selectWithoutDataPropagation('ellipse,polygon,path,polyline');
       var text = a.selectWithoutDataPropagation('text');
     } else {
-      var svgElement = node.selectWithoutDataPropagation('ellipse,polygon,path,polyline');
+      node.selectWithoutDataPropagation('ellipse,polygon,path,polyline');
       var text = node.selectWithoutDataPropagation('text');
     }
 
@@ -1984,7 +2023,7 @@
     if (this._drawnNode) {
       return this._drawnNode.g;
     } else {
-      return d3.select(null);
+      return d3__namespace.select(null);
     }
   }
 
@@ -2003,7 +2042,7 @@
     var svgDoc = this.layoutSync(dotSrc, 'svg', 'dot');
     var parser = new window.DOMParser();
     var doc = parser.parseFromString(svgDoc, "image/svg+xml");
-    var newDoc = d3.select(document.createDocumentFragment()).append(function () {
+    var newDoc = d3__namespace.select(document.createDocumentFragment()).append(function () {
       return doc.documentElement;
     });
     var node = newDoc.select('.node');
@@ -2110,9 +2149,9 @@
     }
 
     if (useWorker || useSharedWorker) {
-      var scripts = d3.selectAll('script');
+      var scripts = d3__namespace.selectAll('script');
       var vizScript = scripts.filter(function () {
-        return d3.select(this).attr('type') == 'javascript/worker' || d3.select(this).attr('src') && d3.select(this).attr('src').match(/.*\/@hpcc-js\/wasm/);
+        return d3__namespace.select(this).attr('type') == 'javascript/worker' || d3__namespace.select(this).attr('src') && d3__namespace.select(this).attr('src').match(/.*\/@hpcc-js\/wasm/);
       });
 
       if (vizScript.size() == 0) {
@@ -2163,7 +2202,7 @@
     selection.node().__graphviz__ = this;
   }
   function graphviz(selector, options) {
-    var g = d3.select(selector).graphviz(options);
+    var g = d3__namespace.select(selector).graphviz(options);
     return g;
   }
   Graphviz.prototype = graphviz.prototype = (_graphviz$prototype = {
@@ -2224,7 +2263,7 @@
   }
 
   function selection_selectWithoutDataPropagation (name) {
-    return d3.select(this.size() > 0 ? this.node().querySelector(name) : null);
+    return d3__namespace.select(this.size() > 0 ? this.node().querySelector(name) : null);
   }
 
   d3.selection.prototype.graphviz = selection_graphviz;

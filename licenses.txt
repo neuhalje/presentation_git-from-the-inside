@@ -1,4 +1,4 @@
-├─ @hpcc-js/wasm@0.3.13
+├─ @hpcc-js/wasm@1.4.1
 │  ├─ licenses: Apache-2.0
 │  ├─ repository: https://github.com/hpcc-systems/hpcc-js-wasm
 │  ├─ publisher: Gordon Smith
@@ -117,7 +117,7 @@
 │  ├─ url: https://bost.ocks.org/mike
 │  ├─ path: /home/jens/Projects/Vortraege/git-from-the-inside/node_modules/d3-geo
 │  └─ licenseFile: /home/jens/Projects/Vortraege/git-from-the-inside/node_modules/d3-geo/LICENSE
-├─ d3-graphviz@3.1.0
+├─ d3-graphviz@3.2.0
 │  ├─ licenses: BSD-3-Clause
 │  ├─ repository: https://github.com/magjac/d3-graphviz
 │  ├─ path: /home/jens/Projects/Vortraege/git-from-the-inside/node_modules/d3-graphviz
@@ -227,13 +227,6 @@
 │  ├─ url: http://bost.ocks.org/mike
 │  ├─ path: /home/jens/Projects/Vortraege/git-from-the-inside/node_modules/d3-voronoi
 │  └─ licenseFile: /home/jens/Projects/Vortraege/git-from-the-inside/node_modules/d3-voronoi/LICENSE
-├─ d3-zoom@1.7.3
-│  ├─ licenses: BSD-3-Clause
-│  ├─ repository: https://github.com/d3/d3-zoom
-│  ├─ publisher: Mike Bostock
-│  ├─ url: http://bost.ocks.org/mike
-│  ├─ path: /home/jens/Projects/Vortraege/git-from-the-inside/node_modules/d3-graphviz/node_modules/d3-zoom
-│  └─ licenseFile: /home/jens/Projects/Vortraege/git-from-the-inside/node_modules/d3-graphviz/node_modules/d3-zoom/LICENSE
 ├─ d3-zoom@1.8.3
 │  ├─ licenses: BSD-3-Clause
 │  ├─ repository: https://github.com/d3/d3-zoom
@@ -249,7 +242,8 @@
 │  ├─ path: /home/jens/Projects/Vortraege/git-from-the-inside/node_modules/d3
 │  └─ licenseFile: /home/jens/Projects/Vortraege/git-from-the-inside/node_modules/d3/LICENSE
 ├─ git-from-the-inside@0.0.1
-│  ├─ licenses: CC-BY-SA-4.0
+│  ├─ licenses: UNLICENSED
+│  ├─ private: true
 │  ├─ repository: https://github.com/neuhalje/git-from-the-inside
 │  ├─ publisher: Jens Neuhalfen
 │  ├─ email: jens@neuhalfen.name
@@ -263,7 +257,7 @@
 │  ├─ email: ashtuchkin@gmail.com
 │  ├─ path: /home/jens/Projects/Vortraege/git-from-the-inside/node_modules/iconv-lite
 │  └─ licenseFile: /home/jens/Projects/Vortraege/git-from-the-inside/node_modules/iconv-lite/LICENSE
-├─ mathjax@3.1.2
+├─ mathjax@3.1.4
 │  ├─ licenses: Apache-2.0
 │  ├─ repository: https://github.com/mathjax/MathJax
 │  ├─ path: /home/jens/Projects/Vortraege/git-from-the-inside/node_modules/mathjax

@@ -896,17 +896,20 @@
        x="1042.8906"
        y="684.94501"
        id="text5185-5"
-       sodipodi:linespacing="125%"><tspan
+       sodipodi:linespacing="125%">
+
+
+      <tspan
          sodipodi:role="line"
          id="tspan5187-4"
          x="1042.8906"
-         y="684.94501">Bob</tspan><tspan
+         y="684.94501"><tspan style="fill:#cc0000;stroke:#cc0000" id="tspan6281">angry</tspan> Bob</tspan><tspan
          sodipodi:role="line"
          x="1042.8906"
          y="734.94501"
-         id="tspan6279">(<tspan
-   style="fill:#cc0000;stroke:#cc0000"
-   id="tspan6281">an angry colleague</tspan>)</tspan></text>
+         id="tspan6279">
+    </tspan>
+    </text>
     <text
        xml:space="preserve"
        style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:40px;line-height:125%;font-family:sans-serif;-inkscape-font-specification:'sans-serif, Bold';text-align:start;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;text-anchor:start;display:inline;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"

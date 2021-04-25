@@ -1,40 +1,34 @@
 {
-  "_from": "reveal.js@^4.1.0",
-  "_id": "reveal.js@4.1.0",
-  "_inBundle": false,
-  "_integrity": "sha512-lYOMhxSWgq5jtgspF7eRL0d2rBnHO/VGZ4/qp46yu+eGoWqJkYHEuepEXzx71M8MI6Rf8HBYWaTnKi5uHWcU1Q==",
-  "_location": "/reveal.js",
-  "_phantomChildren": {},
-  "_requested": {
-    "type": "range",
-    "registry": true,
-    "raw": "reveal.js@^4.1.0",
-    "name": "reveal.js",
-    "escapedName": "reveal.js",
-    "rawSpec": "^4.1.0",
-    "saveSpec": null,
-    "fetchSpec": "^4.1.0"
+  "name": "reveal.js",
+  "version": "4.1.0",
+  "description": "The HTML Presentation Framework",
+  "homepage": "https://revealjs.com",
+  "subdomain": "revealjs",
+  "main": "dist/reveal.js",
+  "module": "dist/reveal.esm.js",
+  "license": "MIT",
+  "scripts": {
+    "test": "gulp test",
+    "start": "gulp serve",
+    "build": "gulp"
   },
-  "_requiredBy": [
-    "#USER",
-    "/"
-  ],
-  "_resolved": "https://registry.npmjs.org/reveal.js/-/reveal.js-4.1.0.tgz",
-  "_shasum": "db87a754b03810584114e902b2702e96ee1ca63c",
-  "_spec": "reveal.js@^4.1.0",
-  "_where": "/home/jens/Projects/Vortraege/git-from-the-inside",
   "author": {
     "name": "Hakim El Hattab",
     "email": "hakim.elhattab@gmail.com",
-    "url": "https://hakim.se"
+    "web": "https://hakim.se"
   },
-  "browserslist": "> 0.5%, IE 11, not dead",
-  "bugs": {
-    "url": "https://github.com/hakimel/reveal.js/issues"
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/hakimel/reveal.js.git"
   },
-  "bundleDependencies": false,
-  "deprecated": false,
-  "description": "The HTML Presentation Framework",
+  "engines": {
+    "node": ">=10.0.0"
+  },
+  "keywords": [
+    "reveal",
+    "slides",
+    "presentation"
+  ],
   "devDependencies": {
     "@babel/core": "^7.9.6",
     "@babel/preset-env": "^7.9.6",
@@ -64,9 +58,7 @@
     "rollup-plugin-terser": "^7.0.0",
     "yargs": "^15.1.0"
   },
-  "engines": {
-    "node": ">=10.0.0"
-  },
+  "browserslist": "> 0.5%, IE 11, not dead",
   "eslintConfig": {
     "env": {
       "browser": true,
@@ -103,26 +95,5 @@
       "no-eq-null": 2,
       "no-unused-expressions": 0
     }
-  },
-  "homepage": "https://revealjs.com",
-  "keywords": [
-    "reveal",
-    "slides",
-    "presentation"
-  ],
-  "license": "MIT",
-  "main": "dist/reveal.js",
-  "module": "dist/reveal.esm.js",
-  "name": "reveal.js",
-  "repository": {
-    "type": "git",
-    "url": "git://github.com/hakimel/reveal.js.git"
-  },
-  "scripts": {
-    "build": "gulp",
-    "start": "gulp serve",
-    "test": "gulp test"
-  },
-  "subdomain": "revealjs",
-  "version": "4.1.0"
+  }
 }
