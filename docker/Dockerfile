@@ -1,4 +1,4 @@
-# SPDX-FileCopyrightText: 2020 Jens Neuhalfen
+# SPDX-FileCopyrightText: 2021 Jens Neuhalfen
 # SPDX-License-Identifier: CC0-1.0
 
 FROM registry.gitlab.com/oer/emacs-reveal/emacs-reveal
@@ -23,9 +23,9 @@ COPY  elisp /emacs/elisp
 COPY  publish.sh /emacs/.
 COPY  oer-publish.sh /emacs/.
 
-# Until merged: https://gitlab.com/oer/org-re-reveal/-/merge_requests/32
-RUN rm -rf /emacs/.emacs.d/elpa/emacs-reveal/org-re-reveal && \
-    git clone -b pr/custom-themes https://gitlab.com/neuhalje/org-re-reveal.git /emacs/.emacs.d/elpa/emacs-reveal/org-re-reveal
+# Force specific version
+#RUN rm -rf /emacs/.emacs.d/elpa/emacs-reveal/org-re-reveal && \
+#    git clone -b 3.8.1 https://gitlab.com/oer/org-re-reveal.git /emacs/.emacs.d/elpa/emacs-reveal/org-re-reveal
 
 # make /emacs world readable and run the container via --user $(id -u):$(id -g)
 RUN find /emacs -type f -executable -exec chmod 777  \{\} \; && \
