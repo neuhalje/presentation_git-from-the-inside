@@ -17,7 +17,6 @@
 #+REVEAL_ROOT: js/reveal.js
 #+REVEAL_MATHJAX_URL:   js/tex-chtml.js
 
-# #+OPTIONS: reveal_width:1200 reveal_height:800
 #+OPTIONS: reveal_width:1200 reveal_height:900
 #+REVEAL_MARGIN: 0.00
 #+REVEAL_MIN_SCALE: 0.5
