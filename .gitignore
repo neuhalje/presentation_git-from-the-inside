@@ -14,3 +14,4 @@ dist/*.map
 build/
 git-from-the-inside.zip
 /src/org-gen/
+/public/
