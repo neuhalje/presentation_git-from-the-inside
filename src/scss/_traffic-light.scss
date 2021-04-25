@@ -1,0 +1,20 @@
+
+object[data *= "traffic"] {
+  width: auto;
+  height: 1.5em;
+}
+
+.light-1em object[data *= "traffic"] {
+  width: auto;
+  height: 1em;
+}
+
+.light-1_5em object[data *= "traffic"] {
+  width: auto;
+  height: 1.5em;
+}
+
+.light-2em object[data *= "traffic"] {
+  width: auto;
+  height: 2em;
+}
