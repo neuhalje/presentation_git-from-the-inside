@@ -66,14 +66,14 @@ function GraphvizAnimation(targetElementSelector, arg) {
             if (isLast) {
                 delay = (that.loopCount > 0) ? 6000 : 0;
             } else {
-              delay = 1000;
+              delay = 6000;
             }
             console.log(`DELAY:  dotIndex=${that.dotIndex}, isLast=${isLast}, delay=${delay}`);
 
             return d3.transition("main")
                 .ease(d3.easeLinear)
                 .delay(delay)
-                .duration(500);
+                .duration(1500);
         },
 
         onEnter : function(slide) {
