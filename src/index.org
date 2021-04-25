@@ -634,8 +634,103 @@ $g
   + /CAVE =push -f=/
 #+HTML: </div>
 * Remote
-wip
-* Examples                                                                      :noexport:
+:PROPERTIES:
+:CUSTOM_ID: remotes
+:END:
+- A =remote= repository is just a normal repository
+- Both repositories (remote and local) work with the same DAG
+- The remote repository can have any name
+  + Most often it is called =origin=
+  + The branches pulled from =origin= are named =origin/...=. E.g. =origin/master=
+  + Your branches /follow/ remote branches. E.g. =master= follows =origin/master=
+- You can have as many remotes as you like!
+** Remote: how it works
+#+HTML: <div class="scale-width r-stretch">
+[[file:img/commits_remote.svg]]
+#+HTML: </div>
+** Remote: /non fast forward/
+#+HTML: <div class="scale-width r-stretch">
+[[file:img/commits_remote_nonff.svg]]
+#+HTML: </div>
+** Remote: /push -f/ - a tragedy in V acts
+Why is ~git push -f~ considered a bad idea? And when would you need it?
+
+- ~git rebase~ can change history
+- So does e.g. ~git reset HEAD^~
+- If you change /published/ history you'd need ~git push -f~
+- *But what happens when Bob bases his work on yours?*
+** ~git push -f~ Act I: /Bob added a feature!/
+#+HTML: <div class="scale-height r-stretch">
+[[file:img/commits_push_rebased_act_i.svg]]
+#+HTML: </div>
+** ~git push -f~ Act II: /But my history is ugly!/
+#+HTML: <div class="scale-height r-stretch">
+[[file:img/commits_push_rebased_act_ii.svg]]
+#+HTML: </div>
+** ~git push -f~ Act III: /It's just a little bit of history rewriting/
+#+HTML: <div class="scale-height r-stretch">
+[[file:img/commits_push_rebased_act_iii.svg]]
+#+HTML: </div>
+** ~git push -f~ Act IV: Drama foreshadowing
+#+HTML: <div class="scale-height r-stretch">
+[[file:img/commits_push_rebased_act_iv.svg]]
+#+HTML: </div>
+** ~git push -f~ Act V: Explanations are needed
+#+HTML: <div class="scale-height r-stretch">
+[[file:img/commits_push_rebased_act_v.svg]]
+#+HTML: </div>
+* Wrapping it up
+:PROPERTIES:
+:CUSTOM_ID: wrapping-it-up
+:END:
+[[file:org-gen/dag.svg]]
+- Git relies on a *directed acyclic graph* (DAG)
+  - {{{green(Adding things)}}} to the graph is easy
+  - {{{red(Removing things)}}} from the graph (~push -f~) /can/ get messy
+- Git relies on a *content addressable storage*
+  + All hex numbers (~0abef12...~) are hashes used to build the DAG
+** Merge vs. Rebase
+#+HTML: <div class="scale-width r-stretch">
+[[file:img/merge_vs_rebase.svg]]
+#+HTML: </div>
+
+* Git and BitCoin
+:PROPERTIES:
+:CUSTOM_ID: bitcoin
+:END:
+- *Git* and *BitCoin* are based on a *DAG* linked via *content addressing*
+- In *BitCoin* the longest "branch wins"
+- Generating "commits" in *BitCoin* ("blocks")
+  + Gives you money
+  + Is artificialy made very difficult
+#+begin_src python
+fiddle = 0
+while True:
+    my_block = build_block(last_block_hash, fiddle, my_transactions)
+
+    my_block_hash = hash(my_block)
+    if my_block_hash.startswith("0"* 19):
+        break
+    else:
+        fiddle = fiddle + 1        # Bad luck - No new block
+print("Yay, I found a new Block!")
+#+end_src
+
+To find a hash that starts wih 19 zeroes in hexadecimal you need a *lot* of luck. Or ~ $10^{11}$ guesses.
+** BitCoin: Git
+  + Data is written in *commits*
+  + The *author* writes the commit
+  + Commits are linked via their hash
+  + no magic money
+** BitCoin: BitCoin
+  + Transactions are written in *blocks*
+    - One *block* can hold 10.000 transactions
+  + The *miner* writes the block
+    - With some extra work - the 40 (hex-) digit long hash of the new block needs to start with 19 zeros (04/2021)
+    - The first transaction of each block is to /magically give the miner some BTC/
+  + Each block links to the previous block via its hash
+    - Only the longest chain is "the truth"
+* Examples                                                                                                              :noexport:
 The following examples can be skipped via a =:noexport= tag on this headline
 ** Notes and timing
 :PROPERTIES:

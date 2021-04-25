@@ -1,4 +1,4 @@
-/* Report slide */
+/* Presentation slide */
 
 @import '_slide_12_grid';
 
@@ -6,126 +6,22 @@
     font-size: x-large;
 }
 
-.project-report {
+.slide--2col {
     @extend .container;
 
-    font-size: medium;
-    text-align: left;
-
-    h1 {
-        font-size: medium;
-        text-decoration: underline;
-        margin-top: 0.5em;
-        margin-bottom: 0.5em;
-    }
+    //font-size: medium;
+    //text-align: left;
 
     .text {
         text-align: left;
     }
 
-    table {
-        float: left;
-        width: 100%;
-        padding-top: 0.5em;
-        border-collapse: collapse;
-    }
-
-    thead {
-        border-bottom-style: solid !important;
-        border-bottom-color: rgb(0,0,0);
-    }
-
-    th {
-        font-weight: bold;
-    }
-
-    td, tr {
-        border: none !important;
-    }
-
-    tbody {
-    }
-
-    caption {
-        display: none;
-    }
-
-
-    .container__description {
-        @extend .container__col-3;
+    .container__left {
+        @extend .container__col-6;
         @extend .text;
     }
 
-    .container__milestone {
-        @extend .container__col-5;
-    }
-
-    .container__status-short {
-        @extend .container__col-4;
-        width: 100%;
-        table {
-            // Traffic lights
-            object {
-                width: 1em;
-                height: auto;
-                margin: 3px; /* Firefox  */
-            }
-            td,th {
-                text-align: center;
-            }
-        }
-    }
-
-    .container__status-comment {
-        @extend .container__col-6;
-        height: 1em; /* Make sure that the status does not stretch the row */
-        overflow: visible; /* Hopefully we don't overrun the text below.. */
-
-        table {
-            width: 100%;
-            tr {
-            }
-            td,th {
-                text-align: left;
-                vertical-align: top;
-                border: none !important;
-                padding-top: 1ex;
-            }
-        }
-    }
-
-    .container__finished-since-last {
-        @extend .container__col-6;
-        table {
-            width: 100%;
-            td,th {
-                text-align: left;
-                vertical-align: left;
-                border: none !important;
-            }
-        }
-    }
-
-    .container__next-steps {
-        @extend .container__col-6;
-        table {
-            width: 100%;
-            .haryev-ball {
-                // Harvey balls
-                width: 1em;
-                height: auto;
-            }
-            td,th {
-                text-align: left;
-                vertical-align: left;
-                border: none !important;
-            }
-        }
-    }
-    .container__risks {
-        @extend .container__col-6;
-    }
-    .container__decissions {
+    .container__left {
         @extend .container__col-6;
     }
 
