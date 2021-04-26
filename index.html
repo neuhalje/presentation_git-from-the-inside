@@ -41,6 +41,7 @@
 <li><a href="#/slide-rebase">Rebase</a></li>
 <li><a href="#/slide-remotes">Remote</a></li>
 <li><a href="#/slide-wrapping-it-up">Wrapping it up</a></li>
+<li><a href="#/slide-org42aec02">Great Resources</a></li>
 <li><a href="#/slide-bitcoin">Git and BitCoin</a></li>
 <li><a href="#/slide-LICENSE">Licensing</a></li>
 </ul>
@@ -113,8 +114,8 @@ Source: <a href="https://en.wikipedia.org/wiki/Birthday_problem">https://en.wiki
 
 </aside>
 </section>
-<section id="slide-org8756500">
-<h3 id="org8756500">How likely is a hash collision?</h3>
+<section id="slide-org96f1281">
+<h3 id="org96f1281">How likely is a hash collision?</h3>
 <aside class="notes">
 <p>
 Since arbitrary long values can be hashed to a fixed length hash the <a href="https://en.wikipedia.org/wiki/Pigeonhole_principle">pigeon hole principle</a> tells us that there <strong>must</strong> be collisions.
@@ -127,7 +128,7 @@ For <code>sha1</code> and <code>git</code> this probability depends on the numbe
 
 <div class="top-left">
 
-<div id="orgac17faf" class="figure">
+<div id="org6dbca2c" class="figure">
 <p><object type="image/svg+xml" data="org-gen/hash-collision-probability.svg" class="scale-height">
 Sorry, your browser does not support SVG.</object>
 </p>
@@ -152,14 +153,14 @@ Collisions depend on the number of changed files &amp; commits.
 <section id="slide-FIRST_BRANCH">
 <h2 id="FIRST_BRANCH"><code>Git</code> basics</h2>
 </section>
-<section id="slide-org1cdbbc1">
-<h3 id="org1cdbbc1">Mental model</h3>
+<section id="slide-org00fdfd2">
+<h3 id="org00fdfd2">Mental model</h3>
 <p>
 Think of git as  <span class="green">  a filesystem with extra dimensions </span>, or, if you like math, a  <span class="green">  directed acyclic graph. </span>
 </p>
 
 
-<div id="org7870fdd" class="figure">
+<div id="org57b7071" class="figure">
 <p><object type="image/svg+xml" data="org-gen/dag.svg" class="org-svg">
 Sorry, your browser does not support SVG.</object>
 </p>
@@ -237,7 +238,7 @@ Disadvantages:
 </div>
 <div  class="top-left">
 
-<div id="org0632d7c" class="figure">
+<div id="org7cc9c94" class="figure">
 <p><object type="image/svg+xml" data="./img/tree_objectstore.svg" class="scale-to-cell">
 Sorry, your browser does not support SVG.</object>
 </p>
@@ -256,8 +257,8 @@ Sorry, your browser does not support SVG.</object>
 </div>
 </div>
 </section>
-<section id="slide-orgc25958d">
-<h4 id="orgc25958d">Empty Object Storage</h4>
+<section id="slide-org9d0b17d">
+<h4 id="org9d0b17d">Empty Object Storage</h4>
 <aside class="notes">
 nil
 </aside>
@@ -271,8 +272,8 @@ This is the empty object store. It is located in the <code>.git/</code> director
 </div>
 </div> <!-- container -->
 </section>
-<section id="slide-orgc836f59">
-<h4 id="orgc836f59">File Content</h4>
+<section id="slide-orgc24d1cd">
+<h4 id="orgc24d1cd">File Content</h4>
 <aside class="notes">
 nil
 </aside>
@@ -287,8 +288,8 @@ We can store the <em>content</em> of <code>README.txt</code> but  <span class="r
 </div>
 </div> <!-- container -->
 </section>
-<section id="slide-org2a7c454">
-<h4 id="org2a7c454">Directories</h4>
+<section id="slide-orgbe868e0">
+<h4 id="orgbe868e0">Directories</h4>
 <aside class="notes">
 nil
 </aside>
@@ -304,8 +305,8 @@ E.g.  <span class="red">  <code>B 0xafde README.txt</code> </span> is the README
 </div>
 </div> <!-- container -->
 </section>
-<section id="slide-org3169d55">
-<h4 id="org3169d55">The First Commit</h4>
+<section id="slide-orgbf1c0d4">
+<h4 id="orgbf1c0d4">The First Commit</h4>
 <aside class="notes">
 nil
 </aside>
@@ -320,8 +321,8 @@ A commit (circle) points to a <code>tree</code> (the files) and has e.g. a commi
 </div>
 </div> <!-- container -->
 </section>
-<section id="slide-org9c3ea18">
-<h4 id="org9c3ea18">The Second Commit</h4>
+<section id="slide-org18fa3f8">
+<h4 id="org18fa3f8">The Second Commit</h4>
 <div class="two-rows two-columns-equal r-stretch">
 <img class="top-left scale-height" src="img/objectstore-4.png"></img>
 <img class="top-right scale-height two-rows-high" src="img/tree_complete-4.png"></img>
@@ -334,8 +335,8 @@ A commit (circle) points to a <code>tree</code> (the files) and has e.g. a commi
 </div>
 </div> <!-- container -->
 </section>
-<section id="slide-org31b3a72">
-<h4 id="org31b3a72">What do changes mean?</h4>
+<section id="slide-orgbab6cc5">
+<h4 id="orgbab6cc5">What do changes mean?</h4>
 <aside class="notes">
 <p>
 This is very important to understand!
@@ -356,8 +357,8 @@ Changing <code>README.txt</code> also changes the <code>tree</code>! The hash ch
 </div>
 </div> <!-- container -->
 </section>
-<section id="slide-org3321192">
-<h3 id="org3321192">The first branch</h3>
+<section id="slide-orgb11c7c8">
+<h3 id="orgb11c7c8">The first branch</h3>
 <p>
 Starting out from the filesystem, let's have a look at how a branch can be constructed.
 </p>
@@ -370,8 +371,8 @@ In order to to so, we need to answer a very important question:
 <strong>How does <code>git</code> know which commit is the <em>current</em> commit?</strong>
 </p>
 </section>
-<section id="slide-orgf332c8c">
-<h4 id="orgf332c8c">How <code>git</code> finds the parent commit</h4>
+<section id="slide-org5ad0163">
+<h4 id="org5ad0163">How <code>git</code> finds the parent commit</h4>
 <p>
 <strong>Let's recapitulate</strong>:
 </p>
@@ -391,8 +392,8 @@ In order to to so, we need to answer a very important question:
 In order to know the <em>current</em> commit, we need to look at the paperwork.
 </p>
 </section>
-<section id="slide-org4efa148">
-<h4 id="org4efa148">Initialize repository</h4>
+<section id="slide-org07c9d78">
+<h4 id="org07c9d78">Initialize repository</h4>
 <aside class="notes">
 <p>
 The content of <code>.git/</code> an implementation specific.
@@ -432,17 +433,17 @@ git commit -m"1st commit"
 
 <div class="org-src-container">
 
-<pre><code class="bash" data-line-numbers="1">[master (root-commit) c8df166] 1st commit
+<pre><code class="bash" data-line-numbers="1">[master (root-commit) 267cc45] 1st commit
  1 file changed, 1 insertion(+)
  create mode 100644 README.txt
 </code></pre>
 </div>
 <p>
-<em>The value <code>c8df166</code> in the first line of the output is the ID of the new commit.</em>
+<em>The value <code>267cc45</code> in the first line of the output is the ID of the new commit.</em>
 </p>
 </section>
-<section id="slide-org6c9be1b">
-<h4 id="org6c9be1b">External storage in <code>.git/</code></h4>
+<section id="slide-org3faf0d7">
+<h4 id="org3faf0d7">External storage in <code>.git/</code></h4>
 <p>
 <strong>Question:</strong> How does <code>git</code> know which commit is the <em>current</em> commit?
 </p>
@@ -510,7 +511,7 @@ What does <code>git</code> make of <code>ref: refs/heads/master</code>?
 
 <div class="org-src-container">
 
-<pre><code class="bash" >c8df1661d82b0aa7d1cc01066864c52db492c290
+<pre><code class="bash" >267cc45a4f225c0c22d875e4d4a8789a0f430028
 </code></pre>
 </div>
 
@@ -525,17 +526,17 @@ What is the last commit?
 
 <div class="org-src-container">
 
-<pre><code class="bash" data-line-numbers="1">commit c8df1661d82b0aa7d1cc01066864c52db492c290
+<pre><code class="bash" data-line-numbers="1">commit 267cc45a4f225c0c22d875e4d4a8789a0f430028
 Author: Alice &lt;alice@neuhalfen.name&gt;
-Date:   Sun Apr 25 17:49:44 2021 +0000
+Date:   Mon Apr 26 17:54:11 2021 +0000
 
     1st commit
 </code></pre>
 </div>
 
 </section>
-<section id="slide-orga068aa4">
-<h4 id="orga068aa4"><code>./git/HEAD</code> part II</h4>
+<section id="slide-org44665c7">
+<h4 id="org44665c7"><code>./git/HEAD</code> part II</h4>
 <p>
 <strong>Question:</strong> How does <code>git</code> know which commit is the <em>current</em> commit?
 </p>
@@ -544,7 +545,7 @@ Date:   Sun Apr 25 17:49:44 2021 +0000
 <strong>Answer:</strong> <code>HEAD</code> points to the current branch. The branch resolves to the current commit.
 </p>
 
-<div id="org40bdf69" class="figure">
+<div id="orge398a32" class="figure">
 <p><object type="image/svg+xml" data="org-gen/dot-git-head.svg" class="org-svg">
 Sorry, your browser does not support SVG.</object>
 </p>
@@ -556,8 +557,8 @@ Sorry, your browser does not support SVG.</object>
 <section id="slide-commit">
 <h2 id="commit">Commit</h2>
 </section>
-<section id="slide-orga36d5c5">
-<h3 id="orga36d5c5">Working on one branch</h3>
+<section id="slide-org2ee33e8">
+<h3 id="org2ee33e8">Working on one branch</h3>
 <callback  style='display:none' targetElementSelector='#one-branch-2nd-commit-result' arg='one-branch-2nd-commit-animation'></callback>
 <animation style='display:none' id='one-branch-2nd-commit-animation'>
 <step>
@@ -565,11 +566,11 @@ digraph git {
 // repo: /tmp/git-from-the-inside/branches
 // cwd: /tmp/git-from-the-inside/branches
 graph [bgcolor=transparent]
-  "c8df1661d82b0aa7d1cc01066864c52db492c290" [label="c8df166"]; "c8df1661d82b0aa7d1cc01066864c52db492c290-msg" [label="1st commit" margin="0" shape="none" ]; "c8df1661d82b0aa7d1cc01066864c52db492c290" -> "c8df1661d82b0aa7d1cc01066864c52db492c290-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "c8df1661d82b0aa7d1cc01066864c52db492c290" "c8df1661d82b0aa7d1cc01066864c52db492c290-msg"}
+  "267cc45a4f225c0c22d875e4d4a8789a0f430028" [label="267cc45"]; "267cc45a4f225c0c22d875e4d4a8789a0f430028-msg" [label="1st commit" margin="0" shape="none" ]; "267cc45a4f225c0c22d875e4d4a8789a0f430028" -> "267cc45a4f225c0c22d875e4d4a8789a0f430028-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "267cc45a4f225c0c22d875e4d4a8789a0f430028" "267cc45a4f225c0c22d875e4d4a8789a0f430028-msg"}
 
-  "c8df1661d82b0aa7d1cc01066864c52db492c290" -> {  };
+  "267cc45a4f225c0c22d875e4d4a8789a0f430028" -> {  };
 
-"master" [label="master" shape="cds" style="filled" fillcolor="darkgoldenrod1" ]; "master" -> "c8df1661d82b0aa7d1cc01066864c52db492c290"  [arrowhead="none"];{rank=same "master" "c8df1661d82b0aa7d1cc01066864c52db492c290"};
+"master" [label="master" shape="cds" style="filled" fillcolor="darkgoldenrod1" ]; "master" -> "267cc45a4f225c0c22d875e4d4a8789a0f430028"  [arrowhead="none"];{rank=same "master" "267cc45a4f225c0c22d875e4d4a8789a0f430028"};
 }
 </step>
 <step>
@@ -577,13 +578,13 @@ digraph git {
 // repo: /tmp/git-from-the-inside/branches
 // cwd: /tmp/git-from-the-inside/branches
 graph [bgcolor=transparent]
-  "2dc351fc6b002de6039445f15f05a863ee489f74" [label="2dc351f"]; "2dc351fc6b002de6039445f15f05a863ee489f74-msg" [label="2nd commit" margin="0" shape="none" ]; "2dc351fc6b002de6039445f15f05a863ee489f74" -> "2dc351fc6b002de6039445f15f05a863ee489f74-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "2dc351fc6b002de6039445f15f05a863ee489f74" "2dc351fc6b002de6039445f15f05a863ee489f74-msg"}
-  "c8df1661d82b0aa7d1cc01066864c52db492c290" [label="c8df166"]; "c8df1661d82b0aa7d1cc01066864c52db492c290-msg" [label="1st commit" margin="0" shape="none" ]; "c8df1661d82b0aa7d1cc01066864c52db492c290" -> "c8df1661d82b0aa7d1cc01066864c52db492c290-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "c8df1661d82b0aa7d1cc01066864c52db492c290" "c8df1661d82b0aa7d1cc01066864c52db492c290-msg"}
+  "267cc45a4f225c0c22d875e4d4a8789a0f430028" [label="267cc45"]; "267cc45a4f225c0c22d875e4d4a8789a0f430028-msg" [label="1st commit" margin="0" shape="none" ]; "267cc45a4f225c0c22d875e4d4a8789a0f430028" -> "267cc45a4f225c0c22d875e4d4a8789a0f430028-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "267cc45a4f225c0c22d875e4d4a8789a0f430028" "267cc45a4f225c0c22d875e4d4a8789a0f430028-msg"}
+  "efc3671bb9aed9ff48300f49575a49ee44d12d8c" [label="efc3671"]; "efc3671bb9aed9ff48300f49575a49ee44d12d8c-msg" [label="2nd commit" margin="0" shape="none" ]; "efc3671bb9aed9ff48300f49575a49ee44d12d8c" -> "efc3671bb9aed9ff48300f49575a49ee44d12d8c-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "efc3671bb9aed9ff48300f49575a49ee44d12d8c" "efc3671bb9aed9ff48300f49575a49ee44d12d8c-msg"}
 
-  "2dc351fc6b002de6039445f15f05a863ee489f74" -> { "c8df1661d82b0aa7d1cc01066864c52db492c290" };
-  "c8df1661d82b0aa7d1cc01066864c52db492c290" -> {  };
+  "267cc45a4f225c0c22d875e4d4a8789a0f430028" -> {  };
+  "efc3671bb9aed9ff48300f49575a49ee44d12d8c" -> { "267cc45a4f225c0c22d875e4d4a8789a0f430028" };
 
-"master" [label="master" shape="cds" style="filled" fillcolor="darkgoldenrod1" ]; "master" -> "2dc351fc6b002de6039445f15f05a863ee489f74"  [arrowhead="none"];{rank=same "master" "2dc351fc6b002de6039445f15f05a863ee489f74"};
+"master" [label="master" shape="cds" style="filled" fillcolor="darkgoldenrod1" ]; "master" -> "efc3671bb9aed9ff48300f49575a49ee44d12d8c"  [arrowhead="none"];{rank=same "master" "efc3671bb9aed9ff48300f49575a49ee44d12d8c"};
 }
 </step>
 </animation>
@@ -598,7 +599,7 @@ graph [bgcolor=transparent]
 
 <div class="org-src-container">
 
-<pre><code class="bash" >[master 2dc351f] 2nd commit
+<pre><code class="bash" >[master efc3671] 2nd commit
 </code></pre>
 </div>
 
@@ -607,8 +608,8 @@ graph [bgcolor=transparent]
 </div> <!-- container -->
 
 </section>
-<section id="slide-orgf1c6c9e">
-<h3 id="orgf1c6c9e">Multiple Branches: Theory</h3>
+<section id="slide-org202d847">
+<h3 id="org202d847">Multiple Branches: Theory</h3>
 <aside class="notes">
 <p>
 Before the commit <code>HEAD</code> points to <code>devel</code> and <code>devel</code> points to <code>D</code>. After the commit <code>devel</code> points to <code>E</code>.
@@ -618,15 +619,15 @@ Before the commit <code>HEAD</code> points to <code>devel</code> and <code>devel
 
 <div class="scale-width r-stretch">
 
-<div id="orgee14a76" class="figure">
+<div id="orgfe873e5" class="figure">
 <p><object type="image/svg+xml" data="img/commits_devel_branch.svg" class="org-svg">
 Sorry, your browser does not support SVG.</object>
 </p>
 </div>
 </div>
 </section>
-<section id="slide-org45c0f63">
-<h3 id="org45c0f63">Multiple Branches: practical I/II</h3>
+<section id="slide-org39368d5">
+<h3 id="org39368d5">Multiple Branches: practical I/II</h3>
 <callback  style='display:none' targetElementSelector='#new-branch-create-result' arg='new-branch-create-animation'></callback>
 <animation style='display:none' id='new-branch-create-animation'>
 <step>
@@ -634,15 +635,15 @@ digraph git {
 // repo: /tmp/git-from-the-inside/branches
 // cwd: /tmp/git-from-the-inside/branches
 graph [bgcolor=transparent]
-  "0e450ebde19182c87c52c7f3ece349ad49ff8cad" [label="0e450eb"]; "0e450ebde19182c87c52c7f3ece349ad49ff8cad-msg" [label="3rd commit - only master" margin="0" shape="none" ]; "0e450ebde19182c87c52c7f3ece349ad49ff8cad" -> "0e450ebde19182c87c52c7f3ece349ad49ff8cad-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "0e450ebde19182c87c52c7f3ece349ad49ff8cad" "0e450ebde19182c87c52c7f3ece349ad49ff8cad-msg"}
-  "2dc351fc6b002de6039445f15f05a863ee489f74" [label="2dc351f"]; "2dc351fc6b002de6039445f15f05a863ee489f74-msg" [label="2nd commit" margin="0" shape="none" ]; "2dc351fc6b002de6039445f15f05a863ee489f74" -> "2dc351fc6b002de6039445f15f05a863ee489f74-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "2dc351fc6b002de6039445f15f05a863ee489f74" "2dc351fc6b002de6039445f15f05a863ee489f74-msg"}
-  "c8df1661d82b0aa7d1cc01066864c52db492c290" [label="c8df166"]; "c8df1661d82b0aa7d1cc01066864c52db492c290-msg" [label="1st commit" margin="0" shape="none" ]; "c8df1661d82b0aa7d1cc01066864c52db492c290" -> "c8df1661d82b0aa7d1cc01066864c52db492c290-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "c8df1661d82b0aa7d1cc01066864c52db492c290" "c8df1661d82b0aa7d1cc01066864c52db492c290-msg"}
+  "267cc45a4f225c0c22d875e4d4a8789a0f430028" [label="267cc45"]; "267cc45a4f225c0c22d875e4d4a8789a0f430028-msg" [label="1st commit" margin="0" shape="none" ]; "267cc45a4f225c0c22d875e4d4a8789a0f430028" -> "267cc45a4f225c0c22d875e4d4a8789a0f430028-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "267cc45a4f225c0c22d875e4d4a8789a0f430028" "267cc45a4f225c0c22d875e4d4a8789a0f430028-msg"}
+  "36aec75f91b26c36e6e140452540b9a042d91eec" [label="36aec75"]; "36aec75f91b26c36e6e140452540b9a042d91eec-msg" [label="3rd commit - only master" margin="0" shape="none" ]; "36aec75f91b26c36e6e140452540b9a042d91eec" -> "36aec75f91b26c36e6e140452540b9a042d91eec-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "36aec75f91b26c36e6e140452540b9a042d91eec" "36aec75f91b26c36e6e140452540b9a042d91eec-msg"}
+  "efc3671bb9aed9ff48300f49575a49ee44d12d8c" [label="efc3671"]; "efc3671bb9aed9ff48300f49575a49ee44d12d8c-msg" [label="2nd commit" margin="0" shape="none" ]; "efc3671bb9aed9ff48300f49575a49ee44d12d8c" -> "efc3671bb9aed9ff48300f49575a49ee44d12d8c-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "efc3671bb9aed9ff48300f49575a49ee44d12d8c" "efc3671bb9aed9ff48300f49575a49ee44d12d8c-msg"}
 
-  "0e450ebde19182c87c52c7f3ece349ad49ff8cad" -> { "2dc351fc6b002de6039445f15f05a863ee489f74" };
-  "2dc351fc6b002de6039445f15f05a863ee489f74" -> { "c8df1661d82b0aa7d1cc01066864c52db492c290" };
-  "c8df1661d82b0aa7d1cc01066864c52db492c290" -> {  };
+  "267cc45a4f225c0c22d875e4d4a8789a0f430028" -> {  };
+  "36aec75f91b26c36e6e140452540b9a042d91eec" -> { "efc3671bb9aed9ff48300f49575a49ee44d12d8c" };
+  "efc3671bb9aed9ff48300f49575a49ee44d12d8c" -> { "267cc45a4f225c0c22d875e4d4a8789a0f430028" };
 
-"master" [label="master" shape="cds" style="filled" fillcolor="darkgoldenrod1" ]; "master" -> "0e450ebde19182c87c52c7f3ece349ad49ff8cad"  [arrowhead="none"];{rank=same "master" "0e450ebde19182c87c52c7f3ece349ad49ff8cad"};
+"master" [label="master" shape="cds" style="filled" fillcolor="darkgoldenrod1" ]; "master" -> "36aec75f91b26c36e6e140452540b9a042d91eec"  [arrowhead="none"];{rank=same "master" "36aec75f91b26c36e6e140452540b9a042d91eec"};
 }
 </step>
 <step>
@@ -650,20 +651,20 @@ digraph git {
 // repo: /tmp/git-from-the-inside/branches
 // cwd: /tmp/git-from-the-inside/branches
 graph [bgcolor=transparent]
-  "0e450ebde19182c87c52c7f3ece349ad49ff8cad" [label="0e450eb"]; "0e450ebde19182c87c52c7f3ece349ad49ff8cad-msg" [label="3rd commit - only master" margin="0" shape="none" ]; "0e450ebde19182c87c52c7f3ece349ad49ff8cad" -> "0e450ebde19182c87c52c7f3ece349ad49ff8cad-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "0e450ebde19182c87c52c7f3ece349ad49ff8cad" "0e450ebde19182c87c52c7f3ece349ad49ff8cad-msg"}
-  "2dc351fc6b002de6039445f15f05a863ee489f74" [label="2dc351f"]; "2dc351fc6b002de6039445f15f05a863ee489f74-msg" [label="2nd commit" margin="0" shape="none" ]; "2dc351fc6b002de6039445f15f05a863ee489f74" -> "2dc351fc6b002de6039445f15f05a863ee489f74-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "2dc351fc6b002de6039445f15f05a863ee489f74" "2dc351fc6b002de6039445f15f05a863ee489f74-msg"}
-  "3c5ec7c52712cdbcf4799e74c427ea25ffa15dc6" [label="3c5ec7c"]; "3c5ec7c52712cdbcf4799e74c427ea25ffa15dc6-msg" [label="Commit 2 on devel" margin="0" shape="none" ]; "3c5ec7c52712cdbcf4799e74c427ea25ffa15dc6" -> "3c5ec7c52712cdbcf4799e74c427ea25ffa15dc6-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "3c5ec7c52712cdbcf4799e74c427ea25ffa15dc6" "3c5ec7c52712cdbcf4799e74c427ea25ffa15dc6-msg"}
-  "a4c0383f7d5c5743e090cf6fe2034f6ecf963ee9" [label="a4c0383"]; "a4c0383f7d5c5743e090cf6fe2034f6ecf963ee9-msg" [label="Commit 1 on devel" margin="0" shape="none" ]; "a4c0383f7d5c5743e090cf6fe2034f6ecf963ee9" -> "a4c0383f7d5c5743e090cf6fe2034f6ecf963ee9-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "a4c0383f7d5c5743e090cf6fe2034f6ecf963ee9" "a4c0383f7d5c5743e090cf6fe2034f6ecf963ee9-msg"}
-  "c8df1661d82b0aa7d1cc01066864c52db492c290" [label="c8df166"]; "c8df1661d82b0aa7d1cc01066864c52db492c290-msg" [label="1st commit" margin="0" shape="none" ]; "c8df1661d82b0aa7d1cc01066864c52db492c290" -> "c8df1661d82b0aa7d1cc01066864c52db492c290-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "c8df1661d82b0aa7d1cc01066864c52db492c290" "c8df1661d82b0aa7d1cc01066864c52db492c290-msg"}
+  "267cc45a4f225c0c22d875e4d4a8789a0f430028" [label="267cc45"]; "267cc45a4f225c0c22d875e4d4a8789a0f430028-msg" [label="1st commit" margin="0" shape="none" ]; "267cc45a4f225c0c22d875e4d4a8789a0f430028" -> "267cc45a4f225c0c22d875e4d4a8789a0f430028-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "267cc45a4f225c0c22d875e4d4a8789a0f430028" "267cc45a4f225c0c22d875e4d4a8789a0f430028-msg"}
+  "36aec75f91b26c36e6e140452540b9a042d91eec" [label="36aec75"]; "36aec75f91b26c36e6e140452540b9a042d91eec-msg" [label="3rd commit - only master" margin="0" shape="none" ]; "36aec75f91b26c36e6e140452540b9a042d91eec" -> "36aec75f91b26c36e6e140452540b9a042d91eec-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "36aec75f91b26c36e6e140452540b9a042d91eec" "36aec75f91b26c36e6e140452540b9a042d91eec-msg"}
+  "e28064749fde0bf31b25f16674e7a24a823883ce" [label="e280647"]; "e28064749fde0bf31b25f16674e7a24a823883ce-msg" [label="Commit 2 on devel" margin="0" shape="none" ]; "e28064749fde0bf31b25f16674e7a24a823883ce" -> "e28064749fde0bf31b25f16674e7a24a823883ce-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "e28064749fde0bf31b25f16674e7a24a823883ce" "e28064749fde0bf31b25f16674e7a24a823883ce-msg"}
+  "ecb9a7f511705a3fb8212df0d6fe4e8bd50a3044" [label="ecb9a7f"]; "ecb9a7f511705a3fb8212df0d6fe4e8bd50a3044-msg" [label="Commit 1 on devel" margin="0" shape="none" ]; "ecb9a7f511705a3fb8212df0d6fe4e8bd50a3044" -> "ecb9a7f511705a3fb8212df0d6fe4e8bd50a3044-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "ecb9a7f511705a3fb8212df0d6fe4e8bd50a3044" "ecb9a7f511705a3fb8212df0d6fe4e8bd50a3044-msg"}
+  "efc3671bb9aed9ff48300f49575a49ee44d12d8c" [label="efc3671"]; "efc3671bb9aed9ff48300f49575a49ee44d12d8c-msg" [label="2nd commit" margin="0" shape="none" ]; "efc3671bb9aed9ff48300f49575a49ee44d12d8c" -> "efc3671bb9aed9ff48300f49575a49ee44d12d8c-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "efc3671bb9aed9ff48300f49575a49ee44d12d8c" "efc3671bb9aed9ff48300f49575a49ee44d12d8c-msg"}
 
-  "0e450ebde19182c87c52c7f3ece349ad49ff8cad" -> { "2dc351fc6b002de6039445f15f05a863ee489f74" };
-  "2dc351fc6b002de6039445f15f05a863ee489f74" -> { "c8df1661d82b0aa7d1cc01066864c52db492c290" };
-  "3c5ec7c52712cdbcf4799e74c427ea25ffa15dc6" -> { "a4c0383f7d5c5743e090cf6fe2034f6ecf963ee9" };
-  "a4c0383f7d5c5743e090cf6fe2034f6ecf963ee9" -> { "2dc351fc6b002de6039445f15f05a863ee489f74" };
-  "c8df1661d82b0aa7d1cc01066864c52db492c290" -> {  };
+  "267cc45a4f225c0c22d875e4d4a8789a0f430028" -> {  };
+  "36aec75f91b26c36e6e140452540b9a042d91eec" -> { "efc3671bb9aed9ff48300f49575a49ee44d12d8c" };
+  "e28064749fde0bf31b25f16674e7a24a823883ce" -> { "ecb9a7f511705a3fb8212df0d6fe4e8bd50a3044" };
+  "ecb9a7f511705a3fb8212df0d6fe4e8bd50a3044" -> { "efc3671bb9aed9ff48300f49575a49ee44d12d8c" };
+  "efc3671bb9aed9ff48300f49575a49ee44d12d8c" -> { "267cc45a4f225c0c22d875e4d4a8789a0f430028" };
 
-"devel" [label="devel" shape="cds" style="filled" fillcolor="darkgoldenrod1" ]; "devel" -> "3c5ec7c52712cdbcf4799e74c427ea25ffa15dc6"  [arrowhead="none"];{rank=same "devel" "3c5ec7c52712cdbcf4799e74c427ea25ffa15dc6"};
-"master" [label="master" shape="cds" style="filled" fillcolor="darkgoldenrod1" ]; "master" -> "0e450ebde19182c87c52c7f3ece349ad49ff8cad"  [arrowhead="none"];{rank=same "master" "0e450ebde19182c87c52c7f3ece349ad49ff8cad"};
+"devel" [label="devel" shape="cds" style="filled" fillcolor="darkgoldenrod1" ]; "devel" -> "e28064749fde0bf31b25f16674e7a24a823883ce"  [arrowhead="none"];{rank=same "devel" "e28064749fde0bf31b25f16674e7a24a823883ce"};
+"master" [label="master" shape="cds" style="filled" fillcolor="darkgoldenrod1" ]; "master" -> "36aec75f91b26c36e6e140452540b9a042d91eec"  [arrowhead="none"];{rank=same "master" "36aec75f91b26c36e6e140452540b9a042d91eec"};
 }
 </step>
 </animation>
@@ -681,10 +682,10 @@ git log --oneline  # since we have "devel" checked out, this shows the "devel" b
 
 <div class="org-src-container">
 
-<pre><code class="bash" >3c5ec7c Commit 2 on devel
-a4c0383 Commit 1 on devel
-2dc351f 2nd commit
-c8df166 1st commit
+<pre><code class="bash" >e280647 Commit 2 on devel
+ecb9a7f Commit 1 on devel
+efc3671 2nd commit
+267cc45 1st commit
 </code></pre>
 </div>
 
@@ -693,10 +694,10 @@ c8df166 1st commit
 </div> <!-- container -->
 
 </section>
-<section id="slide-org32114d6">
-<h3 id="org32114d6">Multiple Branches: practical II/II</h3>
+<section id="slide-orgc400d51">
+<h3 id="orgc400d51">Multiple Branches: practical II/II</h3>
 
-<div id="orgc2ba0bc" class="figure">
+<div id="org4ec4f49" class="figure">
 <p><object type="image/svg+xml" data="org-gen/commit-result.svg" class="org-svg">
 Sorry, your browser does not support SVG.</object>
 </p>
@@ -712,10 +713,10 @@ git log devel --oneline --decorate --topo-order
 
 <div class="org-src-container">
 
-<pre><code class="bash" >3c5ec7c (HEAD -&gt; devel) Commit 2 on devel
-a4c0383 Commit 1 on devel
-2dc351f 2nd commit
-c8df166 1st commit
+<pre><code class="bash" >e280647 (HEAD -&gt; devel) Commit 2 on devel
+ecb9a7f Commit 1 on devel
+efc3671 2nd commit
+267cc45 1st commit
 </code></pre>
 </div>
 
@@ -728,19 +729,19 @@ c8df166 1st commit
 A <em>merge commit</em> has more than one parent and includes the commits of multiple branches.
 </p>
 </section>
-<section id="slide-org188ca45">
-<h3 id="org188ca45">Merge: theory</h3>
+<section id="slide-org05a1063">
+<h3 id="org05a1063">Merge: theory</h3>
 <div class="scale-width r-stretch">
 
-<div id="org6490acc" class="figure">
+<div id="org5ce9d97" class="figure">
 <p><object type="image/svg+xml" data="img/commits_devel_branch_merge.svg" class="org-svg">
 Sorry, your browser does not support SVG.</object>
 </p>
 </div>
 </div>
 </section>
-<section id="slide-orgcb0cc32">
-<h3 id="orgcb0cc32">Merge: how it works</h3>
+<section id="slide-org2e484eb">
+<h3 id="org2e484eb">Merge: how it works</h3>
 <callback  style='display:none' targetElementSelector='#new-branch-merge-result' arg='new-branch-merge-animation'></callback>
 <animation style='display:none' id='new-branch-merge-animation'>
 <step>
@@ -748,20 +749,20 @@ digraph git {
 // repo: /tmp/git-from-the-inside/branches
 // cwd: /tmp/git-from-the-inside/branches
 graph [bgcolor=transparent]
-  "0e450ebde19182c87c52c7f3ece349ad49ff8cad" [label="0e450eb"]; "0e450ebde19182c87c52c7f3ece349ad49ff8cad-msg" [label="3rd commit - only master" margin="0" shape="none" ]; "0e450ebde19182c87c52c7f3ece349ad49ff8cad" -> "0e450ebde19182c87c52c7f3ece349ad49ff8cad-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "0e450ebde19182c87c52c7f3ece349ad49ff8cad" "0e450ebde19182c87c52c7f3ece349ad49ff8cad-msg"}
-  "2dc351fc6b002de6039445f15f05a863ee489f74" [label="2dc351f"]; "2dc351fc6b002de6039445f15f05a863ee489f74-msg" [label="2nd commit" margin="0" shape="none" ]; "2dc351fc6b002de6039445f15f05a863ee489f74" -> "2dc351fc6b002de6039445f15f05a863ee489f74-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "2dc351fc6b002de6039445f15f05a863ee489f74" "2dc351fc6b002de6039445f15f05a863ee489f74-msg"}
-  "3c5ec7c52712cdbcf4799e74c427ea25ffa15dc6" [label="3c5ec7c"]; "3c5ec7c52712cdbcf4799e74c427ea25ffa15dc6-msg" [label="Commit 2 on devel" margin="0" shape="none" ]; "3c5ec7c52712cdbcf4799e74c427ea25ffa15dc6" -> "3c5ec7c52712cdbcf4799e74c427ea25ffa15dc6-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "3c5ec7c52712cdbcf4799e74c427ea25ffa15dc6" "3c5ec7c52712cdbcf4799e74c427ea25ffa15dc6-msg"}
-  "a4c0383f7d5c5743e090cf6fe2034f6ecf963ee9" [label="a4c0383"]; "a4c0383f7d5c5743e090cf6fe2034f6ecf963ee9-msg" [label="Commit 1 on devel" margin="0" shape="none" ]; "a4c0383f7d5c5743e090cf6fe2034f6ecf963ee9" -> "a4c0383f7d5c5743e090cf6fe2034f6ecf963ee9-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "a4c0383f7d5c5743e090cf6fe2034f6ecf963ee9" "a4c0383f7d5c5743e090cf6fe2034f6ecf963ee9-msg"}
-  "c8df1661d82b0aa7d1cc01066864c52db492c290" [label="c8df166"]; "c8df1661d82b0aa7d1cc01066864c52db492c290-msg" [label="1st commit" margin="0" shape="none" ]; "c8df1661d82b0aa7d1cc01066864c52db492c290" -> "c8df1661d82b0aa7d1cc01066864c52db492c290-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "c8df1661d82b0aa7d1cc01066864c52db492c290" "c8df1661d82b0aa7d1cc01066864c52db492c290-msg"}
+  "267cc45a4f225c0c22d875e4d4a8789a0f430028" [label="267cc45"]; "267cc45a4f225c0c22d875e4d4a8789a0f430028-msg" [label="1st commit" margin="0" shape="none" ]; "267cc45a4f225c0c22d875e4d4a8789a0f430028" -> "267cc45a4f225c0c22d875e4d4a8789a0f430028-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "267cc45a4f225c0c22d875e4d4a8789a0f430028" "267cc45a4f225c0c22d875e4d4a8789a0f430028-msg"}
+  "36aec75f91b26c36e6e140452540b9a042d91eec" [label="36aec75"]; "36aec75f91b26c36e6e140452540b9a042d91eec-msg" [label="3rd commit - only master" margin="0" shape="none" ]; "36aec75f91b26c36e6e140452540b9a042d91eec" -> "36aec75f91b26c36e6e140452540b9a042d91eec-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "36aec75f91b26c36e6e140452540b9a042d91eec" "36aec75f91b26c36e6e140452540b9a042d91eec-msg"}
+  "e28064749fde0bf31b25f16674e7a24a823883ce" [label="e280647"]; "e28064749fde0bf31b25f16674e7a24a823883ce-msg" [label="Commit 2 on devel" margin="0" shape="none" ]; "e28064749fde0bf31b25f16674e7a24a823883ce" -> "e28064749fde0bf31b25f16674e7a24a823883ce-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "e28064749fde0bf31b25f16674e7a24a823883ce" "e28064749fde0bf31b25f16674e7a24a823883ce-msg"}
+  "ecb9a7f511705a3fb8212df0d6fe4e8bd50a3044" [label="ecb9a7f"]; "ecb9a7f511705a3fb8212df0d6fe4e8bd50a3044-msg" [label="Commit 1 on devel" margin="0" shape="none" ]; "ecb9a7f511705a3fb8212df0d6fe4e8bd50a3044" -> "ecb9a7f511705a3fb8212df0d6fe4e8bd50a3044-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "ecb9a7f511705a3fb8212df0d6fe4e8bd50a3044" "ecb9a7f511705a3fb8212df0d6fe4e8bd50a3044-msg"}
+  "efc3671bb9aed9ff48300f49575a49ee44d12d8c" [label="efc3671"]; "efc3671bb9aed9ff48300f49575a49ee44d12d8c-msg" [label="2nd commit" margin="0" shape="none" ]; "efc3671bb9aed9ff48300f49575a49ee44d12d8c" -> "efc3671bb9aed9ff48300f49575a49ee44d12d8c-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "efc3671bb9aed9ff48300f49575a49ee44d12d8c" "efc3671bb9aed9ff48300f49575a49ee44d12d8c-msg"}
 
-  "0e450ebde19182c87c52c7f3ece349ad49ff8cad" -> { "2dc351fc6b002de6039445f15f05a863ee489f74" };
-  "2dc351fc6b002de6039445f15f05a863ee489f74" -> { "c8df1661d82b0aa7d1cc01066864c52db492c290" };
-  "3c5ec7c52712cdbcf4799e74c427ea25ffa15dc6" -> { "a4c0383f7d5c5743e090cf6fe2034f6ecf963ee9" };
-  "a4c0383f7d5c5743e090cf6fe2034f6ecf963ee9" -> { "2dc351fc6b002de6039445f15f05a863ee489f74" };
-  "c8df1661d82b0aa7d1cc01066864c52db492c290" -> {  };
+  "267cc45a4f225c0c22d875e4d4a8789a0f430028" -> {  };
+  "36aec75f91b26c36e6e140452540b9a042d91eec" -> { "efc3671bb9aed9ff48300f49575a49ee44d12d8c" };
+  "e28064749fde0bf31b25f16674e7a24a823883ce" -> { "ecb9a7f511705a3fb8212df0d6fe4e8bd50a3044" };
+  "ecb9a7f511705a3fb8212df0d6fe4e8bd50a3044" -> { "efc3671bb9aed9ff48300f49575a49ee44d12d8c" };
+  "efc3671bb9aed9ff48300f49575a49ee44d12d8c" -> { "267cc45a4f225c0c22d875e4d4a8789a0f430028" };
 
-"devel" [label="devel" shape="cds" style="filled" fillcolor="darkgoldenrod1" ]; "devel" -> "3c5ec7c52712cdbcf4799e74c427ea25ffa15dc6"  [arrowhead="none"];{rank=same "devel" "3c5ec7c52712cdbcf4799e74c427ea25ffa15dc6"};
-"master" [label="master" shape="cds" style="filled" fillcolor="darkgoldenrod1" ]; "master" -> "0e450ebde19182c87c52c7f3ece349ad49ff8cad"  [arrowhead="none"];{rank=same "master" "0e450ebde19182c87c52c7f3ece349ad49ff8cad"};
+"devel" [label="devel" shape="cds" style="filled" fillcolor="darkgoldenrod1" ]; "devel" -> "e28064749fde0bf31b25f16674e7a24a823883ce"  [arrowhead="none"];{rank=same "devel" "e28064749fde0bf31b25f16674e7a24a823883ce"};
+"master" [label="master" shape="cds" style="filled" fillcolor="darkgoldenrod1" ]; "master" -> "36aec75f91b26c36e6e140452540b9a042d91eec"  [arrowhead="none"];{rank=same "master" "36aec75f91b26c36e6e140452540b9a042d91eec"};
 }
 </step>
 <step>
@@ -769,22 +770,22 @@ digraph git {
 // repo: /tmp/git-from-the-inside/branches
 // cwd: /tmp/git-from-the-inside/branches
 graph [bgcolor=transparent]
-  "0e450ebde19182c87c52c7f3ece349ad49ff8cad" [label="0e450eb"]; "0e450ebde19182c87c52c7f3ece349ad49ff8cad-msg" [label="3rd commit - only master" margin="0" shape="none" ]; "0e450ebde19182c87c52c7f3ece349ad49ff8cad" -> "0e450ebde19182c87c52c7f3ece349ad49ff8cad-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "0e450ebde19182c87c52c7f3ece349ad49ff8cad" "0e450ebde19182c87c52c7f3ece349ad49ff8cad-msg"}
-  "2dc351fc6b002de6039445f15f05a863ee489f74" [label="2dc351f"]; "2dc351fc6b002de6039445f15f05a863ee489f74-msg" [label="2nd commit" margin="0" shape="none" ]; "2dc351fc6b002de6039445f15f05a863ee489f74" -> "2dc351fc6b002de6039445f15f05a863ee489f74-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "2dc351fc6b002de6039445f15f05a863ee489f74" "2dc351fc6b002de6039445f15f05a863ee489f74-msg"}
-  "3c5ec7c52712cdbcf4799e74c427ea25ffa15dc6" [label="3c5ec7c"]; "3c5ec7c52712cdbcf4799e74c427ea25ffa15dc6-msg" [label="Commit 2 on devel" margin="0" shape="none" ]; "3c5ec7c52712cdbcf4799e74c427ea25ffa15dc6" -> "3c5ec7c52712cdbcf4799e74c427ea25ffa15dc6-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "3c5ec7c52712cdbcf4799e74c427ea25ffa15dc6" "3c5ec7c52712cdbcf4799e74c427ea25ffa15dc6-msg"}
-  "a4c0383f7d5c5743e090cf6fe2034f6ecf963ee9" [label="a4c0383"]; "a4c0383f7d5c5743e090cf6fe2034f6ecf963ee9-msg" [label="Commit 1 on devel" margin="0" shape="none" ]; "a4c0383f7d5c5743e090cf6fe2034f6ecf963ee9" -> "a4c0383f7d5c5743e090cf6fe2034f6ecf963ee9-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "a4c0383f7d5c5743e090cf6fe2034f6ecf963ee9" "a4c0383f7d5c5743e090cf6fe2034f6ecf963ee9-msg"}
-  "b11629f5ecaf38aacfebc969b3960ea57a39e8a2" [label="b11629f"]; "b11629f5ecaf38aacfebc969b3960ea57a39e8a2-msg" [label="Merge branch 'devel'" margin="0" shape="none" ]; "b11629f5ecaf38aacfebc969b3960ea57a39e8a2" -> "b11629f5ecaf38aacfebc969b3960ea57a39e8a2-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "b11629f5ecaf38aacfebc969b3960ea57a39e8a2" "b11629f5ecaf38aacfebc969b3960ea57a39e8a2-msg"}
-  "c8df1661d82b0aa7d1cc01066864c52db492c290" [label="c8df166"]; "c8df1661d82b0aa7d1cc01066864c52db492c290-msg" [label="1st commit" margin="0" shape="none" ]; "c8df1661d82b0aa7d1cc01066864c52db492c290" -> "c8df1661d82b0aa7d1cc01066864c52db492c290-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "c8df1661d82b0aa7d1cc01066864c52db492c290" "c8df1661d82b0aa7d1cc01066864c52db492c290-msg"}
+  "039cf6844778fcdd866f9c24b58dc516b0b86a34" [label="039cf68"]; "039cf6844778fcdd866f9c24b58dc516b0b86a34-msg" [label="Merge branch 'devel'" margin="0" shape="none" ]; "039cf6844778fcdd866f9c24b58dc516b0b86a34" -> "039cf6844778fcdd866f9c24b58dc516b0b86a34-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "039cf6844778fcdd866f9c24b58dc516b0b86a34" "039cf6844778fcdd866f9c24b58dc516b0b86a34-msg"}
+  "267cc45a4f225c0c22d875e4d4a8789a0f430028" [label="267cc45"]; "267cc45a4f225c0c22d875e4d4a8789a0f430028-msg" [label="1st commit" margin="0" shape="none" ]; "267cc45a4f225c0c22d875e4d4a8789a0f430028" -> "267cc45a4f225c0c22d875e4d4a8789a0f430028-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "267cc45a4f225c0c22d875e4d4a8789a0f430028" "267cc45a4f225c0c22d875e4d4a8789a0f430028-msg"}
+  "36aec75f91b26c36e6e140452540b9a042d91eec" [label="36aec75"]; "36aec75f91b26c36e6e140452540b9a042d91eec-msg" [label="3rd commit - only master" margin="0" shape="none" ]; "36aec75f91b26c36e6e140452540b9a042d91eec" -> "36aec75f91b26c36e6e140452540b9a042d91eec-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "36aec75f91b26c36e6e140452540b9a042d91eec" "36aec75f91b26c36e6e140452540b9a042d91eec-msg"}
+  "e28064749fde0bf31b25f16674e7a24a823883ce" [label="e280647"]; "e28064749fde0bf31b25f16674e7a24a823883ce-msg" [label="Commit 2 on devel" margin="0" shape="none" ]; "e28064749fde0bf31b25f16674e7a24a823883ce" -> "e28064749fde0bf31b25f16674e7a24a823883ce-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "e28064749fde0bf31b25f16674e7a24a823883ce" "e28064749fde0bf31b25f16674e7a24a823883ce-msg"}
+  "ecb9a7f511705a3fb8212df0d6fe4e8bd50a3044" [label="ecb9a7f"]; "ecb9a7f511705a3fb8212df0d6fe4e8bd50a3044-msg" [label="Commit 1 on devel" margin="0" shape="none" ]; "ecb9a7f511705a3fb8212df0d6fe4e8bd50a3044" -> "ecb9a7f511705a3fb8212df0d6fe4e8bd50a3044-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "ecb9a7f511705a3fb8212df0d6fe4e8bd50a3044" "ecb9a7f511705a3fb8212df0d6fe4e8bd50a3044-msg"}
+  "efc3671bb9aed9ff48300f49575a49ee44d12d8c" [label="efc3671"]; "efc3671bb9aed9ff48300f49575a49ee44d12d8c-msg" [label="2nd commit" margin="0" shape="none" ]; "efc3671bb9aed9ff48300f49575a49ee44d12d8c" -> "efc3671bb9aed9ff48300f49575a49ee44d12d8c-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "efc3671bb9aed9ff48300f49575a49ee44d12d8c" "efc3671bb9aed9ff48300f49575a49ee44d12d8c-msg"}
 
-  "0e450ebde19182c87c52c7f3ece349ad49ff8cad" -> { "2dc351fc6b002de6039445f15f05a863ee489f74" };
-  "2dc351fc6b002de6039445f15f05a863ee489f74" -> { "c8df1661d82b0aa7d1cc01066864c52db492c290" };
-  "3c5ec7c52712cdbcf4799e74c427ea25ffa15dc6" -> { "a4c0383f7d5c5743e090cf6fe2034f6ecf963ee9" };
-  "a4c0383f7d5c5743e090cf6fe2034f6ecf963ee9" -> { "2dc351fc6b002de6039445f15f05a863ee489f74" };
-  "b11629f5ecaf38aacfebc969b3960ea57a39e8a2" -> { "0e450ebde19182c87c52c7f3ece349ad49ff8cad" "3c5ec7c52712cdbcf4799e74c427ea25ffa15dc6" };
-  "c8df1661d82b0aa7d1cc01066864c52db492c290" -> {  };
+  "039cf6844778fcdd866f9c24b58dc516b0b86a34" -> { "36aec75f91b26c36e6e140452540b9a042d91eec" "e28064749fde0bf31b25f16674e7a24a823883ce" };
+  "267cc45a4f225c0c22d875e4d4a8789a0f430028" -> {  };
+  "36aec75f91b26c36e6e140452540b9a042d91eec" -> { "efc3671bb9aed9ff48300f49575a49ee44d12d8c" };
+  "e28064749fde0bf31b25f16674e7a24a823883ce" -> { "ecb9a7f511705a3fb8212df0d6fe4e8bd50a3044" };
+  "ecb9a7f511705a3fb8212df0d6fe4e8bd50a3044" -> { "efc3671bb9aed9ff48300f49575a49ee44d12d8c" };
+  "efc3671bb9aed9ff48300f49575a49ee44d12d8c" -> { "267cc45a4f225c0c22d875e4d4a8789a0f430028" };
 
-"devel" [label="devel" shape="cds" style="filled" fillcolor="darkgoldenrod1" ]; "devel" -> "3c5ec7c52712cdbcf4799e74c427ea25ffa15dc6"  [arrowhead="none"];{rank=same "devel" "3c5ec7c52712cdbcf4799e74c427ea25ffa15dc6"};
-"master" [label="master" shape="cds" style="filled" fillcolor="darkgoldenrod1" ]; "master" -> "b11629f5ecaf38aacfebc969b3960ea57a39e8a2"  [arrowhead="none"];{rank=same "master" "b11629f5ecaf38aacfebc969b3960ea57a39e8a2"};
+"devel" [label="devel" shape="cds" style="filled" fillcolor="darkgoldenrod1" ]; "devel" -> "e28064749fde0bf31b25f16674e7a24a823883ce"  [arrowhead="none"];{rank=same "devel" "e28064749fde0bf31b25f16674e7a24a823883ce"};
+"master" [label="master" shape="cds" style="filled" fillcolor="darkgoldenrod1" ]; "master" -> "039cf6844778fcdd866f9c24b58dc516b0b86a34"  [arrowhead="none"];{rank=same "master" "039cf6844778fcdd866f9c24b58dc516b0b86a34"};
 }
 </step>
 </animation>
@@ -812,10 +813,10 @@ Merge made by the 'recursive' strategy.
 </div>
 
 </section>
-<section id="slide-orged0a5eb">
-<h3 id="orged0a5eb">Merge: all commits belong to the graph</h3>
+<section id="slide-orgcd26db0">
+<h3 id="orgcd26db0">Merge: all commits belong to the graph</h3>
 
-<div id="org29ec46c" class="figure">
+<div id="org190a5ed" class="figure">
 <p><object type="image/svg+xml" data="org-gen/merge-result.svg" class="org-svg">
 Sorry, your browser does not support SVG.</object>
 </p>
@@ -829,18 +830,18 @@ Sorry, your browser does not support SVG.</object>
 
 <div class="org-src-container">
 
-<pre><code class="bash" >b11629f (HEAD -&gt; master) Merge branch 'devel'
-3c5ec7c (devel) Commit 2 on devel
-a4c0383 Commit 1 on devel
-0e450eb 3rd commit - only master
-2dc351f 2nd commit
-c8df166 1st commit
+<pre><code class="bash" >039cf68 (HEAD -&gt; master) Merge branch 'devel'
+e280647 (devel) Commit 2 on devel
+ecb9a7f Commit 1 on devel
+36aec75 3rd commit - only master
+efc3671 2nd commit
+267cc45 1st commit
 </code></pre>
 </div>
 
 </section>
-<section id="slide-org8422045">
-<h3 id="org8422045">Merge: a branch can be merged more than once</h3>
+<section id="slide-orga714ce9">
+<h3 id="orga714ce9">Merge: a branch can be merged more than once</h3>
 <callback  style='display:none' targetElementSelector='#new-branch-merge2-result' arg='new-branch-merge2-animation'></callback>
 <animation style='display:none' id='new-branch-merge2-animation'>
 <step>
@@ -848,22 +849,22 @@ digraph git {
 // repo: /tmp/git-from-the-inside/branches
 // cwd: /tmp/git-from-the-inside/branches
 graph [bgcolor=transparent]
-  "0e450ebde19182c87c52c7f3ece349ad49ff8cad" [label="0e450eb"]; "0e450ebde19182c87c52c7f3ece349ad49ff8cad-msg" [label="3rd commit - only master" margin="0" shape="none" ]; "0e450ebde19182c87c52c7f3ece349ad49ff8cad" -> "0e450ebde19182c87c52c7f3ece349ad49ff8cad-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "0e450ebde19182c87c52c7f3ece349ad49ff8cad" "0e450ebde19182c87c52c7f3ece349ad49ff8cad-msg"}
-  "2dc351fc6b002de6039445f15f05a863ee489f74" [label="2dc351f"]; "2dc351fc6b002de6039445f15f05a863ee489f74-msg" [label="2nd commit" margin="0" shape="none" ]; "2dc351fc6b002de6039445f15f05a863ee489f74" -> "2dc351fc6b002de6039445f15f05a863ee489f74-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "2dc351fc6b002de6039445f15f05a863ee489f74" "2dc351fc6b002de6039445f15f05a863ee489f74-msg"}
-  "3c5ec7c52712cdbcf4799e74c427ea25ffa15dc6" [label="3c5ec7c"]; "3c5ec7c52712cdbcf4799e74c427ea25ffa15dc6-msg" [label="Commit 2 on devel" margin="0" shape="none" ]; "3c5ec7c52712cdbcf4799e74c427ea25ffa15dc6" -> "3c5ec7c52712cdbcf4799e74c427ea25ffa15dc6-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "3c5ec7c52712cdbcf4799e74c427ea25ffa15dc6" "3c5ec7c52712cdbcf4799e74c427ea25ffa15dc6-msg"}
-  "a4c0383f7d5c5743e090cf6fe2034f6ecf963ee9" [label="a4c0383"]; "a4c0383f7d5c5743e090cf6fe2034f6ecf963ee9-msg" [label="Commit 1 on devel" margin="0" shape="none" ]; "a4c0383f7d5c5743e090cf6fe2034f6ecf963ee9" -> "a4c0383f7d5c5743e090cf6fe2034f6ecf963ee9-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "a4c0383f7d5c5743e090cf6fe2034f6ecf963ee9" "a4c0383f7d5c5743e090cf6fe2034f6ecf963ee9-msg"}
-  "b11629f5ecaf38aacfebc969b3960ea57a39e8a2" [label="b11629f"]; "b11629f5ecaf38aacfebc969b3960ea57a39e8a2-msg" [label="Merge branch 'devel'" margin="0" shape="none" ]; "b11629f5ecaf38aacfebc969b3960ea57a39e8a2" -> "b11629f5ecaf38aacfebc969b3960ea57a39e8a2-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "b11629f5ecaf38aacfebc969b3960ea57a39e8a2" "b11629f5ecaf38aacfebc969b3960ea57a39e8a2-msg"}
-  "c8df1661d82b0aa7d1cc01066864c52db492c290" [label="c8df166"]; "c8df1661d82b0aa7d1cc01066864c52db492c290-msg" [label="1st commit" margin="0" shape="none" ]; "c8df1661d82b0aa7d1cc01066864c52db492c290" -> "c8df1661d82b0aa7d1cc01066864c52db492c290-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "c8df1661d82b0aa7d1cc01066864c52db492c290" "c8df1661d82b0aa7d1cc01066864c52db492c290-msg"}
+  "039cf6844778fcdd866f9c24b58dc516b0b86a34" [label="039cf68"]; "039cf6844778fcdd866f9c24b58dc516b0b86a34-msg" [label="Merge branch 'devel'" margin="0" shape="none" ]; "039cf6844778fcdd866f9c24b58dc516b0b86a34" -> "039cf6844778fcdd866f9c24b58dc516b0b86a34-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "039cf6844778fcdd866f9c24b58dc516b0b86a34" "039cf6844778fcdd866f9c24b58dc516b0b86a34-msg"}
+  "267cc45a4f225c0c22d875e4d4a8789a0f430028" [label="267cc45"]; "267cc45a4f225c0c22d875e4d4a8789a0f430028-msg" [label="1st commit" margin="0" shape="none" ]; "267cc45a4f225c0c22d875e4d4a8789a0f430028" -> "267cc45a4f225c0c22d875e4d4a8789a0f430028-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "267cc45a4f225c0c22d875e4d4a8789a0f430028" "267cc45a4f225c0c22d875e4d4a8789a0f430028-msg"}
+  "36aec75f91b26c36e6e140452540b9a042d91eec" [label="36aec75"]; "36aec75f91b26c36e6e140452540b9a042d91eec-msg" [label="3rd commit - only master" margin="0" shape="none" ]; "36aec75f91b26c36e6e140452540b9a042d91eec" -> "36aec75f91b26c36e6e140452540b9a042d91eec-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "36aec75f91b26c36e6e140452540b9a042d91eec" "36aec75f91b26c36e6e140452540b9a042d91eec-msg"}
+  "e28064749fde0bf31b25f16674e7a24a823883ce" [label="e280647"]; "e28064749fde0bf31b25f16674e7a24a823883ce-msg" [label="Commit 2 on devel" margin="0" shape="none" ]; "e28064749fde0bf31b25f16674e7a24a823883ce" -> "e28064749fde0bf31b25f16674e7a24a823883ce-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "e28064749fde0bf31b25f16674e7a24a823883ce" "e28064749fde0bf31b25f16674e7a24a823883ce-msg"}
+  "ecb9a7f511705a3fb8212df0d6fe4e8bd50a3044" [label="ecb9a7f"]; "ecb9a7f511705a3fb8212df0d6fe4e8bd50a3044-msg" [label="Commit 1 on devel" margin="0" shape="none" ]; "ecb9a7f511705a3fb8212df0d6fe4e8bd50a3044" -> "ecb9a7f511705a3fb8212df0d6fe4e8bd50a3044-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "ecb9a7f511705a3fb8212df0d6fe4e8bd50a3044" "ecb9a7f511705a3fb8212df0d6fe4e8bd50a3044-msg"}
+  "efc3671bb9aed9ff48300f49575a49ee44d12d8c" [label="efc3671"]; "efc3671bb9aed9ff48300f49575a49ee44d12d8c-msg" [label="2nd commit" margin="0" shape="none" ]; "efc3671bb9aed9ff48300f49575a49ee44d12d8c" -> "efc3671bb9aed9ff48300f49575a49ee44d12d8c-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "efc3671bb9aed9ff48300f49575a49ee44d12d8c" "efc3671bb9aed9ff48300f49575a49ee44d12d8c-msg"}
 
-  "0e450ebde19182c87c52c7f3ece349ad49ff8cad" -> { "2dc351fc6b002de6039445f15f05a863ee489f74" };
-  "2dc351fc6b002de6039445f15f05a863ee489f74" -> { "c8df1661d82b0aa7d1cc01066864c52db492c290" };
-  "3c5ec7c52712cdbcf4799e74c427ea25ffa15dc6" -> { "a4c0383f7d5c5743e090cf6fe2034f6ecf963ee9" };
-  "a4c0383f7d5c5743e090cf6fe2034f6ecf963ee9" -> { "2dc351fc6b002de6039445f15f05a863ee489f74" };
-  "b11629f5ecaf38aacfebc969b3960ea57a39e8a2" -> { "0e450ebde19182c87c52c7f3ece349ad49ff8cad" "3c5ec7c52712cdbcf4799e74c427ea25ffa15dc6" };
-  "c8df1661d82b0aa7d1cc01066864c52db492c290" -> {  };
+  "039cf6844778fcdd866f9c24b58dc516b0b86a34" -> { "36aec75f91b26c36e6e140452540b9a042d91eec" "e28064749fde0bf31b25f16674e7a24a823883ce" };
+  "267cc45a4f225c0c22d875e4d4a8789a0f430028" -> {  };
+  "36aec75f91b26c36e6e140452540b9a042d91eec" -> { "efc3671bb9aed9ff48300f49575a49ee44d12d8c" };
+  "e28064749fde0bf31b25f16674e7a24a823883ce" -> { "ecb9a7f511705a3fb8212df0d6fe4e8bd50a3044" };
+  "ecb9a7f511705a3fb8212df0d6fe4e8bd50a3044" -> { "efc3671bb9aed9ff48300f49575a49ee44d12d8c" };
+  "efc3671bb9aed9ff48300f49575a49ee44d12d8c" -> { "267cc45a4f225c0c22d875e4d4a8789a0f430028" };
 
-"devel" [label="devel" shape="cds" style="filled" fillcolor="darkgoldenrod1" ]; "devel" -> "3c5ec7c52712cdbcf4799e74c427ea25ffa15dc6"  [arrowhead="none"];{rank=same "devel" "3c5ec7c52712cdbcf4799e74c427ea25ffa15dc6"};
-"master" [label="master" shape="cds" style="filled" fillcolor="darkgoldenrod1" ]; "master" -> "b11629f5ecaf38aacfebc969b3960ea57a39e8a2"  [arrowhead="none"];{rank=same "master" "b11629f5ecaf38aacfebc969b3960ea57a39e8a2"};
+"devel" [label="devel" shape="cds" style="filled" fillcolor="darkgoldenrod1" ]; "devel" -> "e28064749fde0bf31b25f16674e7a24a823883ce"  [arrowhead="none"];{rank=same "devel" "e28064749fde0bf31b25f16674e7a24a823883ce"};
+"master" [label="master" shape="cds" style="filled" fillcolor="darkgoldenrod1" ]; "master" -> "039cf6844778fcdd866f9c24b58dc516b0b86a34"  [arrowhead="none"];{rank=same "master" "039cf6844778fcdd866f9c24b58dc516b0b86a34"};
 }
 </step>
 <step>
@@ -871,26 +872,26 @@ digraph git {
 // repo: /tmp/git-from-the-inside/branches
 // cwd: /tmp/git-from-the-inside/branches
 graph [bgcolor=transparent]
-  "0e450ebde19182c87c52c7f3ece349ad49ff8cad" [label="0e450eb"]; "0e450ebde19182c87c52c7f3ece349ad49ff8cad-msg" [label="3rd commit - only master" margin="0" shape="none" ]; "0e450ebde19182c87c52c7f3ece349ad49ff8cad" -> "0e450ebde19182c87c52c7f3ece349ad49ff8cad-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "0e450ebde19182c87c52c7f3ece349ad49ff8cad" "0e450ebde19182c87c52c7f3ece349ad49ff8cad-msg"}
-  "2dc351fc6b002de6039445f15f05a863ee489f74" [label="2dc351f"]; "2dc351fc6b002de6039445f15f05a863ee489f74-msg" [label="2nd commit" margin="0" shape="none" ]; "2dc351fc6b002de6039445f15f05a863ee489f74" -> "2dc351fc6b002de6039445f15f05a863ee489f74-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "2dc351fc6b002de6039445f15f05a863ee489f74" "2dc351fc6b002de6039445f15f05a863ee489f74-msg"}
-  "395f7fa28f75ad615a43c7b09b81379b864b776e" [label="395f7fa"]; "395f7fa28f75ad615a43c7b09b81379b864b776e-msg" [label="Hotfix on devel" margin="0" shape="none" ]; "395f7fa28f75ad615a43c7b09b81379b864b776e" -> "395f7fa28f75ad615a43c7b09b81379b864b776e-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "395f7fa28f75ad615a43c7b09b81379b864b776e" "395f7fa28f75ad615a43c7b09b81379b864b776e-msg"}
-  "3c5ec7c52712cdbcf4799e74c427ea25ffa15dc6" [label="3c5ec7c"]; "3c5ec7c52712cdbcf4799e74c427ea25ffa15dc6-msg" [label="Commit 2 on devel" margin="0" shape="none" ]; "3c5ec7c52712cdbcf4799e74c427ea25ffa15dc6" -> "3c5ec7c52712cdbcf4799e74c427ea25ffa15dc6-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "3c5ec7c52712cdbcf4799e74c427ea25ffa15dc6" "3c5ec7c52712cdbcf4799e74c427ea25ffa15dc6-msg"}
-  "a38c7a4e35ec893dd34b2117d73f9fcc246977c0" [label="a38c7a4"]; "a38c7a4e35ec893dd34b2117d73f9fcc246977c0-msg" [label="Merge branch 'devel'" margin="0" shape="none" ]; "a38c7a4e35ec893dd34b2117d73f9fcc246977c0" -> "a38c7a4e35ec893dd34b2117d73f9fcc246977c0-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "a38c7a4e35ec893dd34b2117d73f9fcc246977c0" "a38c7a4e35ec893dd34b2117d73f9fcc246977c0-msg"}
-  "a4c0383f7d5c5743e090cf6fe2034f6ecf963ee9" [label="a4c0383"]; "a4c0383f7d5c5743e090cf6fe2034f6ecf963ee9-msg" [label="Commit 1 on devel" margin="0" shape="none" ]; "a4c0383f7d5c5743e090cf6fe2034f6ecf963ee9" -> "a4c0383f7d5c5743e090cf6fe2034f6ecf963ee9-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "a4c0383f7d5c5743e090cf6fe2034f6ecf963ee9" "a4c0383f7d5c5743e090cf6fe2034f6ecf963ee9-msg"}
-  "b11629f5ecaf38aacfebc969b3960ea57a39e8a2" [label="b11629f"]; "b11629f5ecaf38aacfebc969b3960ea57a39e8a2-msg" [label="Merge branch 'devel'" margin="0" shape="none" ]; "b11629f5ecaf38aacfebc969b3960ea57a39e8a2" -> "b11629f5ecaf38aacfebc969b3960ea57a39e8a2-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "b11629f5ecaf38aacfebc969b3960ea57a39e8a2" "b11629f5ecaf38aacfebc969b3960ea57a39e8a2-msg"}
-  "c8df1661d82b0aa7d1cc01066864c52db492c290" [label="c8df166"]; "c8df1661d82b0aa7d1cc01066864c52db492c290-msg" [label="1st commit" margin="0" shape="none" ]; "c8df1661d82b0aa7d1cc01066864c52db492c290" -> "c8df1661d82b0aa7d1cc01066864c52db492c290-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "c8df1661d82b0aa7d1cc01066864c52db492c290" "c8df1661d82b0aa7d1cc01066864c52db492c290-msg"}
+  "039cf6844778fcdd866f9c24b58dc516b0b86a34" [label="039cf68"]; "039cf6844778fcdd866f9c24b58dc516b0b86a34-msg" [label="Merge branch 'devel'" margin="0" shape="none" ]; "039cf6844778fcdd866f9c24b58dc516b0b86a34" -> "039cf6844778fcdd866f9c24b58dc516b0b86a34-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "039cf6844778fcdd866f9c24b58dc516b0b86a34" "039cf6844778fcdd866f9c24b58dc516b0b86a34-msg"}
+  "1e409c1a928f80cb32ea196fbff2e26ee59cd57a" [label="1e409c1"]; "1e409c1a928f80cb32ea196fbff2e26ee59cd57a-msg" [label="Hotfix on devel" margin="0" shape="none" ]; "1e409c1a928f80cb32ea196fbff2e26ee59cd57a" -> "1e409c1a928f80cb32ea196fbff2e26ee59cd57a-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "1e409c1a928f80cb32ea196fbff2e26ee59cd57a" "1e409c1a928f80cb32ea196fbff2e26ee59cd57a-msg"}
+  "267cc45a4f225c0c22d875e4d4a8789a0f430028" [label="267cc45"]; "267cc45a4f225c0c22d875e4d4a8789a0f430028-msg" [label="1st commit" margin="0" shape="none" ]; "267cc45a4f225c0c22d875e4d4a8789a0f430028" -> "267cc45a4f225c0c22d875e4d4a8789a0f430028-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "267cc45a4f225c0c22d875e4d4a8789a0f430028" "267cc45a4f225c0c22d875e4d4a8789a0f430028-msg"}
+  "36aec75f91b26c36e6e140452540b9a042d91eec" [label="36aec75"]; "36aec75f91b26c36e6e140452540b9a042d91eec-msg" [label="3rd commit - only master" margin="0" shape="none" ]; "36aec75f91b26c36e6e140452540b9a042d91eec" -> "36aec75f91b26c36e6e140452540b9a042d91eec-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "36aec75f91b26c36e6e140452540b9a042d91eec" "36aec75f91b26c36e6e140452540b9a042d91eec-msg"}
+  "dcd848766840d9e8ea7725a93417698e1e9d61c0" [label="dcd8487"]; "dcd848766840d9e8ea7725a93417698e1e9d61c0-msg" [label="Merge branch 'devel'" margin="0" shape="none" ]; "dcd848766840d9e8ea7725a93417698e1e9d61c0" -> "dcd848766840d9e8ea7725a93417698e1e9d61c0-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "dcd848766840d9e8ea7725a93417698e1e9d61c0" "dcd848766840d9e8ea7725a93417698e1e9d61c0-msg"}
+  "e28064749fde0bf31b25f16674e7a24a823883ce" [label="e280647"]; "e28064749fde0bf31b25f16674e7a24a823883ce-msg" [label="Commit 2 on devel" margin="0" shape="none" ]; "e28064749fde0bf31b25f16674e7a24a823883ce" -> "e28064749fde0bf31b25f16674e7a24a823883ce-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "e28064749fde0bf31b25f16674e7a24a823883ce" "e28064749fde0bf31b25f16674e7a24a823883ce-msg"}
+  "ecb9a7f511705a3fb8212df0d6fe4e8bd50a3044" [label="ecb9a7f"]; "ecb9a7f511705a3fb8212df0d6fe4e8bd50a3044-msg" [label="Commit 1 on devel" margin="0" shape="none" ]; "ecb9a7f511705a3fb8212df0d6fe4e8bd50a3044" -> "ecb9a7f511705a3fb8212df0d6fe4e8bd50a3044-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "ecb9a7f511705a3fb8212df0d6fe4e8bd50a3044" "ecb9a7f511705a3fb8212df0d6fe4e8bd50a3044-msg"}
+  "efc3671bb9aed9ff48300f49575a49ee44d12d8c" [label="efc3671"]; "efc3671bb9aed9ff48300f49575a49ee44d12d8c-msg" [label="2nd commit" margin="0" shape="none" ]; "efc3671bb9aed9ff48300f49575a49ee44d12d8c" -> "efc3671bb9aed9ff48300f49575a49ee44d12d8c-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "efc3671bb9aed9ff48300f49575a49ee44d12d8c" "efc3671bb9aed9ff48300f49575a49ee44d12d8c-msg"}
 
-  "0e450ebde19182c87c52c7f3ece349ad49ff8cad" -> { "2dc351fc6b002de6039445f15f05a863ee489f74" };
-  "2dc351fc6b002de6039445f15f05a863ee489f74" -> { "c8df1661d82b0aa7d1cc01066864c52db492c290" };
-  "395f7fa28f75ad615a43c7b09b81379b864b776e" -> { "3c5ec7c52712cdbcf4799e74c427ea25ffa15dc6" };
-  "3c5ec7c52712cdbcf4799e74c427ea25ffa15dc6" -> { "a4c0383f7d5c5743e090cf6fe2034f6ecf963ee9" };
-  "a38c7a4e35ec893dd34b2117d73f9fcc246977c0" -> { "b11629f5ecaf38aacfebc969b3960ea57a39e8a2" "395f7fa28f75ad615a43c7b09b81379b864b776e" };
-  "a4c0383f7d5c5743e090cf6fe2034f6ecf963ee9" -> { "2dc351fc6b002de6039445f15f05a863ee489f74" };
-  "b11629f5ecaf38aacfebc969b3960ea57a39e8a2" -> { "0e450ebde19182c87c52c7f3ece349ad49ff8cad" "3c5ec7c52712cdbcf4799e74c427ea25ffa15dc6" };
-  "c8df1661d82b0aa7d1cc01066864c52db492c290" -> {  };
+  "039cf6844778fcdd866f9c24b58dc516b0b86a34" -> { "36aec75f91b26c36e6e140452540b9a042d91eec" "e28064749fde0bf31b25f16674e7a24a823883ce" };
+  "1e409c1a928f80cb32ea196fbff2e26ee59cd57a" -> { "e28064749fde0bf31b25f16674e7a24a823883ce" };
+  "267cc45a4f225c0c22d875e4d4a8789a0f430028" -> {  };
+  "36aec75f91b26c36e6e140452540b9a042d91eec" -> { "efc3671bb9aed9ff48300f49575a49ee44d12d8c" };
+  "dcd848766840d9e8ea7725a93417698e1e9d61c0" -> { "039cf6844778fcdd866f9c24b58dc516b0b86a34" "1e409c1a928f80cb32ea196fbff2e26ee59cd57a" };
+  "e28064749fde0bf31b25f16674e7a24a823883ce" -> { "ecb9a7f511705a3fb8212df0d6fe4e8bd50a3044" };
+  "ecb9a7f511705a3fb8212df0d6fe4e8bd50a3044" -> { "efc3671bb9aed9ff48300f49575a49ee44d12d8c" };
+  "efc3671bb9aed9ff48300f49575a49ee44d12d8c" -> { "267cc45a4f225c0c22d875e4d4a8789a0f430028" };
 
-"devel" [label="devel" shape="cds" style="filled" fillcolor="darkgoldenrod1" ]; "devel" -> "395f7fa28f75ad615a43c7b09b81379b864b776e"  [arrowhead="none"];{rank=same "devel" "395f7fa28f75ad615a43c7b09b81379b864b776e"};
-"master" [label="master" shape="cds" style="filled" fillcolor="darkgoldenrod1" ]; "master" -> "a38c7a4e35ec893dd34b2117d73f9fcc246977c0"  [arrowhead="none"];{rank=same "master" "a38c7a4e35ec893dd34b2117d73f9fcc246977c0"};
+"devel" [label="devel" shape="cds" style="filled" fillcolor="darkgoldenrod1" ]; "devel" -> "1e409c1a928f80cb32ea196fbff2e26ee59cd57a"  [arrowhead="none"];{rank=same "devel" "1e409c1a928f80cb32ea196fbff2e26ee59cd57a"};
+"master" [label="master" shape="cds" style="filled" fillcolor="darkgoldenrod1" ]; "master" -> "dcd848766840d9e8ea7725a93417698e1e9d61c0"  [arrowhead="none"];{rank=same "master" "dcd848766840d9e8ea7725a93417698e1e9d61c0"};
 }
 </step>
 </animation>
@@ -909,7 +910,7 @@ GIT_MERGE_AUTOEDIT=no git merge devel
 
 <div class="org-src-container">
 
-<pre><code class="bash" >[devel 395f7fa] Hotfix on devel
+<pre><code class="bash" >[devel 1e409c1] Hotfix on devel
 Already up to date!
 Merge made by the 'recursive' strategy.
 </code></pre>
@@ -920,12 +921,12 @@ Merge made by the 'recursive' strategy.
 </div>
 
 </section>
-<section id="slide-orgefc533e">
-<h3 id="orgefc533e">Merge Summary</h3>
+<section id="slide-orgfe1f1e8">
+<h3 id="orgfe1f1e8">Merge Summary</h3>
 <div class="two-columns r-stretch">
 <div  class="top-right">
 
-<div id="org04b88f1" class="figure">
+<div id="orgfa9bb02" class="figure">
 <p><object type="image/svg+xml" data="org-gen/merge-result2.svg" class="org-svg">
 Sorry, your browser does not support SVG.</object>
 </p>
@@ -957,19 +958,19 @@ Sorry, your browser does not support SVG.</object>
 </p>
 
 </section>
-<section id="slide-org403a9c9">
-<h3 id="org403a9c9">Rebase: theory</h3>
+<section id="slide-orgb4c521b">
+<h3 id="orgb4c521b">Rebase: theory</h3>
 <div class="scale-width r-stretch">
 
-<div id="orgf9bc969" class="figure">
+<div id="org9f586a8" class="figure">
 <p><object type="image/svg+xml" data="img/commits_devel_branch_rebase.svg" class="org-svg">
 Sorry, your browser does not support SVG.</object>
 </p>
 </div>
 </div>
 </section>
-<section id="slide-orgf1b176a">
-<h3 id="orgf1b176a">Rebase: how it works</h3>
+<section id="slide-orgc72a50a">
+<h3 id="orgc72a50a">Rebase: how it works</h3>
 <callback  style='display:none' targetElementSelector='#new-branch-rebase-result' arg='new-branch-rebase-animation'></callback>
 <animation style='display:none' id='new-branch-rebase-animation'>
 <step>
@@ -977,20 +978,20 @@ digraph git {
 // repo: /tmp/git-from-the-inside/rebase
 // cwd: /tmp/git-from-the-inside/rebase
 graph [bgcolor=transparent]
-  "4f78481f17217115455d87e541e8927e9a3b3cb0" [label="4f78481"]; "4f78481f17217115455d87e541e8927e9a3b3cb0-msg" [label="devel: 1st commit" margin="0" shape="none" ]; "4f78481f17217115455d87e541e8927e9a3b3cb0" -> "4f78481f17217115455d87e541e8927e9a3b3cb0-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "4f78481f17217115455d87e541e8927e9a3b3cb0" "4f78481f17217115455d87e541e8927e9a3b3cb0-msg"}
-  "7b133b86cd83abaab65111931954ca905b69ba18" [label="7b133b8"]; "7b133b86cd83abaab65111931954ca905b69ba18-msg" [label="master: 3rd commit" margin="0" shape="none" ]; "7b133b86cd83abaab65111931954ca905b69ba18" -> "7b133b86cd83abaab65111931954ca905b69ba18-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "7b133b86cd83abaab65111931954ca905b69ba18" "7b133b86cd83abaab65111931954ca905b69ba18-msg"}
-  "9364c3c9e1fad16bac0b79391b24d092edca1a2d" [label="9364c3c"]; "9364c3c9e1fad16bac0b79391b24d092edca1a2d-msg" [label="master: 1st commit" margin="0" shape="none" ]; "9364c3c9e1fad16bac0b79391b24d092edca1a2d" -> "9364c3c9e1fad16bac0b79391b24d092edca1a2d-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "9364c3c9e1fad16bac0b79391b24d092edca1a2d" "9364c3c9e1fad16bac0b79391b24d092edca1a2d-msg"}
-  "9fd818afb7d40f6939c163f627e625170ba64b7a" [label="9fd818a"]; "9fd818afb7d40f6939c163f627e625170ba64b7a-msg" [label="master: 2nd commit" margin="0" shape="none" ]; "9fd818afb7d40f6939c163f627e625170ba64b7a" -> "9fd818afb7d40f6939c163f627e625170ba64b7a-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "9fd818afb7d40f6939c163f627e625170ba64b7a" "9fd818afb7d40f6939c163f627e625170ba64b7a-msg"}
-  "f491013a5711b2603f0b6d06258411902ae08674" [label="f491013"]; "f491013a5711b2603f0b6d06258411902ae08674-msg" [label="devel: 2nd commit" margin="0" shape="none" ]; "f491013a5711b2603f0b6d06258411902ae08674" -> "f491013a5711b2603f0b6d06258411902ae08674-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "f491013a5711b2603f0b6d06258411902ae08674" "f491013a5711b2603f0b6d06258411902ae08674-msg"}
+  "27aee51ca2e94f247a89d8cf389a95f542f5dc6b" [label="27aee51"]; "27aee51ca2e94f247a89d8cf389a95f542f5dc6b-msg" [label="devel: 2nd commit" margin="0" shape="none" ]; "27aee51ca2e94f247a89d8cf389a95f542f5dc6b" -> "27aee51ca2e94f247a89d8cf389a95f542f5dc6b-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "27aee51ca2e94f247a89d8cf389a95f542f5dc6b" "27aee51ca2e94f247a89d8cf389a95f542f5dc6b-msg"}
+  "546f3da81b713b4f22820e17aac0fb9060858f2d" [label="546f3da"]; "546f3da81b713b4f22820e17aac0fb9060858f2d-msg" [label="master: 2nd commit" margin="0" shape="none" ]; "546f3da81b713b4f22820e17aac0fb9060858f2d" -> "546f3da81b713b4f22820e17aac0fb9060858f2d-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "546f3da81b713b4f22820e17aac0fb9060858f2d" "546f3da81b713b4f22820e17aac0fb9060858f2d-msg"}
+  "5b9f861f9221e78eda14c6a19764f488ebebf448" [label="5b9f861"]; "5b9f861f9221e78eda14c6a19764f488ebebf448-msg" [label="master: 1st commit" margin="0" shape="none" ]; "5b9f861f9221e78eda14c6a19764f488ebebf448" -> "5b9f861f9221e78eda14c6a19764f488ebebf448-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "5b9f861f9221e78eda14c6a19764f488ebebf448" "5b9f861f9221e78eda14c6a19764f488ebebf448-msg"}
+  "bc8bdce0bdd1af511980785ffc0c9a4b1574d21a" [label="bc8bdce"]; "bc8bdce0bdd1af511980785ffc0c9a4b1574d21a-msg" [label="devel: 1st commit" margin="0" shape="none" ]; "bc8bdce0bdd1af511980785ffc0c9a4b1574d21a" -> "bc8bdce0bdd1af511980785ffc0c9a4b1574d21a-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "bc8bdce0bdd1af511980785ffc0c9a4b1574d21a" "bc8bdce0bdd1af511980785ffc0c9a4b1574d21a-msg"}
+  "fc572a09c45bfbd995c7abcc0fbe1117eb64e496" [label="fc572a0"]; "fc572a09c45bfbd995c7abcc0fbe1117eb64e496-msg" [label="master: 3rd commit" margin="0" shape="none" ]; "fc572a09c45bfbd995c7abcc0fbe1117eb64e496" -> "fc572a09c45bfbd995c7abcc0fbe1117eb64e496-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "fc572a09c45bfbd995c7abcc0fbe1117eb64e496" "fc572a09c45bfbd995c7abcc0fbe1117eb64e496-msg"}
 
-  "4f78481f17217115455d87e541e8927e9a3b3cb0" -> { "9fd818afb7d40f6939c163f627e625170ba64b7a" };
-  "7b133b86cd83abaab65111931954ca905b69ba18" -> { "9fd818afb7d40f6939c163f627e625170ba64b7a" };
-  "9364c3c9e1fad16bac0b79391b24d092edca1a2d" -> {  };
-  "9fd818afb7d40f6939c163f627e625170ba64b7a" -> { "9364c3c9e1fad16bac0b79391b24d092edca1a2d" };
-  "f491013a5711b2603f0b6d06258411902ae08674" -> { "4f78481f17217115455d87e541e8927e9a3b3cb0" };
+  "27aee51ca2e94f247a89d8cf389a95f542f5dc6b" -> { "bc8bdce0bdd1af511980785ffc0c9a4b1574d21a" };
+  "546f3da81b713b4f22820e17aac0fb9060858f2d" -> { "5b9f861f9221e78eda14c6a19764f488ebebf448" };
+  "5b9f861f9221e78eda14c6a19764f488ebebf448" -> {  };
+  "bc8bdce0bdd1af511980785ffc0c9a4b1574d21a" -> { "546f3da81b713b4f22820e17aac0fb9060858f2d" };
+  "fc572a09c45bfbd995c7abcc0fbe1117eb64e496" -> { "546f3da81b713b4f22820e17aac0fb9060858f2d" };
 
-"devel" [label="devel" shape="cds" style="filled" fillcolor="darkgoldenrod1" ]; "devel" -> "f491013a5711b2603f0b6d06258411902ae08674"  [arrowhead="none"];{rank=same "devel" "f491013a5711b2603f0b6d06258411902ae08674"};
-"master" [label="master" shape="cds" style="filled" fillcolor="darkgoldenrod1" ]; "master" -> "7b133b86cd83abaab65111931954ca905b69ba18"  [arrowhead="none"];{rank=same "master" "7b133b86cd83abaab65111931954ca905b69ba18"};
+"devel" [label="devel" shape="cds" style="filled" fillcolor="darkgoldenrod1" ]; "devel" -> "27aee51ca2e94f247a89d8cf389a95f542f5dc6b"  [arrowhead="none"];{rank=same "devel" "27aee51ca2e94f247a89d8cf389a95f542f5dc6b"};
+"master" [label="master" shape="cds" style="filled" fillcolor="darkgoldenrod1" ]; "master" -> "fc572a09c45bfbd995c7abcc0fbe1117eb64e496"  [arrowhead="none"];{rank=same "master" "fc572a09c45bfbd995c7abcc0fbe1117eb64e496"};
 }
 </step>
 <step>
@@ -998,22 +999,22 @@ digraph git {
 // repo: /tmp/git-from-the-inside/rebase
 // cwd: /tmp/git-from-the-inside/rebase
 graph [bgcolor=transparent]
-  "0c4b1f4f56f8093bd2e36b20a64cfe1cc14681de" [label="0c4b1f4"]; "0c4b1f4f56f8093bd2e36b20a64cfe1cc14681de-msg" [label="devel: 1st commit" margin="0" shape="none" ]; "0c4b1f4f56f8093bd2e36b20a64cfe1cc14681de" -> "0c4b1f4f56f8093bd2e36b20a64cfe1cc14681de-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "0c4b1f4f56f8093bd2e36b20a64cfe1cc14681de" "0c4b1f4f56f8093bd2e36b20a64cfe1cc14681de-msg"}
-  "4f78481f17217115455d87e541e8927e9a3b3cb0" [label="4f78481"]; "4f78481f17217115455d87e541e8927e9a3b3cb0-msg" [label="devel: 1st commit" margin="0" shape="none" ]; "4f78481f17217115455d87e541e8927e9a3b3cb0" -> "4f78481f17217115455d87e541e8927e9a3b3cb0-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "4f78481f17217115455d87e541e8927e9a3b3cb0" "4f78481f17217115455d87e541e8927e9a3b3cb0-msg"}
-  "7b133b86cd83abaab65111931954ca905b69ba18" [label="7b133b8"]; "7b133b86cd83abaab65111931954ca905b69ba18-msg" [label="master: 3rd commit" margin="0" shape="none" ]; "7b133b86cd83abaab65111931954ca905b69ba18" -> "7b133b86cd83abaab65111931954ca905b69ba18-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "7b133b86cd83abaab65111931954ca905b69ba18" "7b133b86cd83abaab65111931954ca905b69ba18-msg"}
-  "91d9a860baf4cf47ee87f789a8c907abdf4f70ca" [label="91d9a86"]; "91d9a860baf4cf47ee87f789a8c907abdf4f70ca-msg" [label="devel: 2nd commit" margin="0" shape="none" ]; "91d9a860baf4cf47ee87f789a8c907abdf4f70ca" -> "91d9a860baf4cf47ee87f789a8c907abdf4f70ca-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "91d9a860baf4cf47ee87f789a8c907abdf4f70ca" "91d9a860baf4cf47ee87f789a8c907abdf4f70ca-msg"}
-  "9364c3c9e1fad16bac0b79391b24d092edca1a2d" [label="9364c3c"]; "9364c3c9e1fad16bac0b79391b24d092edca1a2d-msg" [label="master: 1st commit" margin="0" shape="none" ]; "9364c3c9e1fad16bac0b79391b24d092edca1a2d" -> "9364c3c9e1fad16bac0b79391b24d092edca1a2d-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "9364c3c9e1fad16bac0b79391b24d092edca1a2d" "9364c3c9e1fad16bac0b79391b24d092edca1a2d-msg"}
-  "9fd818afb7d40f6939c163f627e625170ba64b7a" [label="9fd818a"]; "9fd818afb7d40f6939c163f627e625170ba64b7a-msg" [label="master: 2nd commit" margin="0" shape="none" ]; "9fd818afb7d40f6939c163f627e625170ba64b7a" -> "9fd818afb7d40f6939c163f627e625170ba64b7a-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "9fd818afb7d40f6939c163f627e625170ba64b7a" "9fd818afb7d40f6939c163f627e625170ba64b7a-msg"}
-  "f491013a5711b2603f0b6d06258411902ae08674" [label="f491013"]; "f491013a5711b2603f0b6d06258411902ae08674-msg" [label="devel: 2nd commit" margin="0" shape="none" ]; "f491013a5711b2603f0b6d06258411902ae08674" -> "f491013a5711b2603f0b6d06258411902ae08674-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "f491013a5711b2603f0b6d06258411902ae08674" "f491013a5711b2603f0b6d06258411902ae08674-msg"}
+  "27aee51ca2e94f247a89d8cf389a95f542f5dc6b" [label="27aee51"]; "27aee51ca2e94f247a89d8cf389a95f542f5dc6b-msg" [label="devel: 2nd commit" margin="0" shape="none" ]; "27aee51ca2e94f247a89d8cf389a95f542f5dc6b" -> "27aee51ca2e94f247a89d8cf389a95f542f5dc6b-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "27aee51ca2e94f247a89d8cf389a95f542f5dc6b" "27aee51ca2e94f247a89d8cf389a95f542f5dc6b-msg"}
+  "32fa2de2978fb435057ddc84f18f8f9c16faf735" [label="32fa2de"]; "32fa2de2978fb435057ddc84f18f8f9c16faf735-msg" [label="devel: 1st commit" margin="0" shape="none" ]; "32fa2de2978fb435057ddc84f18f8f9c16faf735" -> "32fa2de2978fb435057ddc84f18f8f9c16faf735-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "32fa2de2978fb435057ddc84f18f8f9c16faf735" "32fa2de2978fb435057ddc84f18f8f9c16faf735-msg"}
+  "546f3da81b713b4f22820e17aac0fb9060858f2d" [label="546f3da"]; "546f3da81b713b4f22820e17aac0fb9060858f2d-msg" [label="master: 2nd commit" margin="0" shape="none" ]; "546f3da81b713b4f22820e17aac0fb9060858f2d" -> "546f3da81b713b4f22820e17aac0fb9060858f2d-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "546f3da81b713b4f22820e17aac0fb9060858f2d" "546f3da81b713b4f22820e17aac0fb9060858f2d-msg"}
+  "5b9f861f9221e78eda14c6a19764f488ebebf448" [label="5b9f861"]; "5b9f861f9221e78eda14c6a19764f488ebebf448-msg" [label="master: 1st commit" margin="0" shape="none" ]; "5b9f861f9221e78eda14c6a19764f488ebebf448" -> "5b9f861f9221e78eda14c6a19764f488ebebf448-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "5b9f861f9221e78eda14c6a19764f488ebebf448" "5b9f861f9221e78eda14c6a19764f488ebebf448-msg"}
+  "9b01ab1932c236d611a10c9c9d9a55395af7c963" [label="9b01ab1"]; "9b01ab1932c236d611a10c9c9d9a55395af7c963-msg" [label="devel: 2nd commit" margin="0" shape="none" ]; "9b01ab1932c236d611a10c9c9d9a55395af7c963" -> "9b01ab1932c236d611a10c9c9d9a55395af7c963-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "9b01ab1932c236d611a10c9c9d9a55395af7c963" "9b01ab1932c236d611a10c9c9d9a55395af7c963-msg"}
+  "bc8bdce0bdd1af511980785ffc0c9a4b1574d21a" [label="bc8bdce"]; "bc8bdce0bdd1af511980785ffc0c9a4b1574d21a-msg" [label="devel: 1st commit" margin="0" shape="none" ]; "bc8bdce0bdd1af511980785ffc0c9a4b1574d21a" -> "bc8bdce0bdd1af511980785ffc0c9a4b1574d21a-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "bc8bdce0bdd1af511980785ffc0c9a4b1574d21a" "bc8bdce0bdd1af511980785ffc0c9a4b1574d21a-msg"}
+  "fc572a09c45bfbd995c7abcc0fbe1117eb64e496" [label="fc572a0"]; "fc572a09c45bfbd995c7abcc0fbe1117eb64e496-msg" [label="master: 3rd commit" margin="0" shape="none" ]; "fc572a09c45bfbd995c7abcc0fbe1117eb64e496" -> "fc572a09c45bfbd995c7abcc0fbe1117eb64e496-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "fc572a09c45bfbd995c7abcc0fbe1117eb64e496" "fc572a09c45bfbd995c7abcc0fbe1117eb64e496-msg"}
 
-  "0c4b1f4f56f8093bd2e36b20a64cfe1cc14681de" -> { "7b133b86cd83abaab65111931954ca905b69ba18" };
-  "7b133b86cd83abaab65111931954ca905b69ba18" -> { "9fd818afb7d40f6939c163f627e625170ba64b7a" };
-  "91d9a860baf4cf47ee87f789a8c907abdf4f70ca" -> { "0c4b1f4f56f8093bd2e36b20a64cfe1cc14681de" };
-  "9364c3c9e1fad16bac0b79391b24d092edca1a2d" -> {  };
-  "9fd818afb7d40f6939c163f627e625170ba64b7a" -> { "9364c3c9e1fad16bac0b79391b24d092edca1a2d" };
+  "32fa2de2978fb435057ddc84f18f8f9c16faf735" -> { "fc572a09c45bfbd995c7abcc0fbe1117eb64e496" };
+  "546f3da81b713b4f22820e17aac0fb9060858f2d" -> { "5b9f861f9221e78eda14c6a19764f488ebebf448" };
+  "5b9f861f9221e78eda14c6a19764f488ebebf448" -> {  };
+  "9b01ab1932c236d611a10c9c9d9a55395af7c963" -> { "32fa2de2978fb435057ddc84f18f8f9c16faf735" };
+  "fc572a09c45bfbd995c7abcc0fbe1117eb64e496" -> { "546f3da81b713b4f22820e17aac0fb9060858f2d" };
 
-"devel" [label="devel" shape="cds" style="filled" fillcolor="darkgoldenrod1" ]; "devel" -> "91d9a860baf4cf47ee87f789a8c907abdf4f70ca"  [arrowhead="none"];{rank=same "devel" "91d9a860baf4cf47ee87f789a8c907abdf4f70ca"};
-"master" [label="master" shape="cds" style="filled" fillcolor="darkgoldenrod1" ]; "master" -> "7b133b86cd83abaab65111931954ca905b69ba18"  [arrowhead="none"];{rank=same "master" "7b133b86cd83abaab65111931954ca905b69ba18"};
+"devel" [label="devel" shape="cds" style="filled" fillcolor="darkgoldenrod1" ]; "devel" -> "9b01ab1932c236d611a10c9c9d9a55395af7c963"  [arrowhead="none"];{rank=same "devel" "9b01ab1932c236d611a10c9c9d9a55395af7c963"};
+"master" [label="master" shape="cds" style="filled" fillcolor="darkgoldenrod1" ]; "master" -> "fc572a09c45bfbd995c7abcc0fbe1117eb64e496"  [arrowhead="none"];{rank=same "master" "fc572a09c45bfbd995c7abcc0fbe1117eb64e496"};
 }
 </step>
 </animation>
@@ -1041,10 +1042,10 @@ Applying: devel: 2nd commit
 </div>
 
 </section>
-<section id="slide-org8220e53">
-<h3 id="org8220e53">Rebase: <em>All</em> rebased commits are changed</h3>
+<section id="slide-org34be7bc">
+<h3 id="org34be7bc">Rebase: <em>All</em> rebased commits are changed</h3>
 
-<div id="orga3beda1" class="figure">
+<div id="org7228e98" class="figure">
 <p><object type="image/svg+xml" data="org-gen/rebase-result.svg" class="org-svg">
 Sorry, your browser does not support SVG.</object>
 </p>
@@ -1058,17 +1059,17 @@ Sorry, your browser does not support SVG.</object>
 
 <div class="org-src-container">
 
-<pre><code class="bash" >91d9a86 (HEAD -&gt; devel) devel: 2nd commit
-0c4b1f4 devel: 1st commit
-7b133b8 (master) master: 3rd commit
-9fd818a master: 2nd commit
-9364c3c master: 1st commit
+<pre><code class="bash" >9b01ab1 (HEAD -&gt; devel) devel: 2nd commit
+32fa2de devel: 1st commit
+fc572a0 (master) master: 3rd commit
+546f3da master: 2nd commit
+5b9f861 master: 1st commit
 </code></pre>
 </div>
 
 </section>
-<section id="slide-org31d5a43">
-<h3 id="org31d5a43">Rebase: Merging gets easy</h3>
+<section id="slide-orgfe3a545">
+<h3 id="orgfe3a545">Rebase: Merging gets easy</h3>
 <callback  style='display:none' targetElementSelector='#new-branch-rebase-merge-result' arg='new-branch-rebase-merge-animation'></callback>
 <animation style='display:none' id='new-branch-rebase-merge-animation'>
 <step>
@@ -1076,22 +1077,22 @@ digraph git {
 // repo: /tmp/git-from-the-inside/rebase
 // cwd: /tmp/git-from-the-inside/rebase
 graph [bgcolor=transparent]
-  "0c4b1f4f56f8093bd2e36b20a64cfe1cc14681de" [label="0c4b1f4"]; "0c4b1f4f56f8093bd2e36b20a64cfe1cc14681de-msg" [label="devel: 1st commit" margin="0" shape="none" ]; "0c4b1f4f56f8093bd2e36b20a64cfe1cc14681de" -> "0c4b1f4f56f8093bd2e36b20a64cfe1cc14681de-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "0c4b1f4f56f8093bd2e36b20a64cfe1cc14681de" "0c4b1f4f56f8093bd2e36b20a64cfe1cc14681de-msg"}
-  "4f78481f17217115455d87e541e8927e9a3b3cb0" [label="4f78481"]; "4f78481f17217115455d87e541e8927e9a3b3cb0-msg" [label="devel: 1st commit" margin="0" shape="none" ]; "4f78481f17217115455d87e541e8927e9a3b3cb0" -> "4f78481f17217115455d87e541e8927e9a3b3cb0-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "4f78481f17217115455d87e541e8927e9a3b3cb0" "4f78481f17217115455d87e541e8927e9a3b3cb0-msg"}
-  "7b133b86cd83abaab65111931954ca905b69ba18" [label="7b133b8"]; "7b133b86cd83abaab65111931954ca905b69ba18-msg" [label="master: 3rd commit" margin="0" shape="none" ]; "7b133b86cd83abaab65111931954ca905b69ba18" -> "7b133b86cd83abaab65111931954ca905b69ba18-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "7b133b86cd83abaab65111931954ca905b69ba18" "7b133b86cd83abaab65111931954ca905b69ba18-msg"}
-  "91d9a860baf4cf47ee87f789a8c907abdf4f70ca" [label="91d9a86"]; "91d9a860baf4cf47ee87f789a8c907abdf4f70ca-msg" [label="devel: 2nd commit" margin="0" shape="none" ]; "91d9a860baf4cf47ee87f789a8c907abdf4f70ca" -> "91d9a860baf4cf47ee87f789a8c907abdf4f70ca-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "91d9a860baf4cf47ee87f789a8c907abdf4f70ca" "91d9a860baf4cf47ee87f789a8c907abdf4f70ca-msg"}
-  "9364c3c9e1fad16bac0b79391b24d092edca1a2d" [label="9364c3c"]; "9364c3c9e1fad16bac0b79391b24d092edca1a2d-msg" [label="master: 1st commit" margin="0" shape="none" ]; "9364c3c9e1fad16bac0b79391b24d092edca1a2d" -> "9364c3c9e1fad16bac0b79391b24d092edca1a2d-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "9364c3c9e1fad16bac0b79391b24d092edca1a2d" "9364c3c9e1fad16bac0b79391b24d092edca1a2d-msg"}
-  "9fd818afb7d40f6939c163f627e625170ba64b7a" [label="9fd818a"]; "9fd818afb7d40f6939c163f627e625170ba64b7a-msg" [label="master: 2nd commit" margin="0" shape="none" ]; "9fd818afb7d40f6939c163f627e625170ba64b7a" -> "9fd818afb7d40f6939c163f627e625170ba64b7a-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "9fd818afb7d40f6939c163f627e625170ba64b7a" "9fd818afb7d40f6939c163f627e625170ba64b7a-msg"}
-  "f491013a5711b2603f0b6d06258411902ae08674" [label="f491013"]; "f491013a5711b2603f0b6d06258411902ae08674-msg" [label="devel: 2nd commit" margin="0" shape="none" ]; "f491013a5711b2603f0b6d06258411902ae08674" -> "f491013a5711b2603f0b6d06258411902ae08674-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "f491013a5711b2603f0b6d06258411902ae08674" "f491013a5711b2603f0b6d06258411902ae08674-msg"}
+  "27aee51ca2e94f247a89d8cf389a95f542f5dc6b" [label="27aee51"]; "27aee51ca2e94f247a89d8cf389a95f542f5dc6b-msg" [label="devel: 2nd commit" margin="0" shape="none" ]; "27aee51ca2e94f247a89d8cf389a95f542f5dc6b" -> "27aee51ca2e94f247a89d8cf389a95f542f5dc6b-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "27aee51ca2e94f247a89d8cf389a95f542f5dc6b" "27aee51ca2e94f247a89d8cf389a95f542f5dc6b-msg"}
+  "32fa2de2978fb435057ddc84f18f8f9c16faf735" [label="32fa2de"]; "32fa2de2978fb435057ddc84f18f8f9c16faf735-msg" [label="devel: 1st commit" margin="0" shape="none" ]; "32fa2de2978fb435057ddc84f18f8f9c16faf735" -> "32fa2de2978fb435057ddc84f18f8f9c16faf735-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "32fa2de2978fb435057ddc84f18f8f9c16faf735" "32fa2de2978fb435057ddc84f18f8f9c16faf735-msg"}
+  "546f3da81b713b4f22820e17aac0fb9060858f2d" [label="546f3da"]; "546f3da81b713b4f22820e17aac0fb9060858f2d-msg" [label="master: 2nd commit" margin="0" shape="none" ]; "546f3da81b713b4f22820e17aac0fb9060858f2d" -> "546f3da81b713b4f22820e17aac0fb9060858f2d-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "546f3da81b713b4f22820e17aac0fb9060858f2d" "546f3da81b713b4f22820e17aac0fb9060858f2d-msg"}
+  "5b9f861f9221e78eda14c6a19764f488ebebf448" [label="5b9f861"]; "5b9f861f9221e78eda14c6a19764f488ebebf448-msg" [label="master: 1st commit" margin="0" shape="none" ]; "5b9f861f9221e78eda14c6a19764f488ebebf448" -> "5b9f861f9221e78eda14c6a19764f488ebebf448-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "5b9f861f9221e78eda14c6a19764f488ebebf448" "5b9f861f9221e78eda14c6a19764f488ebebf448-msg"}
+  "9b01ab1932c236d611a10c9c9d9a55395af7c963" [label="9b01ab1"]; "9b01ab1932c236d611a10c9c9d9a55395af7c963-msg" [label="devel: 2nd commit" margin="0" shape="none" ]; "9b01ab1932c236d611a10c9c9d9a55395af7c963" -> "9b01ab1932c236d611a10c9c9d9a55395af7c963-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "9b01ab1932c236d611a10c9c9d9a55395af7c963" "9b01ab1932c236d611a10c9c9d9a55395af7c963-msg"}
+  "bc8bdce0bdd1af511980785ffc0c9a4b1574d21a" [label="bc8bdce"]; "bc8bdce0bdd1af511980785ffc0c9a4b1574d21a-msg" [label="devel: 1st commit" margin="0" shape="none" ]; "bc8bdce0bdd1af511980785ffc0c9a4b1574d21a" -> "bc8bdce0bdd1af511980785ffc0c9a4b1574d21a-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "bc8bdce0bdd1af511980785ffc0c9a4b1574d21a" "bc8bdce0bdd1af511980785ffc0c9a4b1574d21a-msg"}
+  "fc572a09c45bfbd995c7abcc0fbe1117eb64e496" [label="fc572a0"]; "fc572a09c45bfbd995c7abcc0fbe1117eb64e496-msg" [label="master: 3rd commit" margin="0" shape="none" ]; "fc572a09c45bfbd995c7abcc0fbe1117eb64e496" -> "fc572a09c45bfbd995c7abcc0fbe1117eb64e496-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "fc572a09c45bfbd995c7abcc0fbe1117eb64e496" "fc572a09c45bfbd995c7abcc0fbe1117eb64e496-msg"}
 
-  "0c4b1f4f56f8093bd2e36b20a64cfe1cc14681de" -> { "7b133b86cd83abaab65111931954ca905b69ba18" };
-  "7b133b86cd83abaab65111931954ca905b69ba18" -> { "9fd818afb7d40f6939c163f627e625170ba64b7a" };
-  "91d9a860baf4cf47ee87f789a8c907abdf4f70ca" -> { "0c4b1f4f56f8093bd2e36b20a64cfe1cc14681de" };
-  "9364c3c9e1fad16bac0b79391b24d092edca1a2d" -> {  };
-  "9fd818afb7d40f6939c163f627e625170ba64b7a" -> { "9364c3c9e1fad16bac0b79391b24d092edca1a2d" };
+  "32fa2de2978fb435057ddc84f18f8f9c16faf735" -> { "fc572a09c45bfbd995c7abcc0fbe1117eb64e496" };
+  "546f3da81b713b4f22820e17aac0fb9060858f2d" -> { "5b9f861f9221e78eda14c6a19764f488ebebf448" };
+  "5b9f861f9221e78eda14c6a19764f488ebebf448" -> {  };
+  "9b01ab1932c236d611a10c9c9d9a55395af7c963" -> { "32fa2de2978fb435057ddc84f18f8f9c16faf735" };
+  "fc572a09c45bfbd995c7abcc0fbe1117eb64e496" -> { "546f3da81b713b4f22820e17aac0fb9060858f2d" };
 
-"devel" [label="devel" shape="cds" style="filled" fillcolor="darkgoldenrod1" ]; "devel" -> "91d9a860baf4cf47ee87f789a8c907abdf4f70ca"  [arrowhead="none"];{rank=same "devel" "91d9a860baf4cf47ee87f789a8c907abdf4f70ca"};
-"master" [label="master" shape="cds" style="filled" fillcolor="darkgoldenrod1" ]; "master" -> "7b133b86cd83abaab65111931954ca905b69ba18"  [arrowhead="none"];{rank=same "master" "7b133b86cd83abaab65111931954ca905b69ba18"};
+"devel" [label="devel" shape="cds" style="filled" fillcolor="darkgoldenrod1" ]; "devel" -> "9b01ab1932c236d611a10c9c9d9a55395af7c963"  [arrowhead="none"];{rank=same "devel" "9b01ab1932c236d611a10c9c9d9a55395af7c963"};
+"master" [label="master" shape="cds" style="filled" fillcolor="darkgoldenrod1" ]; "master" -> "fc572a09c45bfbd995c7abcc0fbe1117eb64e496"  [arrowhead="none"];{rank=same "master" "fc572a09c45bfbd995c7abcc0fbe1117eb64e496"};
 }
 </step>
 <step>
@@ -1099,22 +1100,22 @@ digraph git {
 // repo: /tmp/git-from-the-inside/rebase
 // cwd: /tmp/git-from-the-inside/rebase
 graph [bgcolor=transparent]
-  "0c4b1f4f56f8093bd2e36b20a64cfe1cc14681de" [label="0c4b1f4"]; "0c4b1f4f56f8093bd2e36b20a64cfe1cc14681de-msg" [label="devel: 1st commit" margin="0" shape="none" ]; "0c4b1f4f56f8093bd2e36b20a64cfe1cc14681de" -> "0c4b1f4f56f8093bd2e36b20a64cfe1cc14681de-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "0c4b1f4f56f8093bd2e36b20a64cfe1cc14681de" "0c4b1f4f56f8093bd2e36b20a64cfe1cc14681de-msg"}
-  "4f78481f17217115455d87e541e8927e9a3b3cb0" [label="4f78481"]; "4f78481f17217115455d87e541e8927e9a3b3cb0-msg" [label="devel: 1st commit" margin="0" shape="none" ]; "4f78481f17217115455d87e541e8927e9a3b3cb0" -> "4f78481f17217115455d87e541e8927e9a3b3cb0-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "4f78481f17217115455d87e541e8927e9a3b3cb0" "4f78481f17217115455d87e541e8927e9a3b3cb0-msg"}
-  "7b133b86cd83abaab65111931954ca905b69ba18" [label="7b133b8"]; "7b133b86cd83abaab65111931954ca905b69ba18-msg" [label="master: 3rd commit" margin="0" shape="none" ]; "7b133b86cd83abaab65111931954ca905b69ba18" -> "7b133b86cd83abaab65111931954ca905b69ba18-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "7b133b86cd83abaab65111931954ca905b69ba18" "7b133b86cd83abaab65111931954ca905b69ba18-msg"}
-  "91d9a860baf4cf47ee87f789a8c907abdf4f70ca" [label="91d9a86"]; "91d9a860baf4cf47ee87f789a8c907abdf4f70ca-msg" [label="devel: 2nd commit" margin="0" shape="none" ]; "91d9a860baf4cf47ee87f789a8c907abdf4f70ca" -> "91d9a860baf4cf47ee87f789a8c907abdf4f70ca-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "91d9a860baf4cf47ee87f789a8c907abdf4f70ca" "91d9a860baf4cf47ee87f789a8c907abdf4f70ca-msg"}
-  "9364c3c9e1fad16bac0b79391b24d092edca1a2d" [label="9364c3c"]; "9364c3c9e1fad16bac0b79391b24d092edca1a2d-msg" [label="master: 1st commit" margin="0" shape="none" ]; "9364c3c9e1fad16bac0b79391b24d092edca1a2d" -> "9364c3c9e1fad16bac0b79391b24d092edca1a2d-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "9364c3c9e1fad16bac0b79391b24d092edca1a2d" "9364c3c9e1fad16bac0b79391b24d092edca1a2d-msg"}
-  "9fd818afb7d40f6939c163f627e625170ba64b7a" [label="9fd818a"]; "9fd818afb7d40f6939c163f627e625170ba64b7a-msg" [label="master: 2nd commit" margin="0" shape="none" ]; "9fd818afb7d40f6939c163f627e625170ba64b7a" -> "9fd818afb7d40f6939c163f627e625170ba64b7a-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "9fd818afb7d40f6939c163f627e625170ba64b7a" "9fd818afb7d40f6939c163f627e625170ba64b7a-msg"}
-  "f491013a5711b2603f0b6d06258411902ae08674" [label="f491013"]; "f491013a5711b2603f0b6d06258411902ae08674-msg" [label="devel: 2nd commit" margin="0" shape="none" ]; "f491013a5711b2603f0b6d06258411902ae08674" -> "f491013a5711b2603f0b6d06258411902ae08674-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "f491013a5711b2603f0b6d06258411902ae08674" "f491013a5711b2603f0b6d06258411902ae08674-msg"}
+  "27aee51ca2e94f247a89d8cf389a95f542f5dc6b" [label="27aee51"]; "27aee51ca2e94f247a89d8cf389a95f542f5dc6b-msg" [label="devel: 2nd commit" margin="0" shape="none" ]; "27aee51ca2e94f247a89d8cf389a95f542f5dc6b" -> "27aee51ca2e94f247a89d8cf389a95f542f5dc6b-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "27aee51ca2e94f247a89d8cf389a95f542f5dc6b" "27aee51ca2e94f247a89d8cf389a95f542f5dc6b-msg"}
+  "32fa2de2978fb435057ddc84f18f8f9c16faf735" [label="32fa2de"]; "32fa2de2978fb435057ddc84f18f8f9c16faf735-msg" [label="devel: 1st commit" margin="0" shape="none" ]; "32fa2de2978fb435057ddc84f18f8f9c16faf735" -> "32fa2de2978fb435057ddc84f18f8f9c16faf735-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "32fa2de2978fb435057ddc84f18f8f9c16faf735" "32fa2de2978fb435057ddc84f18f8f9c16faf735-msg"}
+  "546f3da81b713b4f22820e17aac0fb9060858f2d" [label="546f3da"]; "546f3da81b713b4f22820e17aac0fb9060858f2d-msg" [label="master: 2nd commit" margin="0" shape="none" ]; "546f3da81b713b4f22820e17aac0fb9060858f2d" -> "546f3da81b713b4f22820e17aac0fb9060858f2d-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "546f3da81b713b4f22820e17aac0fb9060858f2d" "546f3da81b713b4f22820e17aac0fb9060858f2d-msg"}
+  "5b9f861f9221e78eda14c6a19764f488ebebf448" [label="5b9f861"]; "5b9f861f9221e78eda14c6a19764f488ebebf448-msg" [label="master: 1st commit" margin="0" shape="none" ]; "5b9f861f9221e78eda14c6a19764f488ebebf448" -> "5b9f861f9221e78eda14c6a19764f488ebebf448-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "5b9f861f9221e78eda14c6a19764f488ebebf448" "5b9f861f9221e78eda14c6a19764f488ebebf448-msg"}
+  "9b01ab1932c236d611a10c9c9d9a55395af7c963" [label="9b01ab1"]; "9b01ab1932c236d611a10c9c9d9a55395af7c963-msg" [label="devel: 2nd commit" margin="0" shape="none" ]; "9b01ab1932c236d611a10c9c9d9a55395af7c963" -> "9b01ab1932c236d611a10c9c9d9a55395af7c963-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "9b01ab1932c236d611a10c9c9d9a55395af7c963" "9b01ab1932c236d611a10c9c9d9a55395af7c963-msg"}
+  "bc8bdce0bdd1af511980785ffc0c9a4b1574d21a" [label="bc8bdce"]; "bc8bdce0bdd1af511980785ffc0c9a4b1574d21a-msg" [label="devel: 1st commit" margin="0" shape="none" ]; "bc8bdce0bdd1af511980785ffc0c9a4b1574d21a" -> "bc8bdce0bdd1af511980785ffc0c9a4b1574d21a-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "bc8bdce0bdd1af511980785ffc0c9a4b1574d21a" "bc8bdce0bdd1af511980785ffc0c9a4b1574d21a-msg"}
+  "fc572a09c45bfbd995c7abcc0fbe1117eb64e496" [label="fc572a0"]; "fc572a09c45bfbd995c7abcc0fbe1117eb64e496-msg" [label="master: 3rd commit" margin="0" shape="none" ]; "fc572a09c45bfbd995c7abcc0fbe1117eb64e496" -> "fc572a09c45bfbd995c7abcc0fbe1117eb64e496-msg" [K="0.0" arrowhead="none" style="dotted" dir="backward"]; {rank=same "fc572a09c45bfbd995c7abcc0fbe1117eb64e496" "fc572a09c45bfbd995c7abcc0fbe1117eb64e496-msg"}
 
-  "0c4b1f4f56f8093bd2e36b20a64cfe1cc14681de" -> { "7b133b86cd83abaab65111931954ca905b69ba18" };
-  "7b133b86cd83abaab65111931954ca905b69ba18" -> { "9fd818afb7d40f6939c163f627e625170ba64b7a" };
-  "91d9a860baf4cf47ee87f789a8c907abdf4f70ca" -> { "0c4b1f4f56f8093bd2e36b20a64cfe1cc14681de" };
-  "9364c3c9e1fad16bac0b79391b24d092edca1a2d" -> {  };
-  "9fd818afb7d40f6939c163f627e625170ba64b7a" -> { "9364c3c9e1fad16bac0b79391b24d092edca1a2d" };
+  "32fa2de2978fb435057ddc84f18f8f9c16faf735" -> { "fc572a09c45bfbd995c7abcc0fbe1117eb64e496" };
+  "546f3da81b713b4f22820e17aac0fb9060858f2d" -> { "5b9f861f9221e78eda14c6a19764f488ebebf448" };
+  "5b9f861f9221e78eda14c6a19764f488ebebf448" -> {  };
+  "9b01ab1932c236d611a10c9c9d9a55395af7c963" -> { "32fa2de2978fb435057ddc84f18f8f9c16faf735" };
+  "fc572a09c45bfbd995c7abcc0fbe1117eb64e496" -> { "546f3da81b713b4f22820e17aac0fb9060858f2d" };
 
-"devel" [label="devel" shape="cds" style="filled" fillcolor="darkgoldenrod1" ]; "devel" -> "91d9a860baf4cf47ee87f789a8c907abdf4f70ca"  [arrowhead="none"];{rank=same "devel" "91d9a860baf4cf47ee87f789a8c907abdf4f70ca"};
-"master" [label="master" shape="cds" style="filled" fillcolor="darkgoldenrod1" ]; "master" -> "91d9a860baf4cf47ee87f789a8c907abdf4f70ca"  [arrowhead="none"];{rank=same "master" "91d9a860baf4cf47ee87f789a8c907abdf4f70ca"};
+"devel" [label="devel" shape="cds" style="filled" fillcolor="darkgoldenrod1" ]; "devel" -> "9b01ab1932c236d611a10c9c9d9a55395af7c963"  [arrowhead="none"];{rank=same "devel" "9b01ab1932c236d611a10c9c9d9a55395af7c963"};
+"master" [label="master" shape="cds" style="filled" fillcolor="darkgoldenrod1" ]; "master" -> "9b01ab1932c236d611a10c9c9d9a55395af7c963"  [arrowhead="none"];{rank=same "master" "9b01ab1932c236d611a10c9c9d9a55395af7c963"};
 }
 </step>
 </animation>
@@ -1131,7 +1132,7 @@ GIT_MERGE_AUTOEDIT=no git merge devel
 
 <div class="org-src-container">
 
-<pre><code class="bash" >Updating 7b133b8..91d9a86
+<pre><code class="bash" >Updating fc572a0..9b01ab1
 Fast-forward
  change_devel | 2 ++
  1 file changed, 2 insertions(+)
@@ -1144,12 +1145,12 @@ Fast-forward
 </div>
 
 </section>
-<section id="slide-org22d957c">
-<h3 id="org22d957c">Rebase Summary</h3>
+<section id="slide-org158dfba">
+<h3 id="org158dfba">Rebase Summary</h3>
 <div class="two-columns r-stretch">
 <div  class="top-right">
 
-<div id="org7749939" class="figure">
+<div id="orgc209a5d" class="figure">
 <p><object type="image/svg+xml" data="org-gen/rebase-result2.svg" class="org-svg">
 Sorry, your browser does not support SVG.</object>
 </p>
@@ -1191,30 +1192,30 @@ Sorry, your browser does not support SVG.</object>
 
 </ul>
 </section>
-<section id="slide-org900dcb9">
-<h3 id="org900dcb9">Remote: how it works</h3>
+<section id="slide-org749d229">
+<h3 id="org749d229">Remote: how it works</h3>
 <div class="scale-width r-stretch">
 
-<div id="orgcb1c736" class="figure">
+<div id="orgf917f6a" class="figure">
 <p><object type="image/svg+xml" data="img/commits_remote.svg" class="org-svg">
 Sorry, your browser does not support SVG.</object>
 </p>
 </div>
 </div>
 </section>
-<section id="slide-orgc46bf71">
-<h3 id="orgc46bf71">Remote: <em>non fast forward</em></h3>
+<section id="slide-org232cbd0">
+<h3 id="org232cbd0">Remote: <em>non fast forward</em></h3>
 <div class="scale-width r-stretch">
 
-<div id="org2273ab8" class="figure">
+<div id="orgbaadd1c" class="figure">
 <p><object type="image/svg+xml" data="img/commits_remote_nonff.svg" class="org-svg">
 Sorry, your browser does not support SVG.</object>
 </p>
 </div>
 </div>
 </section>
-<section id="slide-org84e865b">
-<h3 id="org84e865b">Remote: <em>push -f</em> - a tragedy in V acts</h3>
+<section id="slide-orge457369">
+<h3 id="orge457369">Remote: <em>push -f</em> - a tragedy in V acts</h3>
 <p>
 Why is <code>git push -f</code> considered a bad idea? And when would you need it?
 </p>
@@ -1227,55 +1228,55 @@ Why is <code>git push -f</code> considered a bad idea? And when would you need i
 
 </ul>
 </section>
-<section id="slide-org3d98b73">
-<h3 id="org3d98b73"><code>git push -f</code> Act I: <em>Bob added a feature!</em></h3>
+<section id="slide-org78f4a56">
+<h3 id="org78f4a56"><code>git push -f</code> Act I: <em>Bob added a feature!</em></h3>
 <div class="scale-height r-stretch">
 
-<div id="org344a725" class="figure">
+<div id="org1fc0efb" class="figure">
 <p><object type="image/svg+xml" data="img/commits_push_rebased_act_i.svg" class="org-svg">
 Sorry, your browser does not support SVG.</object>
 </p>
 </div>
 </div>
 </section>
-<section id="slide-org066d2ab">
-<h3 id="org066d2ab"><code>git push -f</code> Act II: <em>But my history is ugly!</em></h3>
+<section id="slide-org2a8a290">
+<h3 id="org2a8a290"><code>git push -f</code> Act II: <em>But my history is ugly!</em></h3>
 <div class="scale-height r-stretch">
 
-<div id="org75e0eca" class="figure">
+<div id="org77860ab" class="figure">
 <p><object type="image/svg+xml" data="img/commits_push_rebased_act_ii.svg" class="org-svg">
 Sorry, your browser does not support SVG.</object>
 </p>
 </div>
 </div>
 </section>
-<section id="slide-org167f4ef">
-<h3 id="org167f4ef"><code>git push -f</code> Act III: <em>It's just a little bit of history rewriting</em></h3>
+<section id="slide-orgf393a17">
+<h3 id="orgf393a17"><code>git push -f</code> Act III: <em>It's just a little bit of history rewriting</em></h3>
 <div class="scale-height r-stretch">
 
-<div id="org98cdc4b" class="figure">
+<div id="orge7688c4" class="figure">
 <p><object type="image/svg+xml" data="img/commits_push_rebased_act_iii.svg" class="org-svg">
 Sorry, your browser does not support SVG.</object>
 </p>
 </div>
 </div>
 </section>
-<section id="slide-org8d9acaa">
-<h3 id="org8d9acaa"><code>git push -f</code> Act IV: Drama foreshadowing</h3>
+<section id="slide-orgaa526e1">
+<h3 id="orgaa526e1"><code>git push -f</code> Act IV: Drama foreshadowing</h3>
 <div class="scale-height r-stretch">
 
-<div id="org0b9e05e" class="figure">
+<div id="orgb064ccf" class="figure">
 <p><object type="image/svg+xml" data="img/commits_push_rebased_act_iv.svg" class="org-svg">
 Sorry, your browser does not support SVG.</object>
 </p>
 </div>
 </div>
 </section>
-<section id="slide-org0a782f9">
-<h3 id="org0a782f9"><code>git push -f</code> Act V: Explanations are needed</h3>
+<section id="slide-org49f099d">
+<h3 id="org49f099d"><code>git push -f</code> Act V: Explanations are needed</h3>
 <div class="scale-height r-stretch">
 
-<div id="orgf4fcb92" class="figure">
+<div id="org4eaba15" class="figure">
 <p><object type="image/svg+xml" data="img/commits_push_rebased_act_v.svg" class="org-svg">
 Sorry, your browser does not support SVG.</object>
 </p>
@@ -1287,7 +1288,7 @@ Sorry, your browser does not support SVG.</object>
 <section id="slide-wrapping-it-up">
 <h2 id="wrapping-it-up">Wrapping it up</h2>
 
-<div id="orgf996403" class="figure">
+<div id="orgb2a95a0" class="figure">
 <p><object type="image/svg+xml" data="org-gen/dag.svg" class="org-svg">
 Sorry, your browser does not support SVG.</object>
 </p>
@@ -1307,17 +1308,29 @@ Sorry, your browser does not support SVG.</object>
 
 </ul>
 </section>
-<section id="slide-orgdaccd27">
-<h3 id="orgdaccd27">Merge vs. Rebase</h3>
+<section id="slide-org90f179a">
+<h3 id="org90f179a">Merge vs. Rebase</h3>
 <div class="scale-width r-stretch">
 
-<div id="org09c2b0a" class="figure">
+<div id="org2b51300" class="figure">
 <p><object type="image/svg+xml" data="img/merge_vs_rebase.svg" class="org-svg">
 Sorry, your browser does not support SVG.</object>
 </p>
 </div>
 </div>
 
+</section>
+</section>
+<section>
+<section id="slide-org42aec02">
+<h2 id="org42aec02">Great Resources</h2>
+<ul>
+<li><a href="https://learngitbranching.js.org/">https://learngitbranching.js.org/</a> is an interactive tutorial where you can practice <code>git</code> in the browser. Highly recommended!</li>
+<li><a href="https://ohshitgit.com/">https://ohshitgit.com/</a> gives concise answers to classic <code>git</code> WTFs</li>
+<li><a href="https://git-scm.com/book/en/v2">https://git-scm.com/book/en/v2</a> the <code>PRO git</code> book. More than you will ever want to known</li>
+<li><a href="https://git-scm.com/">https://git-scm.com/</a> is the home page of <code>git</code></li>
+
+</ul>
 </section>
 </section>
 <section>
@@ -1353,8 +1366,8 @@ print("Yay, I found a new Block!")
 To find a hash that starts wih 19 zeroes in hexadecimal you need a <strong>lot</strong> of luck. Or ~ \(10^{11}\) guesses.
 </p>
 </section>
-<section id="slide-orga32b31d">
-<h3 id="orga32b31d">BitCoin: Git</h3>
+<section id="slide-org437c48a">
+<h3 id="org437c48a">BitCoin: Git</h3>
 <ul>
 <li>Data is written in <strong>commits</strong></li>
 <li>The <strong>author</strong> writes the commit</li>
@@ -1363,8 +1376,8 @@ To find a hash that starts wih 19 zeroes in hexadecimal you need a <strong>lot</
 
 </ul>
 </section>
-<section id="slide-org7a3ec04">
-<h3 id="org7a3ec04">BitCoin: BitCoin</h3>
+<section id="slide-org1ccbf45">
+<h3 id="org1ccbf45">BitCoin: BitCoin</h3>
 <ul>
 <li>Transactions are written in <strong>blocks</strong>
 <ul>
