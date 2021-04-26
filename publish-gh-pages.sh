@@ -17,7 +17,7 @@ cd "$clone"
 pwd
 
 git clone "${repo}/.git" .
-git checkout -b gh-pages
+git checkout gh-pages
 rm -rf *
 
 cp -rv "${repo}/public/"* .
