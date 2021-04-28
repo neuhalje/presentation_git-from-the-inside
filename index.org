@@ -707,9 +707,9 @@ Why is ~git push -f~ considered a bad idea? And when would you need it?
 - In *BitCoin* the longest "branch wins"
 - Generating "commits" in *BitCoin* ("blocks")
   + Gives you money
-  + Is artificialy made very difficult
+  + Is artificially made very difficult
 #+begin_src python
-fiddle = 0
+fiddle = 0  # A cryptographer/BitCoiner calls this the "nonce"
 while True:
     my_block = build_block(last_block_hash, fiddle, my_transactions)
 
@@ -721,7 +721,7 @@ while True:
 print("Yay, I found a new Block!")
 #+end_src
 
-To find a hash that starts wih 19 zeroes in hexadecimal you need a *lot* of luck. Or ~ $10^{11}$ guesses.
+To find a hash that starts with 19 zeroes in hexadecimal you need a *lot* of luck. Or ~ $10^{11}$ guesses.
 ** BitCoin: Git
   + Data is written in *commits*
   + The *author* writes the commit
@@ -731,8 +731,9 @@ To find a hash that starts wih 19 zeroes in hexadecimal you need a *lot* of luck
   + Transactions are written in *blocks*
     - One *block* can hold 10.000 transactions
   + The *miner* writes the block
-    - With some extra work - the 40 (hex-) digit long hash of the new block needs to start with 19 zeros (04/2021)
+    - With some extra work - the 64 (hex-) digit long hash of the new block needs to start with 19 zeros (04/2021)
     - The first transaction of each block is to /magically give the miner some BTC/
+    - From each transaction a bit of BTC goes to the miner
   + Each block links to the previous block via its hash
     - Only the longest chain is "the truth"
 * Licensing
