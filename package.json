@@ -135,7 +135,7 @@
     "gulp-zip": "^5.0.2",
     "highlight.js": "^10.6.0",
     "license-checker": "^25.0.1",
-    "marked": ">=2.0.0",
+    "marked": ">=4.0.10",
     "merge-stream": "^2.0.0",
     "node-qunit-puppeteer": "^2.0.3",
     "qunit": "^2.14.0",
